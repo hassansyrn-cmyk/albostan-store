@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>AlBostan Store</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
     body {
       margin: 0;
@@ -12,38 +13,57 @@
       color: #111;
       text-align: center;
     }
+
     header {
       padding: 20px;
-      font-size: 24px;
+      font-size: 26px;
       font-weight: bold;
     }
+
     .hero {
-      padding: 80px 20px;
+      padding: 100px 20px;
     }
+
     .hero h1 {
-      font-size: 40px;
+      font-size: 42px;
       margin-bottom: 20px;
     }
+
     .hero p {
       font-size: 18px;
-      margin-bottom: 30px;
+      margin-bottom: 40px;
     }
-    .button {
-      background: black;
-      color: white;
-      padding: 15px 30px;
+
+    /* ✅ CIRCULAR BUTTON */
+    .circle-button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 140px;
+      height: 140px;
+      background-color: #000;
+      color: #fff;
       text-decoration: none;
-      border-radius: 5px;
-      font-size: 16px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 50%;
+      transition: transform 0.2s ease, background-color 0.2s ease;
     }
+
+    .circle-button:hover {
+      background-color: #333;
+      transform: scale(1.05);
+    }
+
     footer {
-      margin-top: 80px;
+      margin-top: 100px;
       padding: 20px;
       font-size: 14px;
       color: #555;
     }
   </style>
 </head>
+
 <body>
 
   <header>AlBostan Store</header>
@@ -51,9 +71,11 @@
   <section class="hero">
     <h1>Shop the Latest Products</h1>
     <p>Electronics, Fashion, Home & Beauty — all in one place</p>
-    #Shop Now</a>
 
-
+    <!-- ✅ REAL CLICKABLE CIRCLE BUTTON -->
+    #
+      Open Shop
+    </a>
   </section>
 
   <footer>
