@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>AlBostan Store</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
     body {
@@ -11,55 +11,89 @@
       font-family: Arial, sans-serif;
       background: #f5f2eb;
       color: #111;
-      text-align: center;
     }
 
     header {
+      text-align: center;
       padding: 20px;
       font-size: 26px;
       font-weight: bold;
     }
 
     .hero {
-      padding: 100px 20px;
+      text-align: center;
+      padding: 80px 20px 40px;
     }
 
     .hero h1 {
-      font-size: 42px;
-      margin-bottom: 20px;
+      font-size: 40px;
+      margin-bottom: 15px;
     }
 
     .hero p {
       font-size: 18px;
-      margin-bottom: 40px;
+      color: #444;
     }
 
-    /* ✅ CIRCULAR BUTTON */
-    .circle-button {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      width: 140px;
-      height: 140px;
-      background-color: #000;
-      color: #fff;
-      text-decoration: none;
+    .products {
+      padding: 40px 20px 80px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .products h2 {
+      text-align: center;
+      font-size: 32px;
+      margin-bottom: 30px;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .product-card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .product-card img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    .product-card h3 {
       font-size: 18px;
-      font-weight: bold;
-      border-radius: 50%;
-      transition: transform 0.2s ease, background-color 0.2s ease;
+      margin: 10px 0;
     }
 
-    .circle-button:hover {
-      background-color: #333;
-      transform: scale(1.05);
+    .price {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .product-card button {
+      width: 100%;
+      padding: 12px;
+      background: #000;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
     }
 
     footer {
-      margin-top: 100px;
+      text-align: center;
       padding: 20px;
       font-size: 14px;
       color: #555;
+      background: #f0ede6;
     }
   </style>
 </head>
@@ -71,16 +105,15 @@
   <section class="hero">
     <h1>Shop the Latest Products</h1>
     <p>Electronics, Fashion, Home & Beauty — all in one place</p>
-
-    <!-- ✅ REAL CLICKABLE CIRCLE BUTTON -->
-    #
-      Open Shop
-    </a>
   </section>
 
-  <footer>
-    © 2026 AlBostan Store — All rights reserved
-  </footer>
+  <section class="products">
+    <h2>Featured Products</h2>
 
-</body>
-</html>
+    <div class="product-grid">
+
+      <div class="product-card">
+        <img src="https://via.placeholder.com/400x300" alt="Wireless Headphones">
+        <h3>Wireless Headphones</h3>
+        <p class="price">AED 199</p>
+        <button>Add to Cart</button>
