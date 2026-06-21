@@ -42,9 +42,13 @@
     max-width:1200px;margin:0 auto;padding:16px 24px;
     display:flex;align-items:center;justify-content:space-between;gap:24px;
   }
-  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.5rem;}
-  .logo svg{width:34px;height:34px;flex-shrink:0;}
-  .logo span{color:var(--clay);}
+  .logo{display:flex;align-items:center;}
+  .header-logo-img {
+    height: 65px; 
+    width: auto; 
+    mix-blend-mode: multiply; /* لجعل الخلفية البيضاء شفافة ومندمجة مع الهيدر */
+  }
+  
   nav.links{display:flex;gap:28px;font-weight:600;font-size:.98rem;}
   nav.links a{position:relative;padding:4px 0;transition:color .2s;}
   nav.links a:hover{color:var(--clay);}
@@ -102,12 +106,12 @@
   .hero-logo-display{
     position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
   }
-  .hero-logo-icon{width:190px;height:auto;animation:float 5s ease-in-out infinite;}
-  .hero-logo-ar{font-family:'El Messiri',serif;font-weight:700;font-size:1.5rem;color:#1F5132;}
-  .hero-logo-en{font-family:'El Messiri',serif;font-weight:600;font-size:1.05rem;color:#1F5132;letter-spacing:1px;}
-
-  .logo-icon-small{width:34px;height:auto;}
-  .foot-logo .logo-icon-small{width:30px;filter:brightness(0) invert(1);}
+  .hero-logo-img{
+    width: 280px;
+    height: auto;
+    mix-blend-mode: multiply;
+    animation: float 5s ease-in-out infinite;
+  }
 
   .wave-divider{display:block;width:100%;height:60px;}
   .wave-divider path{fill:var(--white);}
@@ -201,7 +205,14 @@
   .foot-wrap h5{font-size:1.05rem;margin-bottom:18px;color:var(--sand);}
   .foot-wrap ul li{margin-bottom:10px;opacity:.85;font-size:.92rem;}
   .foot-wrap ul li:hover{opacity:1;color:var(--clay);}
-  .foot-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.3rem;margin-bottom:14px;}
+  .foot-logo{margin-bottom:14px;}
+  .footer-logo-img{
+    height: 70px;
+    width: auto;
+    background: var(--white);
+    padding: 6px;
+    border-radius: 12px;
+  }
   .foot-wrap p.about{opacity:.75;font-size:.9rem;line-height:1.8;max-width:280px;}
   .copyright{
     border-top:1px solid rgba(244,236,221,.12);padding:20px 24px;text-align:center;
@@ -225,7 +236,7 @@
   }
 
   @media (prefers-reduced-motion:reduce){
-    .hero-logo-icon{animation:none;}
+    .hero-logo-img{animation:none;}
     .icon-btn, .cat-circle, .prod-thumb, .add-btn, .cat-item, .prod-card{transition:none;}
     .icon-btn:hover, .cat-item:hover .cat-circle, .prod-card:hover .prod-thumb, .add-btn:hover{transform:none;}
   }
@@ -233,51 +244,11 @@
 </head>
 <body>
 
-<svg style="display:none;" aria-hidden="true">
-  <defs>
-    <symbol id="ab-logo" viewBox="0 0 300 380">
-      <!-- Handle arch (top of the A/bag) -->
-      <path d="M165,95 C165,55 182,35 198,35 C214,35 231,55 231,95"
-            fill="none" stroke="#1F5132" stroke-width="9" stroke-linecap="round"/>
-      <circle cx="165" cy="95" r="6" fill="#1F5132"/>
-      <circle cx="231" cy="95" r="6" fill="#1F5132"/>
-
-      <!-- Left bracket (outer edge of the A) -->
-      <path d="M150,110 L120,110 L120,300 L150,300"
-            fill="none" stroke="#1F5132" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
-
-      <!-- Thin inner vertical (A's leg) -->
-      <path d="M156,140 L156,300" fill="none" stroke="#1F5132" stroke-width="9" stroke-linecap="round"/>
-
-      <!-- B body: two stacked rounded lobes -->
-      <path d="M175,108
-               C222,108 248,124 248,156
-               C248,182 230,194 200,197
-               C230,200 252,214 252,248
-               C252,282 224,300 178,300
-               L175,300 L175,108 Z"
-            fill="#FFFFFF" stroke="#1F5132" stroke-width="9" stroke-linejoin="round"/>
-
-      <!-- Olive branch crossing the gap -->
-      <g>
-        <path d="M148,258 C165,236 182,212 207,168"
-              fill="none" stroke="#8A9A5B" stroke-width="5" stroke-linecap="round"/>
-        <path d="M155,248 C166,242 174,232 173,221 C162,224 153,235 155,248 Z" fill="#8A9A5B" stroke="#1F5132" stroke-width="1.5"/>
-        <path d="M170,224 C181,218 189,208 188,197 C177,200 168,211 170,224 Z" fill="#9CAE6E" stroke="#1F5132" stroke-width="1.5"/>
-        <path d="M183,200 C194,194 202,184 201,173 C190,176 181,187 183,200 Z" fill="#8A9A5B" stroke="#1F5132" stroke-width="1.5"/>
-        <path d="M163,236 C152,231 142,233 136,242 C146,247 158,246 163,236 Z" fill="#9CAE6E" stroke="#1F5132" stroke-width="1.5"/>
-        <path d="M193,188 C182,184 172,187 167,196 C177,200 189,198 193,188 Z" fill="#8A9A5B" stroke="#1F5132" stroke-width="1.5"/>
-      </g>
-    </symbol>
-  </defs>
-</svg>
-
-
 <header>
   <div class="nav-wrap">
     <a href="#" class="logo">
-      <svg class="logo-icon-small" viewBox="0 0 300 380"><use href="#ab-logo"/></svg>
-      <span dir="ltr" style="unicode-bidi:isolate;">Al<span>Bostan</span> Store</span>
+      <!-- تمت إضافة اللوغو هنا -->
+      <img src="108579.png" alt="متجر البستان" class="header-logo-img">
     </a>
     <nav class="links">
       <a href="#categories">الأقسام</a>
@@ -308,9 +279,8 @@
   <div class="hero-visual">
     <div class="blob b1"></div>
     <div class="hero-logo-display">
-      <svg class="hero-logo-icon" viewBox="0 0 300 380"><use href="#ab-logo"/></svg>
-      <p class="hero-logo-ar">متجر البستان</p>
-      <p class="hero-logo-en" dir="ltr">AlBostan Store</p>
+      <!-- تمت إضافة اللوغو هنا في الواجهة -->
+      <img src="108579.png" alt="AlBostan Store Logo" class="hero-logo-img">
     </div>
   </div>
 </section>
@@ -450,8 +420,8 @@
   <div class="foot-wrap">
     <div>
       <div class="foot-logo">
-        <svg class="logo-icon-small" viewBox="0 0 300 380"><use href="#ab-logo"/></svg>
-        AlBostan Store
+        <!-- تمت إضافة اللوغو في الفوتر -->
+        <img src="108579.png" alt="متجر البستان" class="footer-logo-img">
       </div>
       <p class="about">متجرك المتنوع لكل ما يحتاجه منزلك وعائلتك، بجودة موثوقة وخدمة سريعة في الإمارات.</p>
     </div>
