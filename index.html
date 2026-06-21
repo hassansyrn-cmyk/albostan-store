@@ -190,6 +190,23 @@
   .promo .btn-primary{background:#FFFFFF;color:#1A1A1A;box-shadow:none;}
   .promo .btn-primary:hover{background:#E3DBC8;}
 
+  /* --- لماذا تختار متجر البستان --- */
+  .why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;}
+  .why-card{
+    background:var(--white);border-radius:var(--radius);padding:30px 22px;text-align:center;
+    box-shadow:0 6px 18px -10px rgba(61,43,31,.25);transition:transform .25s;
+  }
+  .why-card:hover{transform:translateY(-6px);}
+  .why-icon{font-size:2.4rem;margin-bottom:14px;}
+  .why-card h4{font-family:'El Messiri',serif;font-size:1.08rem;margin-bottom:8px;color:var(--soil);}
+  .why-card p{font-size:.88rem;color:#5b4636;line-height:1.7;}
+
+  /* --- معلومات مهمة قبل الطلب --- */
+  .info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .info-card{background:var(--sand);border-radius:var(--radius);padding:28px 24px;}
+  .info-card h4{font-family:'El Messiri',serif;font-size:1.05rem;margin-bottom:10px;color:var(--soil);}
+  .info-card p{font-size:.9rem;color:#5b4636;line-height:1.75;}
+
   /* --- البحث والتصفية --- */
   .search-filter-wrap{
     margin-bottom:40px;
@@ -264,8 +281,15 @@
   .prod-thumb{
     height:160px;display:flex;align-items:center;justify-content:center;font-size:3.4rem;
     transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+    position:relative;overflow:hidden;
   }
   .prod-card:hover .prod-thumb{transform:scale(1.15) rotate(4deg);}
+  .prod-thumb .prod-img{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  }
+  .prod-thumb .prod-emoji-fallback{
+    display:none;position:absolute;inset:0;align-items:center;justify-content:center;font-size:3.4rem;
+  }
   .prod-body{padding:18px;}
   .prod-cat{color:var(--olive);font-size:.78rem;font-weight:700;letter-spacing:.5px;}
   .prod-body h4{margin:6px 0 10px;font-size:1.02rem;font-weight:700;}
@@ -338,6 +362,14 @@
     line-height:130px;
     border-radius:50%;
   }
+  .modal-img{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    object-fit:cover;
+    display:none;
+    margin-bottom:10px;
+  }
   .modal-cat{
     font-size:0.85rem;
     color:var(--olive);
@@ -370,6 +402,32 @@
     gap:10px;
   }
 
+  /* --- الأسئلة الشائعة --- */
+  .faq-list{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:14px;}
+  .faq-item{
+    background:var(--white);border-radius:18px;overflow:hidden;
+    box-shadow:0 4px 14px -8px rgba(61,43,31,.2);
+  }
+  .faq-question{
+    width:100%;display:flex;align-items:center;justify-content:space-between;gap:14px;
+    padding:18px 22px;font-weight:700;font-size:1rem;background:none;
+    text-align:start;color:var(--soil);
+  }
+  .faq-question .faq-icon{transition:transform .3s;font-size:1.3rem;flex-shrink:0;color:var(--olive);}
+  .faq-item.open .faq-question .faq-icon{transform:rotate(45deg);}
+  .faq-answer{max-height:0;overflow:hidden;transition:max-height .35s ease;padding:0 22px;}
+  .faq-item.open .faq-answer{max-height:300px;padding-bottom:18px;}
+  .faq-answer p{font-size:.92rem;color:#5b4636;line-height:1.75;}
+
+  /* --- زر واتساب العائم --- */
+  .wa-float{
+    position:fixed;bottom:24px;right:24px;width:58px;height:58px;border-radius:50%;
+    background:#25D366;color:#fff;display:flex;align-items:center;justify-content:center;
+    font-size:1.7rem;box-shadow:0 10px 24px -6px rgba(0,0,0,.35);z-index:80;
+    transition:transform .25s;
+  }
+  .wa-float:hover{transform:scale(1.1);}
+
   .newsletter{background:var(--sand);border-radius:32px;max-width:1200px;margin:0 auto 70px;padding:50px;text-align:center;}
   .newsletter h3{font-family:'El Messiri',serif;font-size:2rem;margin-bottom:10px;}
   .newsletter p{color:#5b4636;margin-bottom:26px;}
@@ -393,6 +451,8 @@
     .cat-grid{grid-template-columns:repeat(3,1fr);}
     .prod-grid{grid-template-columns:repeat(2,1fr);}
     .foot-wrap{grid-template-columns:1fr 1fr;}
+    .why-grid{grid-template-columns:repeat(2,1fr);}
+    .info-grid{grid-template-columns:1fr;}
   }
 
   @media (max-width:680px){
@@ -437,6 +497,8 @@
     .foot-wrap{grid-template-columns:1fr;}
     .news-form{flex-direction:column;}
     .prod-grid{grid-template-columns:1fr;}
+    .why-grid{grid-template-columns:1fr;}
+    .wa-float{width:52px;height:52px;font-size:1.5rem;bottom:18px;right:18px;}
   }
 
   @media (min-width:681px){
@@ -452,9 +514,10 @@
 
   @media (prefers-reduced-motion:reduce){
     .hero-logo-img{animation:none;}
-    .icon-btn, .cat-circle, .prod-thumb, .add-btn, .cat-item, .prod-card{transition:none;}
-    .icon-btn:hover, .cat-item:hover .cat-circle, .prod-card:hover .prod-thumb, .add-btn:hover{transform:none;}
+    .icon-btn, .cat-circle, .prod-thumb, .add-btn, .cat-item, .prod-card, .why-card, .wa-float{transition:none;}
+    .icon-btn:hover, .cat-item:hover .cat-circle, .prod-card:hover .prod-thumb, .add-btn:hover, .why-card:hover, .wa-float:hover{transform:none;}
     .modal-box{transition:none;}
+    .faq-answer{transition:none;}
   }
 </style>
 </head>
@@ -551,6 +614,35 @@
   </div>
 </section>
 
+<section class="section" id="why-us">
+  <div class="section-head">
+    <p class="eyebrow" data-ar="مزايا متجر البستان" data-en="AlBostan Store advantages">مزايا متجر البستان</p>
+    <h2 data-ar="لماذا تختار متجر البستان؟" data-en="Why choose AlBostan Store?">لماذا تختار متجر البستان؟</h2>
+  </div>
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="why-icon">🚚</div>
+      <h4 data-ar="توصيل سريع" data-en="Fast Delivery">توصيل سريع</h4>
+      <p data-ar="نوصل طلبك بسرعة وأمان إلى باب منزلك في جميع إمارات الدولة." data-en="We deliver your order quickly and safely to your doorstep across the UAE.">نوصل طلبك بسرعة وأمان إلى باب منزلك في جميع إمارات الدولة.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">✅</div>
+      <h4 data-ar="جودة موثوقة" data-en="Trusted Quality">جودة موثوقة</h4>
+      <p data-ar="نختار منتجاتنا بعناية لضمان جودة تدوم وتلبي توقعاتك." data-en="We carefully select our products to ensure lasting quality that meets your expectations.">نختار منتجاتنا بعناية لضمان جودة تدوم وتلبي توقعاتك.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">💰</div>
+      <h4 data-ar="أسعار مناسبة" data-en="Fair Prices">أسعار مناسبة</h4>
+      <p data-ar="أسعار تنافسية تناسب جميع العائلات دون أي مقابل للجودة." data-en="Competitive prices that suit every family without compromising on quality.">أسعار تنافسية تناسب جميع العائلات دون أي مقابل للجودة.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">📲</div>
+      <h4 data-ar="طلب سهل عبر واتساب" data-en="Easy WhatsApp Ordering">طلب سهل عبر واتساب</h4>
+      <p data-ar="أكمل طلبك بضغطة واحدة عبر واتساب دون أي تعقيد." data-en="Complete your order with one click via WhatsApp, with no complications.">أكمل طلبك بضغطة واحدة عبر واتساب دون أي تعقيد.</p>
+    </div>
+  </div>
+</section>
+
 <section class="section" id="products">
   <div class="section-head">
     <p class="eyebrow" data-ar="الأكثر طلبًا" data-en="Best Sellers">الأكثر طلبًا</p>
@@ -574,8 +666,11 @@
   </div>
 
   <div class="prod-grid" id="productGrid">
-    <div class="prod-card" data-name-ar="عسل طبيعي 500غ" data-name-en="Natural Honey 500g" data-price="35" data-emoji="🍯" data-category-en="Grocery" data-category-ar="بقالة" data-desc-ar="عسل طبيعي نقي 100%، مثالي لتحلية مشروباتك أو استخدامه في الوصفات الصحية." data-desc-en="100% pure natural honey, perfect for sweetening your drinks or using in healthy recipes.">
-      <div class="prod-thumb" style="background:#EFE9DD;">🍯</div>
+    <div class="prod-card" data-name-ar="عسل طبيعي 500غ" data-name-en="Natural Honey 500g" data-price="35" data-emoji="🍯" data-img="images/honey.jpg" data-category-en="Grocery" data-category-ar="بقالة" data-desc-ar="عسل طبيعي نقي 100%، مثالي لتحلية مشروباتك أو استخدامه في الوصفات الصحية." data-desc-en="100% pure natural honey, perfect for sweetening your drinks or using in healthy recipes.">
+      <div class="prod-thumb" style="background:#EFE9DD;">
+        <img src="images/honey.jpg" alt="عسل طبيعي 500غ" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <span class="prod-emoji-fallback">🍯</span>
+      </div>
       <div class="prod-body">
         <p class="prod-cat" data-ar="بقالة" data-en="Grocery">بقالة</p>
         <h4 data-ar="عسل طبيعي 500غ" data-en="Natural Honey 500g">عسل طبيعي 500غ</h4>
@@ -583,8 +678,11 @@
       </div>
     </div>
     
-    <div class="prod-card" data-name-ar="سماعات لاسلكية" data-name-en="Wireless Headphones" data-price="129" data-emoji="🎧" data-category-en="Electronics" data-category-ar="إلكترونيات" data-desc-ar="سماعات لاسلكية بصوت نقي وعزل للضوضاء، تدوم طويلاً ببطارية قوية." data-desc-en="Wireless headphones with pure sound and noise cancellation, long-lasting battery.">
-      <div class="prod-thumb" style="background:#F5F2EC;">🎧</div>
+    <div class="prod-card" data-name-ar="سماعات لاسلكية" data-name-en="Wireless Headphones" data-price="129" data-emoji="🎧" data-img="images/headphones.jpg" data-category-en="Electronics" data-category-ar="إلكترونيات" data-desc-ar="سماعات لاسلكية بصوت نقي وعزل للضوضاء، تدوم طويلاً ببطارية قوية." data-desc-en="Wireless headphones with pure sound and noise cancellation, long-lasting battery.">
+      <div class="prod-thumb" style="background:#F5F2EC;">
+        <img src="images/headphones.jpg" alt="سماعات لاسلكية" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <span class="prod-emoji-fallback">🎧</span>
+      </div>
       <div class="prod-body">
         <p class="prod-cat" data-ar="إلكترونيات" data-en="Electronics">إلكترونيات</p>
         <h4 data-ar="سماعات لاسلكية" data-en="Wireless Headphones">سماعات لاسلكية</h4>
@@ -592,8 +690,11 @@
       </div>
     </div>
     
-    <div class="prod-card" data-name-ar="حقيبة يد جلدية" data-name-en="Leather Handbag" data-price="95" data-emoji="👜" data-category-en="Fashion" data-category-ar="أزياء" data-desc-ar="حقيبة يد جلدية أنيقة بتصميم عصري، تناسب جميع مناسباتك اليومية." data-desc-en="Elegant leather handbag with a modern design, suitable for all your daily occasions.">
-      <div class="prod-thumb" style="background:#E3DBC8;">👜</div>
+    <div class="prod-card" data-name-ar="حقيبة يد جلدية" data-name-en="Leather Handbag" data-price="95" data-emoji="👜" data-img="images/handbag.jpg" data-category-en="Fashion" data-category-ar="أزياء" data-desc-ar="حقيبة يد جلدية أنيقة بتصميم عصري، تناسب جميع مناسباتك اليومية." data-desc-en="Elegant leather handbag with a modern design, suitable for all your daily occasions.">
+      <div class="prod-thumb" style="background:#E3DBC8;">
+        <img src="images/handbag.jpg" alt="حقيبة يد جلدية" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <span class="prod-emoji-fallback">👜</span>
+      </div>
       <div class="prod-body">
         <p class="prod-cat" data-ar="أزياء" data-en="Fashion">أزياء</p>
         <h4 data-ar="حقيبة يد جلدية" data-en="Leather Handbag">حقيبة يد جلدية</h4>
@@ -601,8 +702,11 @@
       </div>
     </div>
     
-    <div class="prod-card" data-name-ar="نبتة زينة داخلية" data-name-en="Indoor Decorative Plant" data-price="48" data-emoji="🪴" data-category-en="Home & Garden" data-category-ar="المنزل والحديقة" data-desc-ar="نبتة زينة داخلية تضفي لمسة من الطبيعة والجمال على ديكور منزلك." data-desc-en="Indoor decorative plant that adds a touch of nature and beauty to your home decor.">
-      <div class="prod-thumb" style="background:#ECE6D9;">🪴</div>
+    <div class="prod-card" data-name-ar="نبتة زينة داخلية" data-name-en="Indoor Decorative Plant" data-price="48" data-emoji="🪴" data-img="images/plant.jpg" data-category-en="Home & Garden" data-category-ar="المنزل والحديقة" data-desc-ar="نبتة زينة داخلية تضفي لمسة من الطبيعة والجمال على ديكور منزلك." data-desc-en="Indoor decorative plant that adds a touch of nature and beauty to your home decor.">
+      <div class="prod-thumb" style="background:#ECE6D9;">
+        <img src="images/plant.jpg" alt="نبتة زينة داخلية" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <span class="prod-emoji-fallback">🪴</span>
+      </div>
       <div class="prod-body">
         <p class="prod-cat" data-ar="المنزل والحديقة" data-en="Home & Garden">المنزل والحديقة</p>
         <h4 data-ar="نبتة زينة داخلية" data-en="Indoor Decorative Plant">نبتة زينة داخلية</h4>
@@ -610,8 +714,11 @@
       </div>
     </div>
     
-    <div class="prod-card" data-name-ar="طقم عناية بالبشرة" data-name-en="Skincare Set" data-price="62" data-emoji="🧴" data-category-en="Personal Care" data-category-ar="العناية الشخصية" data-desc-ar="طقم عناية بالبشرة متكامل يمنحك نضارة وإشراقة يومية بخلاصات طبيعية." data-desc-en="Complete skincare set that gives you daily freshness and radiance with natural extracts.">
-      <div class="prod-thumb" style="background:#F0EDE5;">🧴</div>
+    <div class="prod-card" data-name-ar="طقم عناية بالبشرة" data-name-en="Skincare Set" data-price="62" data-emoji="🧴" data-img="images/skincare.jpg" data-category-en="Personal Care" data-category-ar="العناية الشخصية" data-desc-ar="طقم عناية بالبشرة متكامل يمنحك نضارة وإشراقة يومية بخلاصات طبيعية." data-desc-en="Complete skincare set that gives you daily freshness and radiance with natural extracts.">
+      <div class="prod-thumb" style="background:#F0EDE5;">
+        <img src="images/skincare.jpg" alt="طقم عناية بالبشرة" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <span class="prod-emoji-fallback">🧴</span>
+      </div>
       <div class="prod-body">
         <p class="prod-cat" data-ar="العناية الشخصية" data-en="Personal Care">العناية الشخصية</p>
         <h4 data-ar="طقم عناية بالبشرة" data-en="Skincare Set">طقم عناية بالبشرة</h4>
@@ -619,8 +726,11 @@
       </div>
     </div>
     
-    <div class="prod-card" data-name-ar="لوحة مفاتيح ميكانيكية" data-name-en="Mechanical Keyboard" data-price="149" data-emoji="⌨️" data-category-en="Electronics" data-category-ar="إلكترونيات" data-desc-ar="لوحة مفاتيح ميكانيكية سريعة الاستجابة، مصممة للمبرمجين وعشاق الألعاب." data-desc-en="Responsive mechanical keyboard, designed for programmers and gamers.">
-      <div class="prod-thumb" style="background:#EFE9DD;">⌨️</div>
+    <div class="prod-card" data-name-ar="لوحة مفاتيح ميكانيكية" data-name-en="Mechanical Keyboard" data-price="149" data-emoji="⌨️" data-img="images/keyboard.jpg" data-category-en="Electronics" data-category-ar="إلكترونيات" data-desc-ar="لوحة مفاتيح ميكانيكية سريعة الاستجابة، مصممة للمبرمجين وعشاق الألعاب." data-desc-en="Responsive mechanical keyboard, designed for programmers and gamers.">
+      <div class="prod-thumb" style="background:#EFE9DD;">
+        <img src="images/keyboard.jpg" alt="لوحة مفاتيح ميكانيكية" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <span class="prod-emoji-fallback">⌨️</span>
+      </div>
       <div class="prod-body">
         <p class="prod-cat" data-ar="إلكترونيات" data-en="Electronics">إلكترونيات</p>
         <h4 data-ar="لوحة مفاتيح ميكانيكية" data-en="Mechanical Keyboard">لوحة مفاتيح ميكانيكية</h4>
@@ -628,8 +738,11 @@
       </div>
     </div>
     
-    <div class="prod-card" data-name-ar="دب قطني محشو" data-name-en="Plush Teddy Bear" data-price="39" data-emoji="🧸" data-category-en="Kids" data-category-ar="أطفال" data-desc-ar="دب قطني محشو ناعم وآمن للأطفال، الهدية المثالية لأحبائك الصغار." data-desc-en="Soft and safe stuffed plush teddy bear, the perfect gift for your little ones.">
-      <div class="prod-thumb" style="background:#F5F2EC;">🧸</div>
+    <div class="prod-card" data-name-ar="دب قطني محشو" data-name-en="Plush Teddy Bear" data-price="39" data-emoji="🧸" data-img="images/teddy.jpg" data-category-en="Kids" data-category-ar="أطفال" data-desc-ar="دب قطني محشو ناعم وآمن للأطفال، الهدية المثالية لأحبائك الصغار." data-desc-en="Soft and safe stuffed plush teddy bear, the perfect gift for your little ones.">
+      <div class="prod-thumb" style="background:#F5F2EC;">
+        <img src="images/teddy.jpg" alt="دب قطني محشو" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <span class="prod-emoji-fallback">🧸</span>
+      </div>
       <div class="prod-body">
         <p class="prod-cat" data-ar="أطفال" data-en="Kids">أطفال</p>
         <h4 data-ar="دب قطني محشو" data-en="Plush Teddy Bear">دب قطني محشو</h4>
@@ -637,8 +750,11 @@
       </div>
     </div>
     
-    <div class="prod-card" data-name-ar="سجادة يوغا" data-name-en="Yoga Mat" data-price="55" data-emoji="🏋️" data-category-en="Sports" data-category-ar="رياضة" data-desc-ar="سجادة يوغا مريحة ومانعة للانزلاق، تضمن لك تمرينًا آمنًا في أي مكان." data-desc-en="Comfortable and non-slip yoga mat, ensuring a safe workout anywhere.">
-      <div class="prod-thumb" style="background:#E3DBC8;">🏋️</div>
+    <div class="prod-card" data-name-ar="سجادة يوغا" data-name-en="Yoga Mat" data-price="55" data-emoji="🏋️" data-img="images/yoga-mat.jpg" data-category-en="Sports" data-category-ar="رياضة" data-desc-ar="سجادة يوغا مريحة ومانعة للانزلاق، تضمن لك تمرينًا آمنًا في أي مكان." data-desc-en="Comfortable and non-slip yoga mat, ensuring a safe workout anywhere.">
+      <div class="prod-thumb" style="background:#E3DBC8;">
+        <img src="images/yoga-mat.jpg" alt="سجادة يوغا" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <span class="prod-emoji-fallback">🏋️</span>
+      </div>
       <div class="prod-body">
         <p class="prod-cat" data-ar="رياضة" data-en="Sports">رياضة</p>
         <h4 data-ar="سجادة يوغا" data-en="Yoga Mat">سجادة يوغا</h4>
@@ -649,6 +765,72 @@
 
   <div class="no-results" id="noResultsMsg" data-ar="لا توجد منتجات مطابقة" data-en="No matching products found">لا توجد منتجات مطابقة</div>
 
+</section>
+
+<section class="section" id="shipping-info">
+  <div class="section-head">
+    <p class="eyebrow" data-ar="يرجى القراءة قبل الطلب" data-en="Please read before ordering">يرجى القراءة قبل الطلب</p>
+    <h2 data-ar="معلومات مهمة قبل الطلب" data-en="Important information before ordering">معلومات مهمة قبل الطلب</h2>
+  </div>
+  <div class="info-grid">
+    <div class="info-card">
+      <h4 data-ar="الشحن والتوصيل" data-en="Shipping & Delivery">الشحن والتوصيل</h4>
+      <p data-ar="نوفر خدمة التوصيل داخل الإمارات، ويتم تأكيد مدة التوصيل عبر واتساب بعد استلام الطلب." data-en="Delivery is available across the UAE. Delivery time will be confirmed via WhatsApp after receiving your order.">نوفر خدمة التوصيل داخل الإمارات، ويتم تأكيد مدة التوصيل عبر واتساب بعد استلام الطلب.</p>
+    </div>
+    <div class="info-card">
+      <h4 data-ar="الدفع" data-en="Payment">الدفع</h4>
+      <p data-ar="الدفع يتم حاليًا عند التواصل عبر واتساب. يمكن لاحقًا إضافة بوابة دفع إلكتروني." data-en="Payment is currently arranged through WhatsApp. Online payment can be added later.">الدفع يتم حاليًا عند التواصل عبر واتساب. يمكن لاحقًا إضافة بوابة دفع إلكتروني.</p>
+    </div>
+    <div class="info-card">
+      <h4 data-ar="الإرجاع والاستبدال" data-en="Returns & Exchanges">الإرجاع والاستبدال</h4>
+      <p data-ar="يمكن طلب الإرجاع أو الاستبدال حسب حالة المنتج وسياسة المتجر." data-en="Returns or exchanges can be requested depending on the product condition and store policy.">يمكن طلب الإرجاع أو الاستبدال حسب حالة المنتج وسياسة المتجر.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="faq">
+  <div class="section-head">
+    <p class="eyebrow" data-ar="هل لديك سؤال؟" data-en="Have a question?">هل لديك سؤال؟</p>
+    <h2 data-ar="الأسئلة الشائعة" data-en="Frequently Asked Questions">الأسئلة الشائعة</h2>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-question">
+        <span data-ar="كيف أطلب من متجر البستان؟" data-en="How do I order from AlBostan Store?">كيف أطلب من متجر البستان؟</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <p data-ar="أضف المنتجات إلى السلة ثم اضغط إتمام الشراء، وسيتم فتح واتساب برسالة الطلب." data-en="Add products to the cart, then click Checkout. WhatsApp will open with your order message.">أضف المنتجات إلى السلة ثم اضغط إتمام الشراء، وسيتم فتح واتساب برسالة الطلب.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">
+        <span data-ar="هل يوجد توصيل داخل الإمارات؟" data-en="Is delivery available within the UAE?">هل يوجد توصيل داخل الإمارات؟</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <p data-ar="نعم، يتم تأكيد تفاصيل التوصيل عبر واتساب." data-en="Yes, delivery details are confirmed via WhatsApp.">نعم، يتم تأكيد تفاصيل التوصيل عبر واتساب.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">
+        <span data-ar="هل الدفع الإلكتروني متوفر؟" data-en="Is online payment available?">هل الدفع الإلكتروني متوفر؟</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <p data-ar="حاليًا الطلب يتم عبر واتساب، ويمكن إضافة الدفع الإلكتروني لاحقًا." data-en="Currently orders are handled via WhatsApp. Online payment can be added later.">حاليًا الطلب يتم عبر واتساب، ويمكن إضافة الدفع الإلكتروني لاحقًا.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">
+        <span data-ar="هل الأسعار تشمل التوصيل؟" data-en="Do prices include delivery?">هل الأسعار تشمل التوصيل؟</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <p data-ar="رسوم التوصيل يتم تأكيدها حسب المنطقة عبر واتساب." data-en="Delivery fees are confirmed via WhatsApp depending on the area.">رسوم التوصيل يتم تأكيدها حسب المنطقة عبر واتساب.</p>
+      </div>
+    </div>
+  </div>
 </section>
 
 <section class="section">
@@ -681,9 +863,9 @@
     <div>
       <h5 data-ar="خدمة العملاء" data-en="Customer Service">خدمة العملاء</h5>
       <ul>
-        <li><a href="#" data-ar="الشحن والتوصيل" data-en="Shipping & Delivery">الشحن والتوصيل</a></li>
-        <li><a href="#" data-ar="الإرجاع والاستبدال" data-en="Returns & Exchanges">الإرجاع والاستبدال</a></li>
-        <li><a href="#" data-ar="الأسئلة الشائعة" data-en="FAQs">الأسئلة الشائعة</a></li>
+        <li><a href="#shipping-info" data-ar="الشحن والتوصيل" data-en="Shipping & Delivery">الشحن والتوصيل</a></li>
+        <li><a href="#shipping-info" data-ar="الإرجاع والاستبدال" data-en="Returns & Exchanges">الإرجاع والاستبدال</a></li>
+        <li><a href="#faq" data-ar="الأسئلة الشائعة" data-en="FAQs">الأسئلة الشائعة</a></li>
       </ul>
     </div>
     <div>
@@ -698,11 +880,14 @@
   <div class="copyright" data-ar="© 2026 AlBostan Store. جميع الحقوق محفوظة." data-en="© 2026 AlBostan Store. All rights reserved.">© 2026 AlBostan Store. جميع الحقوق محفوظة.</div>
 </footer>
 
+<a href="#" class="wa-float" id="waFloatBtn" aria-label="تواصل عبر واتساب">💬</a>
+
 <div class="toast" id="toast">تمت الإضافة للسلة ✅</div>
 
 <div class="modal-overlay" id="productModal">
   <div class="modal-box">
     <button class="modal-close" id="modalClose">×</button>
+    <img class="modal-img" id="mImg" src="" alt="">
     <div class="modal-emoji" id="mEmoji">🍯</div>
     <div class="modal-cat" id="mCat">بقالة</div>
     <h3 class="modal-title" id="mTitle">عسل طبيعي 500غ</h3>
@@ -725,7 +910,8 @@
       added: 'تمت الإضافة للسلة ✅',
       removed: 'تم حذف المنتج من السلة',
       emptyCartCheckout: 'السلة فارغة، أضف منتجات أولًا 🛍️',
-      noResults: 'لا توجد منتجات مطابقة'
+      noResults: 'لا توجد منتجات مطابقة',
+      waInquiry: 'مرحبًا، أريد الاستفسار عن متجر البستان'
     },
     en: {
       emptyCart: 'Your cart is empty, please add products first 🛍️',
@@ -733,7 +919,8 @@
       added: 'Added to cart ✅',
       removed: 'Item removed from cart',
       emptyCartCheckout: 'Your cart is empty, please add products first 🛍️',
-      noResults: 'No matching products found'
+      noResults: 'No matching products found',
+      waInquiry: 'Hello, I would like to ask about AlBostan Store'
     }
   };
 
@@ -948,6 +1135,15 @@
     window.open(waUrl, '_blank');
   });
 
+  // ===== زر واتساب العائم (استفسار سريع) =====
+  const waFloatBtn = document.getElementById('waFloatBtn');
+  waFloatBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const inquiryMsg = T[currentLang].waInquiry;
+    const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(inquiryMsg)}`;
+    window.open(waUrl, '_blank');
+  });
+
   // ===== البحث والتصفية =====
   const searchInput = document.getElementById('searchInput');
   const filterButtons = document.querySelectorAll('.filter-btn');
@@ -1013,6 +1209,7 @@
   // ===== نافذة تفاصيل المنتج (Modal) =====
   const modalOverlay = document.getElementById('productModal');
   const modalClose = document.getElementById('modalClose');
+  const mImg = document.getElementById('mImg');
   const mEmoji = document.getElementById('mEmoji');
   const mCat = document.getElementById('mCat');
   const mTitle = document.getElementById('mTitle');
@@ -1024,11 +1221,25 @@
 
   function updateModalContent(){
     if(!currentModalProduct) return;
-    mEmoji.textContent = currentModalProduct.emoji;
-    mCat.textContent = currentLang === 'ar' ? currentModalProduct.categoryAr : currentModalProduct.categoryEn;
-    mTitle.textContent = currentLang === 'ar' ? currentModalProduct.nameAr : currentModalProduct.nameEn;
-    mPrice.textContent = `${currentModalProduct.price} ${T[currentLang].currency}`;
-    mDesc.textContent = currentLang === 'ar' ? currentModalProduct.descAr : currentModalProduct.descEn;
+    const data = currentModalProduct;
+    mEmoji.textContent = data.emoji;
+    mCat.textContent = currentLang === 'ar' ? data.categoryAr : data.categoryEn;
+    mTitle.textContent = currentLang === 'ar' ? data.nameAr : data.nameEn;
+    mPrice.textContent = `${data.price} ${T[currentLang].currency}`;
+    mDesc.textContent = currentLang === 'ar' ? data.descAr : data.descEn;
+
+    if(data.img){
+      mEmoji.style.display = 'none';
+      mImg.style.display = 'inline-block';
+      mImg.src = data.img;
+      mImg.onerror = function(){
+        mImg.style.display = 'none';
+        mEmoji.style.display = 'inline-block';
+      };
+    } else {
+      mImg.style.display = 'none';
+      mEmoji.style.display = 'inline-block';
+    }
   }
 
   function openModal(productData){
@@ -1060,6 +1271,13 @@
     }
   });
 
+  // ===== الأسئلة الشائعة (Accordion) =====
+  document.querySelectorAll('.faq-question').forEach(question => {
+    question.addEventListener('click', () => {
+      const item = question.closest('.faq-item');
+      item.classList.toggle('open');
+    });
+  });
 
   // ===== حساب المستخدم =====
   const accountBtn = document.getElementById('accountBtn');
