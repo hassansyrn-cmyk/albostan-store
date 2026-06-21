@@ -1068,17 +1068,25 @@
     showToast(T[currentLang].added);
   }
 
-  // ربط أزرار الإضافة الموجودة في بطاقات المنتجات
-  document.querySelectorAll('.add-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation(); // لمنع فتح النافذة
-      const card = btn.closest('.prod-card');
-      addToCart(card.dataset);
+  // ربط أزرار الإضافة وفتح نافذة التفاصيل لكل بطاقات المنتجات (يعمل مع المنتجات الثابتة وأيضًا منتجات الشيت)
+  function bindProductCardEvents(){
+    document.querySelectorAll('.prod-card .add-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation(); // لمنع فتح النافذة
+        const card = btn.closest('.prod-card');
+        addToCart(card.dataset);
 
-      btn.style.transform = 'scale(1.3) rotate(90deg)';
-      setTimeout(() => btn.style.transform = '', 150);
+        btn.style.transform = 'scale(1.3) rotate(90deg)';
+        setTimeout(() => btn.style.transform = '', 150);
+      });
     });
-  });
+
+    document.querySelectorAll('.prod-card').forEach(card => {
+      card.addEventListener('click', () => {
+        openModal(card.dataset);
+      });
+    });
+  }
 
   function openCart(){
     cartDrawer.classList.add('open');
@@ -1148,12 +1156,12 @@
   const searchInput = document.getElementById('searchInput');
   const filterButtons = document.querySelectorAll('.filter-btn');
   const noResultsMsg = document.getElementById('noResultsMsg');
-  const productCards = document.querySelectorAll('.prod-card');
 
   let currentCategory = 'all';
   let currentSearchQuery = '';
 
   function filterProducts(){
+    const productCards = document.querySelectorAll('.prod-card');
     let visibleCount = 0;
     
     productCards.forEach(card => {
@@ -1252,12 +1260,6 @@
     modalOverlay.classList.remove('open');
     currentModalProduct = null;
   }
-
-  productCards.forEach(card => {
-    card.addEventListener('click', () => {
-      openModal(card.dataset);
-    });
-  });
 
   modalClose.addEventListener('click', closeModal);
   modalOverlay.addEventListener('click', (e) => {
@@ -1364,8 +1366,101 @@
     }
   });
 
+  // ===== ربط المنتجات بـ Google Sheet =====
+  // رابط CSV الناتج عن شيت Google الخاص بمنتجات المتجر
+  const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1kdO5E6o8FW3X2qHQefOa9tlH0Qdnoqzuwx7UvPyyqTU/export?format=csv&gid=0';
+
+  function parseCSV(text){
+    const rows = [];
+    let row = [], field = '', inQuotes = false;
+    for(let i = 0; i < text.length; i++){
+      const char = text[i];
+      if(inQuotes){
+        if(char === '"'){
+          if(text[i + 1] === '"'){ field += '"'; i++; }
+          else { inQuotes = false; }
+        } else {
+          field += char;
+        }
+      } else {
+        if(char === '"'){ inQuotes = true; }
+        else if(char === ','){ row.push(field); field = ''; }
+        else if(char === '\n'){ row.push(field); rows.push(row); row = []; field = ''; }
+        else if(char === '\r'){ /* تجاهل */ }
+        else { field += char; }
+      }
+    }
+    if(field.length > 0 || row.length > 0){ row.push(field); rows.push(row); }
+    return rows;
+  }
+
+  function renderProductsFromSheet(products){
+    const grid = document.getElementById('productGrid');
+    if(!grid) return;
+    grid.innerHTML = '';
+
+    products.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'prod-card';
+      card.dataset.nameAr = p.nameAr || '';
+      card.dataset.nameEn = p.nameEn || '';
+      card.dataset.price = p.price || '0';
+      card.dataset.emoji = p.emoji || '🛒';
+      card.dataset.img = p.img || '';
+      card.dataset.categoryEn = p.categoryEn || '';
+      card.dataset.categoryAr = p.categoryAr || '';
+      card.dataset.descAr = p.descAr || '';
+      card.dataset.descEn = p.descEn || '';
+
+      const priceVal = p.price || '0';
+      card.innerHTML = `
+        <div class="prod-thumb" style="background:#EFE9DD;">
+          <img src="${p.img || ''}" alt="" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <span class="prod-emoji-fallback">${p.emoji || '🛒'}</span>
+        </div>
+        <div class="prod-body">
+          <p class="prod-cat" data-ar="${p.categoryAr || ''}" data-en="${p.categoryEn || ''}">${currentLang === 'ar' ? (p.categoryAr || '') : (p.categoryEn || '')}</p>
+          <h4 data-ar="${p.nameAr || ''}" data-en="${p.nameEn || ''}">${currentLang === 'ar' ? (p.nameAr || '') : (p.nameEn || '')}</h4>
+          <div class="prod-foot">
+            <span class="price" data-ar="${priceVal} د.إ" data-en="${priceVal} AED">${currentLang === 'ar' ? priceVal + ' د.إ' : priceVal + ' AED'}</span>
+            <button class="add-btn" aria-label="أضف للسلة">+</button>
+          </div>
+        </div>`;
+      grid.appendChild(card);
+    });
+
+    bindProductCardEvents();
+    filterProducts();
+  }
+
+  async function loadProductsFromSheet(){
+    try{
+      const res = await fetch(SHEET_CSV_URL);
+      if(!res.ok) return;
+      const text = await res.text();
+      const rows = parseCSV(text).filter(r => r.length > 1 && r.some(c => c.trim() !== ''));
+      if(rows.length < 2) return; // لا توجد بيانات منتجات بعد العنوان
+
+      const headers = rows[0].map(h => h.trim());
+      const products = rows.slice(1).map(r => {
+        const obj = {};
+        headers.forEach((h, idx) => { obj[h] = (r[idx] || '').trim(); });
+        return obj;
+      }).filter(p => p.nameAr || p.nameEn);
+
+      if(products.length > 0){
+        renderProductsFromSheet(products);
+      }
+    } catch(err){
+      console.warn('تعذر تحميل المنتجات من الشيت، سيتم عرض المنتجات الافتراضية', err);
+    }
+  }
+
   // تفعيل السلة عند التحميل
+  bindProductCardEvents();
   renderCart();
+  loadProductsFromSheet();
+
 </script>
 
 </body>
