@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>متجر البستان - AlBostan Store</title>
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
+    <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
+    <link href="[https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap](https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap)" rel="stylesheet">
     
     <style>
-        /* التنسيقات العامة للموقع */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -19,23 +18,19 @@
         }
 
         body {
-            background-color: #fbf8f3; /* اللون العاجي (البيج الناعم) المريح للعين */
+            background-color: #fbf8f3; /* اللون العاجي البيج للموقع */
             color: #1a1a1a;
             overflow-x: hidden;
         }
 
-        /* الهيدر / شريط التنقل العلوي */
+        /* شريط التنقل العلوي */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px 5%;
             background-color: transparent;
-            position: absolute;
             width: 100%;
-            top: 0;
-            right: 0;
-            z-index: 100;
         }
 
         .nav-links {
@@ -49,22 +44,17 @@
             color: #2c3e50;
             font-weight: 700;
             font-size: 14px;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: #2e7d32; /* يتغير للون الأخضر عند تمرير الماوس */
         }
 
         .header-logo img {
             height: 45px;
             width: auto;
-            mix-blend-mode: multiply; /* دمج خلفية اللوغو العلوية */
+            mix-blend-mode: multiply;
         }
 
-        /* قسم الواجهة الرئيسية (Hero Section) */
+        /* الواجهة الرئيسية للموقع */
         .hero-section {
-            padding: 140px 5% 60px 5%;
+            padding: 40px 5% 60px 5%;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -110,8 +100,7 @@
             font-size: 14px;
             font-weight: 700;
             text-decoration: none;
-            transition: all 0.3s ease;
-            cursor: pointer;
+            display: inline-block;
         }
 
         .btn-dark {
@@ -120,62 +109,49 @@
             border: 1px solid #1a1a1a;
         }
 
-        .btn-dark:hover {
-            background-color: #333333;
-            border-color: #333333;
-        }
-
         .btn-outline {
             background-color: transparent;
             color: #1a1a1a;
             border: 1px solid #1a1a1a;
         }
 
-        .btn-outline:hover {
-            background-color: #1a1a1a;
-            color: #ffffff;
-        }
-
-        /* [تعديل أساسي] حاوية اللوغو المدمجة مع الدائرة الخضراء */
+        /* حاوية اللوغو والدائرة الخضراء المدمجة والموسطة بالكامل */
         .hero-logo-wrapper {
             position: relative;
             width: 280px;
             height: 280px;
             margin: 20px auto;
             display: flex;
-            justify-content: center;  /* توسيط اللوغو أفقياً بنسبة 100% */
-            align-items: center;      /* توسيط اللوغو عمودياً بنسبة 100% */
+            justify-content: center;
+            align-items: center;
         }
 
-        /* الدائرة الخضراء المضيئة في الخلفية */
         .hero-green-circle {
             position: absolute;
             width: 100%;
             height: 100%;
-            background: #e8f5e9;      /* نفس درجة اللون الأخضر الهادئ لشعارك */
+            background-color: #e8f5e9; /* نفس لون شعارك الأخضر */
             border-radius: 50%;
-            filter: blur(20px);       /* تأثير التوهج الضبابي الناعم */
+            filter: blur(20px);
             opacity: 0.85;
-            z-index: 1;               /* تبقى بالخلف */
+            z-index: 1;
         }
 
-        /* صورة شعار المتجر فوق الدائرة مباشرة */
         .hero-logo-img {
             position: relative;
-            max-width: 80%;           /* حجم اللوغو ليكون متناسقاً داخل حدود الدائرة */
+            max-width: 80%;
             height: auto;
-            z-index: 2;               /* تظهر فوق الدائرة دائماً */
-            mix-blend-mode: multiply;  /* إخفاء الخلفية البيضاء للشعار لتندمج بالكامل */
+            z-index: 2;
+            mix-blend-mode: multiply;
         }
 
-        /* قسم أقسام المتجر السفلي */
+        /* قسم أقسام المتجر */
         .categories-section {
             background-color: #ffffff;
             padding: 50px 5%;
             border-top-left-radius: 35px;
             border-top-right-radius: 35px;
             text-align: center;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.02);
         }
 
         .section-subtitle {
@@ -214,21 +190,13 @@
             width: 75px;
             height: 75px;
             border-radius: 50%;
-            background-color: #f4efe8; /* لون خلفية الدوائر الصغيرة المطابق للتصميم */
+            background-color: #f4efe8;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 26px;
             margin-bottom: 10px;
             transition: all 0.3s ease;
-            border: 1px solid rgba(0,0,0,0.02);
-        }
-
-        /* تأثير حركي رائع عند تمرير الماوس فوق القسم */
-        .category-item:hover .category-circle {
-            transform: translateY(-5px);
-            background-color: #e8f5e9;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
         }
 
         .category-name {
@@ -236,7 +204,7 @@
             font-weight: 700;
         }
 
-        /* الفوتر / أسفل الموقع */
+        /* أسفل الموقع الفوتر */
         footer {
             background-color: #fbf8f3;
             padding: 35px 5%;
@@ -256,13 +224,110 @@
             color: #8d99ae;
         }
 
-        /* شاشات الكمبيوتر والأجهزة اللوحية العريضة لإعطاء مظهر متوازن ومتجاور */
+        /* التجاوب مع شاشات الكومبيوتر الكبيرة لترتيب العناصر جنباً إلى جنب */
         @media (min-width: 768px) {
             .hero-section {
                 flex-direction: row-reverse;
                 justify-content: space-between;
                 text-align: right;
-                padding: 160px 8% 80px 8%;
+                padding: 60px 8%;
                 max-width: 1200px;
                 margin: 0 auto;
                 gap: 5%;
+            }
+
+            .hero-content {
+                flex: 1;
+                margin-bottom: 0;
+                text-align: right;
+            }
+
+            .hero-title {
+                font-size: 42px;
+            }
+
+            .hero-buttons {
+                justify-content: flex-start;
+            }
+
+            .hero-logo-wrapper {
+                flex: 1;
+                max-width: 380px;
+                height: 380px;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-logo">
+            <img src="108579.png" alt="متجر البستان">
+        </div>
+        <ul class="nav-links">
+            <li><a href="#categories">الأقسام</a></li>
+            <li><a href="#products">المنتجات</a></li>
+            <li><a href="#offers">العروض</a></li>
+            <li><a href="#contact">تواصل معنا</a></li>
+        </ul>
+    </header>
+
+    <section class="hero-section">
+        <div class="hero-logo-wrapper">
+            <div class="hero-green-circle"></div>
+            <img src="108579.png" alt="AlBostan Store Logo" class="hero-logo-img">
+        </div>
+
+        <div class="hero-content">
+            <p class="hero-subtitle">متجرك العائلي المتكامل</p>
+            <h1 class="hero-title">كل ما يحتاجه بيتك،<br>في مكان واحد</h1>
+            <p class="hero-description">
+                من البقالة اليومية إلى الإلكترونيات والأزياء ومستلزمات المنزل – AlBostan Store يجمع لك كل شيء بجودة موثوقة وأسعار تنافسية.
+            </p>
+            <div class="hero-buttons">
+                <a href="#products" class="btn btn-dark">تسوق الآن</a>
+                <a href="#categories" class="btn btn-outline">استعرض الأقسام</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="categories-section" id="categories">
+        <p class="section-subtitle">تصفّح حسب القسم</p>
+        <h2 class="section-title">أقسام المتجر</h2>
+        
+        <div class="categories-grid">
+            <a href="#grocery" class="category-item">
+                <div class="category-circle">🥕</div>
+                <span class="category-name">بقالة</span>
+            </a>
+            <a href="#electronics" class="category-item">
+                <div class="category-circle">📱</div>
+                <span class="category-name">إلكترونيات</span>
+            </a>
+            <a href="#home" class="category-item">
+                <div class="category-circle">🏠</div>
+                <span class="category-name">المنزل والحديقة</span>
+            </a>
+            <a href="#kids" class="category-item">
+                <div class="category-circle">🧸</div>
+                <span class="category-name">أطفال</span>
+            </a>
+            <a href="#fashion" class="category-item">
+                <div class="category-circle">👕</div>
+                <span class="category-name">أزياء</span>
+            </a>
+            <a href="#sports" class="category-item">
+                <div class="category-circle">🏋️‍♂️</div>
+                <span class="category-name">رياضية</span>
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <img src="108579.png" alt="متجر البستان" class="footer-logo-img">
+        <p class="footer-text">جميع الحقوق محفوظة © متجر البستان ٢٠٢٦</p>
+    </footer>
+
+</body>
+</html>
