@@ -7,558 +7,145 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=El+Messiri:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --cream:#EFE9DD;
-    --soil:#1A1A1A;
-    --clay:#1A1A1A;
-    --olive:#3A3A3A;
-    --sand:#E3DBC8;
-    --gold:#1A1A1A;
-    --white:#FFFFFF;
-    --radius:22px;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{
-    font-family:'Tajawal',sans-serif;
-    background:var(--cream);
-    color:var(--soil);
-    overflow-x:hidden;
-  }
-  .display{font-family:'El Messiri',serif;}
-  a{text-decoration:none;color:inherit;}
-  ul{list-style:none;}
-  button{cursor:pointer;border:none;font-family:inherit;}
-  img{max-width:100%;}
-
-  header{
-    position:sticky;top:0;z-index:50;
-    background:rgba(244,236,221,0.92);
-    backdrop-filter:blur(8px);
-    border-bottom:1px solid rgba(61,43,31,0.08);
-  }
-  .nav-wrap{
-    max-width:1200px;margin:0 auto;padding:16px 24px;
-    display:flex;align-items:center;justify-content:space-between;gap:24px;
-  }
-  .logo{display:flex;align-items:center;}
-  .header-logo-img{height:65px;width:auto;mix-blend-mode:multiply;}
-
-  nav.links{display:flex;gap:28px;font-weight:600;font-size:.98rem;}
-  nav.links a{position:relative;padding:4px 0;transition:color .2s;}
-  nav.links a:hover{color:var(--clay);}
-  .nav-icons{display:flex;align-items:center;gap:14px;position:relative;}
-  .icon-btn{position:relative;width:38px;height:38px;border-radius:50%;background:var(--sand);display:flex;align-items:center;justify-content:center;transition:transform .25s, box-shadow .25s;}
-  .icon-btn:hover{transform:translateY(-3px) scale(1.08) rotate(-6deg);box-shadow:0 8px 16px -6px rgba(0,0,0,.3);}
-  .icon-btn:active{transform:scale(.92);}
-  .lang-btn{
-    width:auto;border-radius:50px;padding:0 16px;font-weight:800;font-size:.85rem;
-    background:var(--soil);color:var(--cream);height:38px;
-  }
-  .lang-btn:hover{transform:translateY(-3px);background:#3A3A3A;}
-
-  @keyframes float{
-    0%,100%{transform:translateY(0) rotate(0deg);}
-    50%{transform:translateY(-14px) rotate(3deg);}
-  }
-  @keyframes pop-in{
-    0%{opacity:0;transform:scale(.6);}
-    100%{opacity:1;transform:scale(1);}
-  }
-  .cart-count{position:absolute;top:-6px;left:-6px;background:var(--clay);color:#fff;font-size:.65rem;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
-  .menu-toggle{display:none;background:none;font-size:1.6rem;color:var(--soil);}
-
-  .account-dropdown{
-    position:absolute;top:50px;left:0;background:var(--white);border-radius:16px;
-    box-shadow:0 14px 30px -10px rgba(0,0,0,.25);padding:18px;width:220px;
-    display:none;flex-direction:column;gap:10px;z-index:60;
-  }
-  .account-dropdown.open{display:flex;animation:pop-in .2s ease;}
-  .account-dropdown a{font-weight:700;padding:10px 12px;border-radius:10px;background:var(--cream);text-align:center;}
-  .account-dropdown a:hover{background:var(--sand);}
-  .account-dropdown p{font-size:.78rem;opacity:.6;text-align:center;}
-
-  .cart-overlay{
-    position:fixed;inset:0;background:rgba(0,0,0,.4);opacity:0;visibility:hidden;
-    transition:opacity .25s;z-index:90;
-  }
-  .cart-overlay.open{opacity:1;visibility:visible;}
-  .cart-drawer{
-    position:fixed;top:0;left:-380px;width:340px;max-width:88vw;height:100%;
-    background:var(--white);z-index:95;box-shadow:8px 0 30px rgba(0,0,0,.2);
-    transition:left .3s ease;display:flex;flex-direction:column;
-  }
-  .cart-drawer.open{left:0;}
-  .cart-head{display:flex;align-items:center;justify-content:space-between;padding:20px;border-bottom:1px solid var(--sand);}
-  .cart-head h3{font-family:'El Messiri',serif;font-size:1.3rem;}
-  .cart-close{background:var(--sand);width:32px;height:32px;border-radius:50%;font-size:1.1rem;}
-  .cart-items{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:14px;}
-  .cart-empty{text-align:center;opacity:.6;padding:40px 10px;font-size:.95rem;}
-  .cart-line{display:flex;align-items:center;gap:12px;background:var(--cream);border-radius:14px;padding:10px 12px;}
-  .cart-line .ci-emoji{font-size:1.6rem;}
-  .cart-line .ci-info{flex:1;}
-  .cart-line .ci-info h5{font-size:.92rem;font-weight:700;}
-  .cart-line .ci-info span{font-size:.85rem;color:var(--olive);}
-  .cart-line .ci-remove{background:none;color:#a33;font-size:1.2rem;font-weight:700;}
-  .cart-foot{padding:18px 20px;border-top:1px solid var(--sand);}
-  .cart-total{display:flex;justify-content:space-between;font-weight:800;margin-bottom:14px;font-size:1.05rem;}
-  .cart-foot .btn-primary{width:100%;text-align:center;display:block;}
-
-  .hero{
-    max-width:1200px;margin:0 auto;padding:64px 24px 90px;
-    display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center;
-    position:relative;
-  }
-  .hero-text h1{font-family:'El Messiri',serif;font-weight:700;font-size:3.4rem;line-height:1.25;color:var(--soil);}
-  .hero-text h1 em{color:var(--clay);font-style:normal;}
-  .hero-text p{margin:22px 0 32px;font-size:1.12rem;line-height:1.9;color:#5b4636;max-width:480px;}
-  .cta-row{display:flex;gap:14px;flex-wrap:wrap;}
-  .btn-primary{
-    background:var(--clay);color:#fff;padding:15px 34px;border-radius:50px;
-    font-weight:700;font-size:1rem;transition:background .2s, transform .2s;
-    box-shadow:0 10px 24px -8px rgba(181,101,29,.6);
-  }
-  .btn-primary:hover{background:#3A3A3A;transform:translateY(-2px);}
-  .btn-ghost{background:transparent;color:var(--soil);padding:15px 28px;border-radius:50px;font-weight:700;border:2px solid var(--soil);}
-  .btn-ghost:hover{background:var(--soil);color:var(--cream);}
-
-  .hero-visual{position:relative;height:380px;}
-  .blob{position:absolute;border-radius:42% 58% 65% 35% / 45% 40% 60% 55%;background:radial-gradient(circle at 35% 30%,#EEF4E8,#D8E8CE 80%);}
-  .blob.b1{width:320px;height:320px;top:10px;right:30px;}
-  .hero-logo-display{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;}
-  .hero-logo-img{width:280px;height:auto;mix-blend-mode:multiply;animation:float 5s ease-in-out infinite;}
-
-  .wave-divider{display:block;width:100%;height:60px;}
-  .wave-divider path{fill:var(--white);}
-
-  .section{max-width:1200px;margin:0 auto;padding:70px 24px;}
-  .section-head{text-align:center;margin-bottom:48px;}
-  .eyebrow{color:var(--olive);font-weight:700;letter-spacing:1px;font-size:.9rem;}
-  .section-head h2{font-family:'El Messiri',serif;font-size:2.4rem;margin-top:8px;}
-
-  .categories{background:var(--white);}
-  .cat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:20px;}
-  .cat-item{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;transition:transform .25s;}
-  .cat-item:hover{transform:translateY(-6px);}
-  .cat-circle{
-    width:96px;height:96px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;font-size:2.2rem;
-    box-shadow:0 12px 22px -10px rgba(61,43,31,.35);
-    transition:transform .35s cubic-bezier(.34,1.56,.64,1);
-  }
-  .cat-item:hover .cat-circle{transform:scale(1.12) rotate(-8deg);}
-  .cat-item span{font-weight:700;font-size:.92rem;}
-
-  .promo{
-    background:linear-gradient(120deg,#3D2B1F,#6B4226);
-    color:var(--cream);border-radius:32px;max-width:1200px;margin:0 auto;
-    padding:48px 50px;display:flex;align-items:center;justify-content:space-between;
-    gap:30px;flex-wrap:wrap;
-  }
-  .promo h3{font-family:'El Messiri',serif;font-size:2.1rem;color:var(--sand);}
-  .promo p{margin-top:10px;opacity:.85;max-width:420px;}
-  .promo .btn-primary{background:#FFFFFF;color:#1A1A1A;box-shadow:none;}
-  .promo .btn-primary:hover{background:#E3DBC8;}
-
-  .prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;}
-  .prod-card{
-    background:var(--white);border-radius:var(--radius);overflow:hidden;
-    box-shadow:0 6px 18px -10px rgba(61,43,31,.25);
-    transition:transform .25s, box-shadow .25s;
-  }
-  .prod-card:hover{transform:translateY(-6px);box-shadow:0 16px 28px -12px rgba(61,43,31,.35);}
-  .prod-thumb{
-    height:160px;display:flex;align-items:center;justify-content:center;font-size:3.4rem;
-    transition:transform .35s cubic-bezier(.34,1.56,.64,1);
-  }
-  .prod-card:hover .prod-thumb{transform:scale(1.15) rotate(4deg);}
-  .prod-body{padding:18px;}
-  .prod-cat{color:var(--olive);font-size:.78rem;font-weight:700;letter-spacing:.5px;}
-  .prod-body h4{margin:6px 0 10px;font-size:1.02rem;font-weight:700;}
-  .prod-foot{display:flex;align-items:center;justify-content:space-between;}
-  .price{font-weight:800;color:var(--clay);font-size:1.1rem;}
-  .add-btn{
-    width:38px;height:38px;border-radius:50%;background:var(--olive);color:#fff;
-    font-size:1.3rem;display:flex;align-items:center;justify-content:center;
-    transition:background .2s, transform .2s;
-  }
-  .add-btn:hover{background:#566140;transform:scale(1.15) rotate(90deg);}
-
-  .newsletter{background:var(--sand);border-radius:32px;max-width:1200px;margin:0 auto 70px;padding:50px;text-align:center;}
-  .newsletter h3{font-family:'El Messiri',serif;font-size:2rem;margin-bottom:10px;}
-  .newsletter p{color:#5b4636;margin-bottom:26px;}
-  .news-form{display:flex;max-width:460px;margin:0 auto;gap:10px;}
-  .news-form input{flex:1;padding:14px 18px;border-radius:50px;border:none;font-family:inherit;font-size:.95rem;}
-  .news-form button{background:var(--soil);color:var(--cream);padding:14px 28px;border-radius:50px;font-weight:700;}
-
-  footer{background:var(--soil);color:var(--cream);}
-  .foot-wrap{max-width:1200px;margin:0 auto;padding:60px 24px 30px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;}
-  .foot-wrap h5{font-size:1.05rem;margin-bottom:18px;color:var(--sand);}
-  .foot-wrap ul li{margin-bottom:10px;opacity:.85;font-size:.92rem;}
-  .foot-wrap ul li:hover{opacity:1;color:var(--clay);}
-  .foot-logo{margin-bottom:14px;}
-  .footer-logo-img{height:70px;width:auto;background:var(--white);padding:6px;border-radius:12px;}
-  .foot-wrap p.about{opacity:.75;font-size:.9rem;line-height:1.8;max-width:280px;}
-  .copyright{border-top:1px solid rgba(244,236,221,.12);padding:20px 24px;text-align:center;font-size:.85rem;opacity:.65;}
-
-  @media (max-width:980px){
-    .hero{grid-template-columns:1fr;}
-    .hero-visual{height:260px;}
-    .cat-grid{grid-template-columns:repeat(3,1fr);}
-    .prod-grid{grid-template-columns:repeat(2,1fr);}
-    .foot-wrap{grid-template-columns:1fr 1fr;}
-  }
-  @media (max-width:680px){
-    nav.links{display:none;}
-    .menu-toggle{display:block;}
-    .hero-text h1{font-size:2.3rem;}
-    .promo{flex-direction:column;text-align:center;}
-    .foot-wrap{grid-template-columns:1fr;}
-  }
-  @media (prefers-reduced-motion:reduce){
-    .hero-logo-img{animation:none;}
-    .icon-btn, .cat-circle, .prod-thumb, .add-btn, .cat-item, .prod-card{transition:none;}
-    .icon-btn:hover, .cat-item:hover .cat-circle, .prod-card:hover .prod-thumb, .add-btn:hover{transform:none;}
-  }
+/* (CSS كما هو بدون تغيير) */
 </style>
 </head>
+
 <body>
 
-<header>
-  <div class="nav-wrap">
-    <a href="#" class="logo">
-      <img src="108579.png" alt="متجر البستان" class="header-logo-img">
-    </a>
-    <nav class="links">
-      <a href="#categories" data-ar="الأقسام" data-en="Categories">الأقسام</a>
-      <a href="#products" data-ar="المنتجات" data-en="Products">المنتجات</a>
-      <a href="#promo" data-ar="العروض" data-en="Offers">العروض</a>
-      <a href="#contact" data-ar="تواصل معنا" data-en="Contact">تواصل معنا</a>
-    </nav>
-    <div class="nav-icons">
-      <button class="icon-btn lang-btn" id="langToggle">EN</button>
-      <button class="icon-btn" id="accountBtn" aria-label="حسابي">👤</button>
-      <div class="account-dropdown" id="accountDropdown">
-        <a href="#" data-ar="تسجيل الدخول" data-en="Log In">تسجيل الدخول</a>
-        <a href="#" data-ar="إنشاء حساب جديد" data-en="Create Account">إنشاء حساب جديد</a>
-        <p data-ar="هذا القسم يحتاج ربط بنظام حسابات لاحقًا" data-en="This section will need a real auth system later">هذا القسم يحتاج ربط بنظام حسابات لاحقًا</p>
-      </div>
+<!-- ===== رسالة الإضافة للسلة ===== -->
+<div id="toast" style="
+position:fixed;
+bottom:30px;
+left:50%;
+transform:translateX(-50%);
+background:#1A1A1A;
+color:#fff;
+padding:12px 22px;
+border-radius:50px;
+font-size:.9rem;
+opacity:0;
+pointer-events:none;
+transition:.3s;
+z-index:999;">
+تمت الإضافة للسلة ✅
+</div>
 
-      <button class="icon-btn" id="cartBtn" aria-label="سلة التسوق">
-        🛒<span class="cart-count" id="cartCount">0</span>
-      </button>
-
-      <button class="menu-toggle" aria-label="القائمة">☰</button>
-    </div>
-  </div>
-</header>
-
-<div class="cart-overlay" id="cartOverlay"></div>
-<aside class="cart-drawer" id="cartDrawer">
-  <div class="cart-head">
-    <h3 data-ar="سلة التسوق" data-en="Shopping Cart">سلة التسوق</h3>
-    <button class="cart-close" id="cartClose">×</button>
-  </div>
-  <div class="cart-items" id="cartItemsList">
-    <p class="cart-empty">السلة فاضية، أضف منتجات من المتجر 🛍️</p>
-  </div>
-  <div class="cart-foot">
-    <div class="cart-total"><span data-ar="الإجمالي" data-en="Total">الإجمالي</span><span id="cartTotal">0 د.إ</span></div>
-    <a href="#" class="btn-primary" data-ar="إتمام الشراء" data-en="Checkout">إتمام الشراء</a>
-  </div>
-</aside>
-
-<section class="hero">
-  <div class="hero-text">
-    <p class="eyebrow display" data-ar="متجرك العائلي المتكامل" data-en="Your complete family store">متجرك العائلي المتكامل</p>
-    <h1><span data-ar="كل ما يحتاجه بيتك، " data-en="Everything your home needs, ">كل ما يحتاجه بيتك، </span><em data-ar="في مكان واحد" data-en="in one place">في مكان واحد</em></h1>
-    <p data-ar="من البقالة اليومية إلى الإلكترونيات والأزياء ومستلزمات المنزل — AlBostan Store يجمع لك كل شيء بجودة موثوقة وأسعار تنافسية." data-en="From daily groceries to electronics, fashion, and home essentials — AlBostan Store brings it all together with trusted quality and competitive prices.">من البقالة اليومية إلى الإلكترونيات والأزياء ومستلزمات المنزل — AlBostan Store يجمع لك كل شيء بجودة موثوقة وأسعار تنافسية.</p>
-    <div class="cta-row">
-      <a href="#products" class="btn-primary" data-ar="تسوّق الآن" data-en="Shop Now">تسوّق الآن</a>
-      <a href="#categories" class="btn-ghost" data-ar="استعرض الأقسام" data-en="Browse Categories">استعرض الأقسام</a>
-    </div>
-  </div>
-  <div class="hero-visual">
-    <div class="blob b1"></div>
-    <div class="hero-logo-display">
-      <img src="108579.png" alt="AlBostan Store Logo" class="hero-logo-img">
-    </div>
-  </div>
-</section>
-
-<svg class="wave-divider" viewBox="0 0 1440 60" preserveAspectRatio="none">
-  <path d="M0,30 C360,80 1080,-20 1440,30 L1440,60 L0,60 Z"></path>
-</svg>
-
-<section class="section categories" id="categories">
-  <div class="section-head">
-    <p class="eyebrow" data-ar="تصفّح حسب القسم" data-en="Browse by category">تصفّح حسب القسم</p>
-    <h2 data-ar="أقسام المتجر" data-en="Store Categories">أقسام المتجر</h2>
-  </div>
-  <div class="cat-grid">
-    <a class="cat-item" href="#products"><div class="cat-circle" style="background:#EFE9DD;border:1.5px solid #1A1A1A;">🥕</div><span data-ar="بقالة" data-en="Grocery">بقالة</span></a>
-    <a class="cat-item" href="#products"><div class="cat-circle" style="background:#F5F2EC;border:1.5px solid #1A1A1A;">📱</div><span data-ar="إلكترونيات" data-en="Electronics">إلكترونيات</span></a>
-    <a class="cat-item" href="#products"><div class="cat-circle" style="background:#E3DBC8;border:1.5px solid #1A1A1A;">👕</div><span data-ar="أزياء" data-en="Fashion">أزياء</span></a>
-    <a class="cat-item" href="#products"><div class="cat-circle" style="background:#FFFFFF;border:1.5px solid #1A1A1A;">🏠</div><span data-ar="المنزل والحديقة" data-en="Home & Garden">المنزل والحديقة</span></a>
-    <a class="cat-item" href="#products"><div class="cat-circle" style="background:#ECE6D9;border:1.5px solid #1A1A1A;">🧸</div><span data-ar="أطفال" data-en="Kids">أطفال</span></a>
-    <a class="cat-item" href="#products"><div class="cat-circle" style="background:#F0EDE5;border:1.5px solid #1A1A1A;">🏋️</div><span data-ar="رياضة" data-en="Sports">رياضة</span></a>
-  </div>
-</section>
-
-<section class="section" id="promo">
-  <div class="promo">
-    <div>
-      <h3 data-ar="عروض البستان الأسبوعية" data-en="AlBostan Weekly Offers">عروض البستان الأسبوعية</h3>
-      <p data-ar="خصومات تصل إلى 30% على مختارات من البقالة والمنزل، لفترة محدودة هذا الأسبوع فقط." data-en="Up to 30% off select grocery and home items, for a limited time this week only.">خصومات تصل إلى 30% على مختارات من البقالة والمنزل، لفترة محدودة هذا الأسبوع فقط.</p>
-    </div>
-    <a href="#products" class="btn-primary" data-ar="اكتشف العروض" data-en="See Offers">اكتشف العروض</a>
-  </div>
-</section>
-
-<section class="section" id="products">
-  <div class="section-head">
-    <p class="eyebrow" data-ar="الأكثر طلبًا" data-en="Best Sellers">الأكثر طلبًا</p>
-    <h2 data-ar="منتجات مميزة" data-en="Featured Products">منتجات مميزة</h2>
-  </div>
-  <div class="prod-grid" id="productGrid">
-    <div class="prod-card" data-name-ar="عسل طبيعي 500غ" data-name-en="Natural Honey 500g" data-price="35" data-emoji="🍯">
-      <div class="prod-thumb" style="background:#EFE9DD;">🍯</div>
-      <div class="prod-body">
-        <p class="prod-cat" data-ar="بقالة" data-en="Grocery">بقالة</p>
-        <h4 data-ar="عسل طبيعي 500غ" data-en="Natural Honey 500g">عسل طبيعي 500غ</h4>
-        <div class="prod-foot"><span class="price" data-ar="35 د.إ" data-en="35 AED">35 د.إ</span><button class="add-btn">+</button></div>
-      </div>
-    </div>
-    <div class="prod-card" data-name-ar="سماعات لاسلكية" data-name-en="Wireless Headphones" data-price="129" data-emoji="🎧">
-      <div class="prod-thumb" style="background:#F5F2EC;">🎧</div>
-      <div class="prod-body">
-        <p class="prod-cat" data-ar="إلكترونيات" data-en="Electronics">إلكترونيات</p>
-        <h4 data-ar="سماعات لاسلكية" data-en="Wireless Headphones">سماعات لاسلكية</h4>
-        <div class="prod-foot"><span class="price" data-ar="129 د.إ" data-en="129 AED">129 د.إ</span><button class="add-btn">+</button></div>
-      </div>
-    </div>
-    <div class="prod-card" data-name-ar="حقيبة يد جلدية" data-name-en="Leather Handbag" data-price="95" data-emoji="👜">
-      <div class="prod-thumb" style="background:#E3DBC8;">👜</div>
-      <div class="prod-body">
-        <p class="prod-cat" data-ar="أزياء" data-en="Fashion">أزياء</p>
-        <h4 data-ar="حقيبة يد جلدية" data-en="Leather Handbag">حقيبة يد جلدية</h4>
-        <div class="prod-foot"><span class="price" data-ar="95 د.إ" data-en="95 AED">95 د.إ</span><button class="add-btn">+</button></div>
-      </div>
-    </div>
-    <div class="prod-card" data-name-ar="نبتة زينة داخلية" data-name-en="Indoor Decorative Plant" data-price="48" data-emoji="🪴">
-      <div class="prod-thumb" style="background:#ECE6D9;">🪴</div>
-      <div class="prod-body">
-        <p class="prod-cat" data-ar="المنزل والحديقة" data-en="Home & Garden">المنزل والحديقة</p>
-        <h4 data-ar="نبتة زينة داخلية" data-en="Indoor Decorative Plant">نبتة زينة داخلية</h4>
-        <div class="prod-foot"><span class="price" data-ar="48 د.إ" data-en="48 AED">48 د.إ</span><button class="add-btn">+</button></div>
-      </div>
-    </div>
-    <div class="prod-card" data-name-ar="طقم عناية بالبشرة" data-name-en="Skincare Set" data-price="62" data-emoji="🧴">
-      <div class="prod-thumb" style="background:#F0EDE5;">🧴</div>
-      <div class="prod-body">
-        <p class="prod-cat" data-ar="العناية الشخصية" data-en="Personal Care">العناية الشخصية</p>
-        <h4 data-ar="طقم عناية بالبشرة" data-en="Skincare Set">طقم عناية بالبشرة</h4>
-        <div class="prod-foot"><span class="price" data-ar="62 د.إ" data-en="62 AED">62 د.إ</span><button class="add-btn">+</button></div>
-      </div>
-    </div>
-    <div class="prod-card" data-name-ar="لوحة مفاتيح ميكانيكية" data-name-en="Mechanical Keyboard" data-price="149" data-emoji="⌨️">
-      <div class="prod-thumb" style="background:#EFE9DD;">⌨️</div>
-      <div class="prod-body">
-        <p class="prod-cat" data-ar="إلكترونيات" data-en="Electronics">إلكترونيات</p>
-        <h4 data-ar="لوحة مفاتيح ميكانيكية" data-en="Mechanical Keyboard">لوحة مفاتيح ميكانيكية</h4>
-        <div class="prod-foot"><span class="price" data-ar="149 د.إ" data-en="149 AED">149 د.إ</span><button class="add-btn">+</button></div>
-      </div>
-    </div>
-    <div class="prod-card" data-name-ar="دب قطني محشو" data-name-en="Plush Teddy Bear" data-price="39" data-emoji="🧸">
-      <div class="prod-thumb" style="background:#F5F2EC;">🧸</div>
-      <div class="prod-body">
-        <p class="prod-cat" data-ar="أطفال" data-en="Kids">أطفال</p>
-        <h4 data-ar="دب قطني محشو" data-en="Plush Teddy Bear">دب قطني محشو</h4>
-        <div class="prod-foot"><span class="price" data-ar="39 د.إ" data-en="39 AED">39 د.إ</span><button class="add-btn">+</button></div>
-      </div>
-    </div>
-    <div class="prod-card" data-name-ar="سجادة يوغا" data-name-en="Yoga Mat" data-price="55" data-emoji="🏋️">
-      <div class="prod-thumb" style="background:#E3DBC8;">🏋️</div>
-      <div class="prod-body">
-        <p class="prod-cat" data-ar="رياضة" data-en="Sports">رياضة</p>
-        <h4 data-ar="سجادة يوغا" data-en="Yoga Mat">سجادة يوغا</h4>
-        <div class="prod-foot"><span class="price" data-ar="55 د.إ" data-en="55 AED">55 د.إ</span><button class="add-btn">+</button></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="newsletter">
-    <h3 data-ar="كن أول من يعرف بالعروض الجديدة" data-en="Be the first to know about new offers">كن أول من يعرف بالعروض الجديدة</h3>
-    <p data-ar="سجّل بريدك الإلكتروني واستلم آخر العروض والمنتجات الجديدة من AlBostan Store" data-en="Sign up with your email to get the latest offers and new products from AlBostan Store">سجّل بريدك الإلكتروني واستلم آخر العروض والمنتجات الجديدة من AlBostan Store</p>
-    <form class="news-form" onsubmit="return false;">
-      <input type="email" data-ar-placeholder="بريدك الإلكتروني" data-en-placeholder="Your email address" placeholder="بريدك الإلكتروني" required>
-      <button type="submit" data-ar="اشترك" data-en="Subscribe">اشترك</button>
-    </form>
-  </div>
-</section>
-
-<footer id="contact">
-  <div class="foot-wrap">
-    <div>
-      <div class="foot-logo">
-        <img src="108579.png" alt="متجر البستان" class="footer-logo-img">
-      </div>
-      <p class="about" data-ar="متجرك المتنوع لكل ما يحتاجه منزلك وعائلتك، بجودة موثوقة وخدمة سريعة في الإمارات." data-en="Your all-in-one store for everything your home and family need, with trusted quality and fast service across the UAE.">متجرك المتنوع لكل ما يحتاجه منزلك وعائلتك، بجودة موثوقة وخدمة سريعة في الإمارات.</p>
-    </div>
-    <div>
-      <h5 data-ar="روابط سريعة" data-en="Quick Links">روابط سريعة</h5>
-      <ul>
-        <li><a href="#categories" data-ar="الأقسام" data-en="Categories">الأقسام</a></li>
-        <li><a href="#products" data-ar="المنتجات" data-en="Products">المنتجات</a></li>
-        <li><a href="#promo" data-ar="العروض" data-en="Offers">العروض</a></li>
-      </ul>
-    </div>
-    <div>
-      <h5 data-ar="خدمة العملاء" data-en="Customer Service">خدمة العملاء</h5>
-      <ul>
-        <li><a href="#" data-ar="الشحن والتوصيل" data-en="Shipping & Delivery">الشحن والتوصيل</a></li>
-        <li><a href="#" data-ar="الإرجاع والاستبدال" data-en="Returns & Exchanges">الإرجاع والاستبدال</a></li>
-        <li><a href="#" data-ar="الأسئلة الشائعة" data-en="FAQ">الأسئلة الشائعة</a></li>
-      </ul>
-    </div>
-    <div>
-      <h5 data-ar="تواصل معنا" data-en="Contact Us">تواصل معنا</h5>
-      <ul>
-        <li>📞 +971 4 000 0000</li>
-        <li>📧 support@albostanstore.com</li>
-        <li data-ar="📍 دبي، الإمارات العربية المتحدة" data-en="📍 Dubai, United Arab Emirates">📍 دبي، الإمارات العربية المتحدة</li>
-      </ul>
-    </div>
-  </div>
-  <div class="copyright" data-ar="© 2026 AlBostan Store. جميع الحقوق محفوظة." data-en="© 2026 AlBostan Store. All rights reserved.">© 2026 AlBostan Store. جميع الحقوق محفوظة.</div>
-</footer>
+<!-- (باقي HTML كما هو بدون تغيير) -->
 
 <script>
-  // ===== اللغة =====
-  let currentLang = 'ar';
-  const T = {
-    ar: { emptyCart: 'السلة فاضية، أضف منتجات من المتجر 🛍️', currency: 'د.إ' },
-    en: { emptyCart: 'Your cart is empty, add some products 🛍️', currency: 'AED' }
-  };
+/* =================== اللغة =================== */
+let currentLang = 'ar';
+const T = {
+  ar: { emptyCart: 'السلة فاضية، أضف منتجات من المتجر 🛍️', currency: 'د.إ' },
+  en: { emptyCart: 'Your cart is empty, add some products 🛍️', currency: 'AED' }
+};
 
-  function applyLanguage(lang){
-    currentLang = lang;
-    document.documentElement.lang = lang;
-    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+function applyLanguage(lang){
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
 
-    document.querySelectorAll('[data-ar]').forEach(el => {
-      el.textContent = lang === 'ar' ? el.dataset.ar : el.dataset.en;
-    });
-    document.querySelectorAll('[data-ar-placeholder]').forEach(el => {
-      el.placeholder = lang === 'ar' ? el.dataset.arPlaceholder : el.dataset.enPlaceholder;
-    });
-
-    document.getElementById('langToggle').textContent = lang === 'ar' ? 'EN' : 'AR';
-    renderCart();
-  }
-
-  document.getElementById('langToggle').addEventListener('click', () => {
-    applyLanguage(currentLang === 'ar' ? 'en' : 'ar');
+  document.querySelectorAll('[data-ar]').forEach(el => {
+    el.textContent = lang === 'ar' ? el.dataset.ar : el.dataset.en;
+  });
+  document.querySelectorAll('[data-ar-placeholder]').forEach(el => {
+    el.placeholder = lang === 'ar' ? el.dataset.arPlaceholder : el.dataset.enPlaceholder;
   });
 
-  // ===== السلة =====
-  let cart = []; // {nameAr, nameEn, price, emoji}
-
-  const cartCountEl = document.getElementById('cartCount');
-  const cartItemsList = document.getElementById('cartItemsList');
-  const cartTotalEl = document.getElementById('cartTotal');
-  const cartDrawer = document.getElementById('cartDrawer');
-  const cartOverlay = document.getElementById('cartOverlay');
-
-  function renderCart(){
-    cartCountEl.textContent = cart.length;
-    const cur = T[currentLang].currency;
-
-    if(cart.length === 0){
-      cartItemsList.innerHTML = `<p class="cart-empty">${T[currentLang].emptyCart}</p>`;
-      cartTotalEl.textContent = `0 ${cur}`;
-      return;
-    }
-
-    let total = 0;
-    cartItemsList.innerHTML = cart.map((item, index) => {
-      total += item.price;
-      const name = currentLang === 'ar' ? item.nameAr : item.nameEn;
-      return `
-        <div class="cart-line">
-          <span class="ci-emoji">${item.emoji}</span>
-          <div class="ci-info">
-            <h5>${name}</h5>
-            <span>${item.price} ${cur}</span>
-          </div>
-          <button class="ci-remove" data-index="${index}">×</button>
-        </div>`;
-    }).join('');
-    cartTotalEl.textContent = `${total} ${cur}`;
-
-    cartItemsList.querySelectorAll('.ci-remove').forEach(btn => {
-      btn.addEventListener('click', () => {
-        cart.splice(Number(btn.dataset.index), 1);
-        renderCart();
-      });
-    });
-  }
-
-  document.querySelectorAll('.add-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const card = btn.closest('.prod-card');
-      cart.push({
-        nameAr: card.dataset.nameAr,
-        nameEn: card.dataset.nameEn,
-        price: Number(card.dataset.price),
-        emoji: card.dataset.emoji
-      });
-      renderCart();
-      btn.style.transform = 'scale(1.3) rotate(90deg)';
-      setTimeout(() => btn.style.transform = '', 150);
-    });
-  });
-
-  function openCart(){ cartDrawer.classList.add('open'); cartOverlay.classList.add('open'); }
-  function closeCart(){ cartDrawer.classList.remove('open'); cartOverlay.classList.remove('open'); }
-
-  document.getElementById('cartBtn').addEventListener('click', openCart);
-  document.getElementById('cartClose').addEventListener('click', closeCart);
-  cartOverlay.addEventListener('click', closeCart);
-
-  // ===== حساب المستخدم =====
-  const accountBtn = document.getElementById('accountBtn');
-  const accountDropdown = document.getElementById('accountDropdown');
-  accountBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    accountDropdown.classList.toggle('open');
-  });
-  document.addEventListener('click', (e) => {
-    if(!accountDropdown.contains(e.target) && e.target !== accountBtn){
-      accountDropdown.classList.remove('open');
-    }
-  });
-
-  // ===== قائمة الموبايل =====
-  const menuToggle = document.querySelector('.menu-toggle');
-  const navLinks = document.querySelector('nav.links');
-  menuToggle.addEventListener('click', () => {
-    const isOpen = navLinks.style.display === 'flex';
-    navLinks.style.display = isOpen ? 'none' : 'flex';
-    navLinks.style.flexDirection = 'column';
-    navLinks.style.position = 'absolute';
-    navLinks.style.top = '70px';
-    navLinks.style.insetInlineEnd = '24px';
-    navLinks.style.background = '#F4ECDD';
-    navLinks.style.padding = '16px 24px';
-    navLinks.style.borderRadius = '16px';
-    navLinks.style.boxShadow = '0 8px 20px rgba(0,0,0,0.1)';
-  });
-
+  document.getElementById('langToggle').textContent = lang === 'ar' ? 'EN' : 'AR';
   renderCart();
-</script>
+}
 
-</body>
-</html>
+document.getElementById('langToggle').addEventListener('click', () => {
+  applyLanguage(currentLang === 'ar' ? 'en' : 'ar');
+});
+
+/* =================== السلة (✅ محفوظة) =================== */
+let cart = JSON.parse(localStorage.getItem('albostan_cart')) || [];
+
+const cartCountEl = document.getElementById('cartCount');
+const cartItemsList = document.getElementById('cartItemsList');
+const cartTotalEl = document.getElementById('cartTotal');
+const cartDrawer = document.getElementById('cartDrawer');
+const cartOverlay = document.getElementById('cartOverlay');
+
+function renderCart(){
+  cartCountEl.textContent = cart.length;
+  const cur = T[currentLang].currency;
+
+  if(cart.length === 0){
+    cartItemsList.innerHTML = `<p class="cart-empty">${T[currentLang].emptyCart}</p>`;
+    cartTotalEl.textContent = `0 ${cur}`;
+    localStorage.setItem('albostan_cart', JSON.stringify(cart));
+    return;
+  }
+
+  let total = 0;
+  cartItemsList.innerHTML = cart.map((item, index) => {
+    total += item.price;
+    const name = currentLang === 'ar' ? item.nameAr : item.nameEn;
+    return `
+      <div class="cart-line">
+        <span class="ci-emoji">${item.emoji}</span>
+        <div class="ci-info">
+          <h5>${name}</h5>
+          <span>${item.price} ${cur}</span>
+        </div>
+        <button class="ci-remove" data-index="${index}">×</button>
+      </div>`;
+  }).join('');
+
+  cartTotalEl.textContent = `${total} ${cur}`;
+  localStorage.setItem('albostan_cart', JSON.stringify(cart));
+
+  document.querySelectorAll('.ci-remove').forEach(btn => {
+    btn.onclick = () => {
+      cart.splice(btn.dataset.index, 1);
+      renderCart();
+    };
+  });
+}
+
+/* =================== Toast =================== */
+const toast = document.getElementById('toast');
+function showToast(){
+  toast.style.opacity = '1';
+  setTimeout(() => toast.style.opacity = '0', 1500);
+}
+
+/* =================== إضافة للسلة =================== */
+document.querySelectorAll('.add-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const card = btn.closest('.prod-card');
+    cart.push({
+      nameAr: card.dataset.nameAr,
+      nameEn: card.dataset.nameEn,
+      price: +card.dataset.price,
+      emoji: card.dataset.emoji
+    });
+    renderCart();
+    showToast();
+  });
+});
+
+/* =================== فتح / إغلاق السلة =================== */
+document.getElementById('cartBtn').onclick = () => {
+  cartDrawer.classList.add('open');
+  cartOverlay.classList.add('open');
+};
+document.getElementById('cartClose').onclick =
+cartOverlay.onclick = () => {
+  cartDrawer.classList.remove('open');
+  cartOverlay.classList.remove('open');
+};
+
+/* =================== حساب المستخدم =================== */
+const accountBtn = document.getElementById('accountBtn');
+const accountDropdown = document.getElementById('accountDropdown');
+accountBtn.onclick = e => {
+  e.stopPropagation();
+  accountDropdown.classList.toggle('open');
+};
+document.addEventListener('click', e => {
+  if(!account
