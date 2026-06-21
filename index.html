@@ -336,7 +336,7 @@
   </div>
   <div class="cart-foot">
     <div class="cart-total"><span data-ar="الإجمالي" data-en="Total">الإجمالي</span><span id="cartTotal">0 د.إ</span></div>
-    <a href="#" class="btn-primary">إتمام الشراء</a>
+    <a href="#" class="btn-primary" id="checkoutBtn" data-ar="إتمام الشراء" data-en="Checkout">إتمام الشراء</a>
   </div>
 </aside>
 
@@ -516,12 +516,14 @@
     ar: {
       emptyCart: 'السلة فاضية، أضف منتجات من المتجر 🛍️',
       currency: 'د.إ',
-      added: 'تمت الإضافة للسلة ✅'
+      added: 'تمت الإضافة للسلة ✅',
+      emptyCartCheckout: 'السلة فارغة، أضف منتجات أولًا 🛍️'
     },
     en: {
       emptyCart: 'Your cart is empty, add some products 🛍️',
       currency: 'AED',
-      added: 'Added to cart ✅'
+      added: 'Added to cart ✅',
+      emptyCartCheckout: 'Your cart is empty, please add products first 🛍️'
     }
   };
 
@@ -640,6 +642,45 @@
   document.getElementById('cartBtn').addEventListener('click', openCart);
   document.getElementById('cartClose').addEventListener('click', closeCart);
   cartOverlay.addEventListener('click', closeCart);
+
+  // ===== الواتساب وإتمام الشراء =====
+  const checkoutBtn = document.getElementById('checkoutBtn');
+  const whatsappNumber = '971501554132';
+
+  checkoutBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    
+    if(cart.length === 0){
+      showToast(T[currentLang].emptyCartCheckout);
+      return;
+    }
+
+    let message = '';
+    let total = 0;
+
+    if(currentLang === 'ar'){
+      message += 'مرحبًا، أريد إتمام طلب من متجر البستان:\n\n';
+      message += 'المنتجات:\n';
+      cart.forEach((item, index) => {
+        message += `${index + 1}. ${item.nameAr} - ${item.price} ${T['ar'].currency}\n`;
+        total += item.price;
+      });
+      message += `\nالإجمالي: ${total} ${T['ar'].currency}\n\n`;
+      message += 'الاسم:\nالعنوان:\nملاحظات:';
+    } else {
+      message += 'Hello, I would like to place an order from AlBostan Store:\n\n';
+      message += 'Products:\n';
+      cart.forEach((item, index) => {
+        message += `${index + 1}. ${item.nameEn} - ${item.price} ${T['en'].currency}\n`;
+        total += item.price;
+      });
+      message += `\nTotal: ${total} ${T['en'].currency}\n\n`;
+      message += 'Name:\nAddress:\nNotes:';
+    }
+
+    const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    window.open(waUrl, '_blank');
+  });
 
   // ===== حساب المستخدم =====
   const accountBtn = document.getElementById('accountBtn');
