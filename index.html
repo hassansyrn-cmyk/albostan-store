@@ -1,437 +1,361 @@
-Skip to content
-hassansyrn-cmyk
-albostan-store
-Repository navigation
-Code
-Issues
-Pull requests
-Actions
-Projects
-Wiki
-Security and quality
-Insights
-Settings
-Commit ec7ff43
-hassansyrn-cmyk
-hassansyrn-cmyk
-authored
-3 hours ago
-·
-·
-Verified
-Update index.html
-main
-1 parent 
-9d81de0
- commit 
-ec7ff43
-1 file changed
-
-+124
--86
-Lines changed: 124 additions & 86 deletions
-File tree
-Filter files…
-index.html
-Search within code
- 
-‎index.html‎
-+124
--86
-Lines changed: 124 additions & 86 deletions
-Original file line number	Diff line number	Diff line change
-@@ -1,4 +1,3 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-@@ -48,10 +47,15 @@
-  nav.links{display:flex;gap:28px;font-weight:600;font-size:.98rem;}
-  nav.links a{position:relative;padding:4px 0;transition:color .2s;}
-  nav.links a:hover{color:var(--clay);}
-  .nav-icons{display:flex;align-items:center;gap:18px;position:relative;}
-  .nav-icons{display:flex;align-items:center;gap:14px;position:relative;}
-  .icon-btn{position:relative;width:38px;height:38px;border-radius:50%;background:var(--sand);display:flex;align-items:center;justify-content:center;transition:transform .25s, box-shadow .25s;}
-  .icon-btn:hover{transform:translateY(-3px) scale(1.08) rotate(-6deg);box-shadow:0 8px 16px -6px rgba(0,0,0,.3);}
-  .icon-btn:active{transform:scale(.92);}
-  .lang-btn{
-    width:auto;border-radius:50px;padding:0 16px;font-weight:800;font-size:.85rem;
-    background:var(--soil);color:var(--cream);height:38px;
-  }
-  .lang-btn:hover{transform:translateY(-3px);background:#3A3A3A;}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر البستان - AlBostan Store</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
 
-  @keyframes float{
-    0%,100%{transform:translateY(0) rotate(0deg);}
-@@ -226,17 +230,18 @@
-      <img src="108579.png" alt="متجر البستان" class="header-logo-img">
-    </a>
-    <nav class="links">
-      <a href="#categories">الأقسام</a>
-      <a href="#products">المنتجات</a>
-      <a href="#promo">العروض</a>
-      <a href="#contact">تواصل معنا</a>
-      <a href="#categories" data-ar="الأقسام" data-en="Categories">الأقسام</a>
-      <a href="#products" data-ar="المنتجات" data-en="Products">المنتجات</a>
-      <a href="#promo" data-ar="العروض" data-en="Offers">العروض</a>
-      <a href="#contact" data-ar="تواصل معنا" data-en="Contact">تواصل معنا</a>
-    </nav>
-    <div class="nav-icons">
-      <button class="icon-btn lang-btn" id="langToggle">EN</button>
-      <button class="icon-btn" id="accountBtn" aria-label="حسابي">👤</button>
-      <div class="account-dropdown" id="accountDropdown">
-        <a href="#">تسجيل الدخول</a>
-        <a href="#">إنشاء حساب جديد</a>
-        <p>هذا القسم يحتاج ربط بنظام حسابات لاحقًا</p>
-        <a href="#" data-ar="تسجيل الدخول" data-en="Log In">تسجيل الدخول</a>
-        <a href="#" data-ar="إنشاء حساب جديد" data-en="Create Account">إنشاء حساب جديد</a>
-        <p data-ar="هذا القسم يحتاج ربط بنظام حسابات لاحقًا" data-en="This section will need a real auth system later">هذا القسم يحتاج ربط بنظام حسابات لاحقًا</p>
-      </div>
+        body {
+            background-color: #fbf8f3; /* اللون العاجي البيج للموقع */
+            color: #1a1a1a;
+            overflow-x: hidden;
+        }
 
-      <button class="icon-btn" id="cartBtn" aria-label="سلة التسوق">
-@@ -251,26 +256,26 @@
-<div class="cart-overlay" id="cartOverlay"></div>
-<aside class="cart-drawer" id="cartDrawer">
-  <div class="cart-head">
-    <h3>سلة التسوق</h3>
-    <h3 data-ar="سلة التسوق" data-en="Shopping Cart">سلة التسوق</h3>
-    <button class="cart-close" id="cartClose">×</button>
-  </div>
-  <div class="cart-items" id="cartItemsList">
-    <p class="cart-empty">السلة فاضية، أضف منتجات من المتجر 🛍️</p>
-  </div>
-  <div class="cart-foot">
-    <div class="cart-total"><span>الإجمالي</span><span id="cartTotal">0 د.إ</span></div>
-    <a href="#" class="btn-primary">إتمام الشراء</a>
-    <div class="cart-total"><span data-ar="الإجمالي" data-en="Total">الإجمالي</span><span id="cartTotal">0 د.إ</span></div>
-    <a href="#" class="btn-primary" data-ar="إتمام الشراء" data-en="Checkout">إتمام الشراء</a>
-  </div>
-</aside>
+        /* شريط التنقل العلوي */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background-color: transparent;
+            width: 100%;
+        }
 
-<section class="hero">
-  <div class="hero-text">
-    <p class="eyebrow display" style="font-family:'Tajawal';">متجرك العائلي المتكامل</p>
-    <h1>كل ما يحتاجه بيتك، <em>في مكان واحد</em></h1>
-    <p>من البقالة اليومية إلى الإلكترونيات والأزياء ومستلزمات المنزل — AlBostan Store يجمع لك كل شيء بجودة موثوقة وأسعار تنافسية.</p>
-    <p class="eyebrow display" data-ar="متجرك العائلي المتكامل" data-en="Your complete family store">متجرك العائلي المتكامل</p>
-    <h1><span data-ar="كل ما يحتاجه بيتك، " data-en="Everything your home needs, ">كل ما يحتاجه بيتك، </span><em data-ar="في مكان واحد" data-en="in one place">في مكان واحد</em></h1>
-    <p data-ar="من البقالة اليومية إلى الإلكترونيات والأزياء ومستلزمات المنزل — AlBostan Store يجمع لك كل شيء بجودة موثوقة وأسعار تنافسية." data-en="From daily groceries to electronics, fashion, and home essentials — AlBostan Store brings it all together with trusted quality and competitive prices.">من البقالة اليومية إلى الإلكترونيات والأزياء ومستلزمات المنزل — AlBostan Store يجمع لك كل شيء بجودة موثوقة وأسعار تنافسية.</p>
-    <div class="cta-row">
-      <a href="#products" class="btn-primary">تسوّق الآن</a>
-      <a href="#categories" class="btn-ghost">استعرض الأقسام</a>
-      <a href="#products" class="btn-primary" data-ar="تسوّق الآن" data-en="Shop Now">تسوّق الآن</a>
-      <a href="#categories" class="btn-ghost" data-ar="استعرض الأقسام" data-en="Browse Categories">استعرض الأقسام</a>
-    </div>
-  </div>
-  <div class="hero-visual">
-@@ -287,109 +292,109 @@ <h1>كل ما يحتاجه بيتك، <em>في مكان واحد</em></h1>
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 15px;
+        }
 
-<section class="section categories" id="categories">
-  <div class="section-head">
-    <p class="eyebrow">تصفّح حسب القسم</p>
-    <h2>أقسام المتجر</h2>
-    <p class="eyebrow" data-ar="تصفّح حسب القسم" data-en="Browse by category">تصفّح حسب القسم</p>
-    <h2 data-ar="أقسام المتجر" data-en="Store Categories">أقسام المتجر</h2>
-  </div>
-  <div class="cat-grid">
-    <a class="cat-item" href="#products"><div class="cat-circle" style="background:#EFE9DD;border:1.5px solid #1A1A1A;">🥕</div><span>بقالة</span></a>
-    <a class="cat-item" href="#products"><div class="cat-circle" style="background:#F5F2EC;border:1.5px solid #1A1A1A;">📱</div><span>إلكترونيات</span></a>
-    <a class="cat-item" href="#products"><div class="cat-circle" style="background:#E3DBC8;border:1.5px solid #1A1A1A;">👕</div><span>أزياء</span></a>
-    <a class="cat-item" href="#products"><div class="cat-circle" style="background:#FFFFFF;border:1.5px solid #1A1A1A;">🏠</div><span>المنزل والحديقة</span></a>
-    <a class="cat-item" href="#products"><div class="cat-circle" style="background:#ECE6D9;border:1.5px solid #1A1A1A;">🧸</div><span>أطفال</span></a>
-    <a class="cat-item" href="#products"><div class="cat-circle" style="background:#F0EDE5;border:1.5px solid #1A1A1A;">🏋️</div><span>رياضة</span></a>
-    <a class="cat-item" href="#products"><div class="cat-circle" style="background:#EFE9DD;border:1.5px solid #1A1A1A;">🥕</div><span data-ar="بقالة" data-en="Grocery">بقالة</span></a>
-    <a class="cat-item" href="#products"><div class="cat-circle" style="background:#F5F2EC;border:1.5px solid #1A1A1A;">📱</div><span data-ar="إلكترونيات" data-en="Electronics">إلكترونيات</span></a>
-    <a class="cat-item" href="#products"><div class="cat-circle" style="background:#E3DBC8;border:1.5px solid #1A1A1A;">👕</div><span data-ar="أزياء" data-en="Fashion">أزياء</span></a>
-    <a class="cat-item" href="#products"><div class="cat-circle" style="background:#FFFFFF;border:1.5px solid #1A1A1A;">🏠</div><span data-ar="المنزل والحديقة" data-en="Home & Garden">المنزل والحديقة</span></a>
-    <a class="cat-item" href="#products"><div class="cat-circle" style="background:#ECE6D9;border:1.5px solid #1A1A1A;">🧸</div><span data-ar="أطفال" data-en="Kids">أطفال</span></a>
-    <a class="cat-item" href="#products"><div class="cat-circle" style="background:#F0EDE5;border:1.5px solid #1A1A1A;">🏋️</div><span data-ar="رياضة" data-en="Sports">رياضة</span></a>
-  </div>
-</section>
+        .nav-links a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 700;
+            font-size: 13px;
+        }
 
-<section class="section" id="promo">
-  <div class="promo">
-    <div>
-      <h3>عروض البستان الأسبوعية</h3>
-      <p>خصومات تصل إلى 30% على مختارات من البقالة والمنزل، لفترة محدودة هذا الأسبوع فقط.</p>
-      <h3 data-ar="عروض البستان الأسبوعية" data-en="AlBostan Weekly Offers">عروض البستان الأسبوعية</h3>
-      <p data-ar="خصومات تصل إلى 30% على مختارات من البقالة والمنزل، لفترة محدودة هذا الأسبوع فقط." data-en="Up to 30% off select grocery and home items, for a limited time this week only.">خصومات تصل إلى 30% على مختارات من البقالة والمنزل، لفترة محدودة هذا الأسبوع فقط.</p>
-    </div>
-    <a href="#products" class="btn-primary">اكتشف العروض</a>
-    <a href="#products" class="btn-primary" data-ar="اكتشف العروض" data-en="See Offers">اكتشف العروض</a>
-  </div>
-</section>
+        .header-logo img {
+            height: 40px;
+            width: auto;
+            mix-blend-mode: multiply;
+        }
 
-<section class="section" id="products">
-  <div class="section-head">
-    <p class="eyebrow">الأكثر طلبًا</p>
-    <h2>منتجات مميزة</h2>
-    <p class="eyebrow" data-ar="الأكثر طلبًا" data-en="Best Sellers">الأكثر طلبًا</p>
-    <h2 data-ar="منتجات مميزة" data-en="Featured Products">منتجات مميزة</h2>
-  </div>
-  <div class="prod-grid" id="productGrid">
-    <div class="prod-card" data-name="عسل طبيعي 500غ" data-price="35" data-emoji="🍯">
-    <div class="prod-card" data-name-ar="عسل طبيعي 500غ" data-name-en="Natural Honey 500g" data-price="35" data-emoji="🍯">
-      <div class="prod-thumb" style="background:#EFE9DD;">🍯</div>
-      <div class="prod-body">
-        <p class="prod-cat">بقالة</p>
-        <h4>عسل طبيعي 500غ</h4>
-        <div class="prod-foot"><span class="price">35 د.إ</span><button class="add-btn">+</button></div>
-        <p class="prod-cat" data-ar="بقالة" data-en="Grocery">بقالة</p>
-        <h4 data-ar="عسل طبيعي 500غ" data-en="Natural Honey 500g">عسل طبيعي 500غ</h4>
-        <div class="prod-foot"><span class="price" data-ar="35 د.إ" data-en="35 AED">35 د.إ</span><button class="add-btn">+</button></div>
-      </div>
-    </div>
-    <div class="prod-card" data-name="سماعات لاسلكية" data-price="129" data-emoji="🎧">
-    <div class="prod-card" data-name-ar="سماعات لاسلكية" data-name-en="Wireless Headphones" data-price="129" data-emoji="🎧">
-      <div class="prod-thumb" style="background:#F5F2EC;">🎧</div>
-      <div class="prod-body">
-        <p class="prod-cat">إلكترونيات</p>
-        <h4>سماعات لاسلكية</h4>
-        <div class="prod-foot"><span class="price">129 د.إ</span><button class="add-btn">+</button></div>
-        <p class="prod-cat" data-ar="إلكترونيات" data-en="Electronics">إلكترونيات</p>
-        <h4 data-ar="سماعات لاسلكية" data-en="Wireless Headphones">سماعات لاسلكية</h4>
-        <div class="prod-foot"><span class="price" data-ar="129 د.إ" data-en="129 AED">129 د.إ</span><button class="add-btn">+</button></div>
-      </div>
-    </div>
-    <div class="prod-card" data-name="حقيبة يد جلدية" data-price="95" data-emoji="👜">
-    <div class="prod-card" data-name-ar="حقيبة يد جلدية" data-name-en="Leather Handbag" data-price="95" data-emoji="👜">
-      <div class="prod-thumb" style="background:#E3DBC8;">👜</div>
-      <div class="prod-body">
-        <p class="prod-cat">أزياء</p>
-        <h4>حقيبة يد جلدية</h4>
-        <div class="prod-foot"><span class="price">95 د.إ</span><button class="add-btn">+</button></div>
-        <p class="prod-cat" data-ar="أزياء" data-en="Fashion">أزياء</p>
-        <h4 data-ar="حقيبة يد جلدية" data-en="Leather Handbag">حقيبة يد جلدية</h4>
-        <div class="prod-foot"><span class="price" data-ar="95 د.إ" data-en="95 AED">95 د.إ</span><button class="add-btn">+</button></div>
-      </div>
-    </div>
-    <div class="prod-card" data-name="نبتة زينة داخلية" data-price="48" data-emoji="🪴">
-    <div class="prod-card" data-name-ar="نبتة زينة داخلية" data-name-en="Indoor Decorative Plant" data-price="48" data-emoji="🪴">
-      <div class="prod-thumb" style="background:#ECE6D9;">🪴</div>
-      <div class="prod-body">
-        <p class="prod-cat">المنزل والحديقة</p>
-        <h4>نبتة زينة داخلية</h4>
-        <div class="prod-foot"><span class="price">48 د.إ</span><button class="add-btn">+</button></div>
-        <p class="prod-cat" data-ar="المنزل والحديقة" data-en="Home & Garden">المنزل والحديقة</p>
-        <h4 data-ar="نبتة زينة داخلية" data-en="Indoor Decorative Plant">نبتة زينة داخلية</h4>
-        <div class="prod-foot"><span class="price" data-ar="48 د.إ" data-en="48 AED">48 د.إ</span><button class="add-btn">+</button></div>
-      </div>
-    </div>
-    <div class="prod-card" data-name="طقم عناية بالبشرة" data-price="62" data-emoji="🧴">
-    <div class="prod-card" data-name-ar="طقم عناية بالبشرة" data-name-en="Skincare Set" data-price="62" data-emoji="🧴">
-      <div class="prod-thumb" style="background:#F0EDE5;">🧴</div>
-      <div class="prod-body">
-        <p class="prod-cat">العناية الشخصية</p>
-        <h4>طقم عناية بالبشرة</h4>
-        <div class="prod-foot"><span class="price">62 د.إ</span><button class="add-btn">+</button></div>
-        <p class="prod-cat" data-ar="العناية الشخصية" data-en="Personal Care">العناية الشخصية</p>
-        <h4 data-ar="طقم عناية بالبشرة" data-en="Skincare Set">طقم عناية بالبشرة</h4>
-        <div class="prod-foot"><span class="price" data-ar="62 د.إ" data-en="62 AED">62 د.إ</span><button class="add-btn">+</button></div>
-      </div>
-    </div>
-    <div class="prod-card" data-name="لوحة مفاتيح ميكانيكية" data-price="149" data-emoji="⌨️">
-    <div class="prod-card" data-name-ar="لوحة مفاتيح ميكانيكية" data-name-en="Mechanical Keyboard" data-price="149" data-emoji="⌨️">
-      <div class="prod-thumb" style="background:#EFE9DD;">⌨️</div>
-      <div class="prod-body">
-        <p class="prod-cat">إلكترونيات</p>
-        <h4>لوحة مفاتيح ميكانيكية</h4>
-        <div class="prod-foot"><span class="price">149 د.إ</span><button class="add-btn">+</button></div>
-        <p class="prod-cat" data-ar="إلكترونيات" data-en="Electronics">إلكترونيات</p>
-        <h4 data-ar="لوحة مفاتيح ميكانيكية" data-en="Mechanical Keyboard">لوحة مفاتيح ميكانيكية</h4>
-        <div class="prod-foot"><span class="price" data-ar="149 د.إ" data-en="149 AED">149 د.إ</span><button class="add-btn">+</button></div>
-      </div>
-    </div>
-    <div class="prod-card" data-name="دب قطني محشو" data-price="39" data-emoji="🧸">
-    <div class="prod-card" data-name-ar="دب قطني محشو" data-name-en="Plush Teddy Bear" data-price="39" data-emoji="🧸">
-      <div class="prod-thumb" style="background:#F5F2EC;">🧸</div>
-      <div class="prod-body">
-        <p class="prod-cat">أطفال</p>
-        <h4>دب قطني محشو</h4>
-        <div class="prod-foot"><span class="price">39 د.إ</span><button class="add-btn">+</button></div>
-        <p class="prod-cat" data-ar="أطفال" data-en="Kids">أطفال</p>
-        <h4 data-ar="دب قطني محشو" data-en="Plush Teddy Bear">دب قطني محشو</h4>
-        <div class="prod-foot"><span class="price" data-ar="39 د.إ" data-en="39 AED">39 د.إ</span><button class="add-btn">+</button></div>
-      </div>
-    </div>
-    <div class="prod-card" data-name="سجادة يوغا" data-price="55" data-emoji="🏋️">
-    <div class="prod-card" data-name-ar="سجادة يوغا" data-name-en="Yoga Mat" data-price="55" data-emoji="🏋️">
-      <div class="prod-thumb" style="background:#E3DBC8;">🏋️</div>
-      <div class="prod-body">
-        <p class="prod-cat">رياضة</p>
-        <h4>سجادة يوغا</h4>
-        <div class="prod-foot"><span class="price">55 د.إ</span><button class="add-btn">+</button></div>
-        <p class="prod-cat" data-ar="رياضة" data-en="Sports">رياضة</p>
-        <h4 data-ar="سجادة يوغا" data-en="Yoga Mat">سجادة يوغا</h4>
-        <div class="prod-foot"><span class="price" data-ar="55 د.إ" data-en="55 AED">55 د.إ</span><button class="add-btn">+</button></div>
-      </div>
-    </div>
-  </div>
-</section>
+        /* الواجهة الرئيسية للموقع (تناسق عمودي للهواتف) */
+        .hero-section {
+            padding: 30px 5% 60px 5%;
+            display: flex;
+            flex-direction: column; /* ترتيب عمودي أساسي للهواتف */
+            align-items: center;
+            text-align: center;
+        }
 
-<section class="section">
-  <div class="newsletter">
-    <h3>كن أول من يعرف بالعروض الجديدة</h3>
-    <p>سجّل بريدك الإلكتروني واستلم آخر العروض والمنتجات الجديدة من AlBostan Store</p>
-    <h3 data-ar="كن أول من يعرف بالعروض الجديدة" data-en="Be the first to know about new offers">كن أول من يعرف بالعروض الجديدة</h3>
-    <p data-ar="سجّل بريدك الإلكتروني واستلم آخر العروض والمنتجات الجديدة من AlBostan Store" data-en="Sign up with your email to get the latest offers and new products from AlBostan Store">سجّل بريدك الإلكتروني واستلم آخر العروض والمنتجات الجديدة من AlBostan Store</p>
-    <form class="news-form" onsubmit="return false;">
-      <input type="email" placeholder="بريدك الإلكتروني" required>
-      <button type="submit">اشترك</button>
-      <input type="email" data-ar-placeholder="بريدك الإلكتروني" data-en-placeholder="Your email address" placeholder="بريدك الإلكتروني" required>
-      <button type="submit" data-ar="اشترك" data-en="Subscribe">اشترك</button>
-    </form>
-  </div>
-</section>
-@@ -400,38 +405,66 @@ <h3>كن أول من يعرف بالعروض الجديدة</h3>
-      <div class="foot-logo">
+        .hero-content {
+            max-width: 600px;
+            margin-bottom: 40px;
+            order: 1; /* جعل النص يظهر أولاً في الهواتف */
+        }
+
+        .hero-subtitle {
+            color: #8d99ae;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .hero-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: #1a1a1a;
+            line-height: 1.4;
+            margin-bottom: 18px;
+        }
+
+        .hero-description {
+            font-size: 14px;
+            color: #555555;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 26px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .btn-dark {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            border: 1px solid #1a1a1a;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: #1a1a1a;
+            border: 1px solid #1a1a1a;
+        }
+
+        /* حاوية اللوغو والدائرة الخضراء المدمجة والموسطة بالكامل */
+        .hero-logo-wrapper {
+            position: relative;
+            width: 260px;
+            height: 260px;
+            margin: 0 auto 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            order: 2; /* يظهر اللوغو أسفل النص في الهواتف لمنع الانضغاط */
+        }
+
+        .hero-green-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #e8f5e9; /* نفس لون شعارك الأخضر الهادئ */
+            border-radius: 50%;
+            filter: blur(20px);
+            opacity: 0.9;
+            z-index: 1;
+        }
+
+        .hero-logo-img {
+            position: relative;
+            max-width: 75%;
+            height: auto;
+            z-index: 2;
+            mix-blend-mode: multiply;
+        }
+
+        /* قسم أقسام المتجر */
+        .categories-section {
+            background-color: #ffffff;
+            padding: 50px 5%;
+            border-top-left-radius: 35px;
+            border-top-right-radius: 35px;
+            text-align: center;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.01);
+        }
+
+        .section-subtitle {
+            font-size: 13px;
+            color: #8d99ae;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1a1a1a;
+            margin-bottom: 35px;
+        }
+
+        .categories-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        .category-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90px;
+            text-decoration: none;
+            color: #1a1a1a;
+        }
+
+        .category-circle {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            background-color: #f4efe8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 26px;
+            margin-bottom: 10px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* حركة انسيابية ناعمة */
+            border: 1px solid rgba(0,0,0,0.01);
+        }
+
+        /* [إصلاح التوقف] تأثير الحركة التفاعلية للأيقونات عند التمرير أو اللمس */
+        .category-item:hover .category-circle,
+        .category-item:active .category-circle {
+            transform: translateY(-6px);
+            background-color: #e8f5e9; /* تتحول للأخضر الفاتح المتناسق مع الهوية */
+            box-shadow: 0 8px 15px rgba(46, 125, 50, 0.12);
+        }
+
+        .category-name {
+            font-size: 13px;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+        
+        .category-item:hover .category-name {
+            color: #2e7d32;
+        }
+
+        /* أسفل الموقع الفوتر */
+        footer {
+            background-color: #fbf8f3;
+            padding: 35px 5%;
+            text-align: center;
+            border-top: 1px solid #f4efe8;
+        }
+
+        .footer-logo-img {
+            height: 50px;
+            width: auto;
+            mix-blend-mode: multiply;
+            margin-bottom: 12px;
+        }
+
+        .footer-text {
+            font-size: 12px;
+            color: #8d99ae;
+        }
+
+        /* التجاوب الذكي فقط مع شاشات الكمبيوتر والأجهزة اللوحية العريضة جداً (شاشات العرض الكبيرة) */
+        @media (min-width: 1024px) {
+            .hero-section {
+                flex-direction: row-reverse; /* اللوغو يسار والنص يمين فقط في الكمبيوتر */
+                justify-content: space-between;
+                text-align: right;
+                padding: 80px 8%;
+                max-width: 1200px;
+                margin: 0 auto;
+                gap: 5%;
+            }
+
+            .hero-content {
+                flex: 1;
+                margin-bottom: 0;
+                text-align: right;
+                order: 2;
+            }
+
+            .hero-title {
+                font-size: 42px;
+            }
+
+            .hero-buttons {
+                justify-content: flex-start;
+            }
+
+            .hero-logo-wrapper {
+                flex: 1;
+                max-width: 380px;
+                height: 380px;
+                margin: 0;
+                order: 1;
+            }
+            
+            .nav-links {
+                gap: 25px;
+            }
+            
+            .nav-links a {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-logo">
+            <img src="108579.png" alt="متجر البستان">
+        </div>
+        <ul class="nav-links">
+            <li><a href="#categories">الأقسام</a></li>
+            <li><a href="#products">المنتجات</a></li>
+            <li><a href="#offers">العروض</a></li>
+            <li><a href="#contact">تواصل معنا</a></li>
+        </ul>
+    </header>
+
+    <section class="hero-section">
+        <div class="hero-logo-wrapper">
+            <div class="hero-green-circle"></div>
+            <img src="108579.png" alt="AlBostan Store Logo" class="hero-logo-img">
+        </div>
+
+        <div class="hero-content">
+            <p class="hero-subtitle">متجرك العائلي المتكامل</p>
+            <h1 class="hero-title">كل ما يحتاجه بيتك،<br>في مكان واحد</h1>
+            <p class="hero-description">
+                من البقالة اليومية إلى الإلكترونيات والأزياء ومستلزمات المنزل – AlBostan Store يجمع لك كل شيء بجودة موثوقة وأسعار تنافسية.
+            </p>
+            <div class="hero-buttons">
+                <a href="#products" class="btn btn-dark">تسوق الآن</a>
+                <a href="#categories" class="btn btn-outline">استعرض الأقسام</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="categories-section" id="categories">
+        <p class="section-subtitle">تصفّح حسب القسم</p>
+        <h2 class="section-title">أقسام المتجر</h2>
+        
+        <div class="categories-grid">
+            <a href="#grocery" class="category-item">
+                <div class="category-circle">🥕</div>
+                <span class="category-name">بقالة</span>
+            </a>
+            <a href="#electronics" class="category-item">
+                <div class="category-circle">📱</div>
+                <span class="category-name">إلكترونيات</span>
+            </a>
+            <a href="#home" class="category-item">
+                <div class="category-circle">🏠</div>
+                <span class="category-name">المنزل</span>
+            </a>
+            <a href="#kids" class="category-item">
+                <div class="category-circle">🧸</div>
+                <span class="category-name">أطفال</span>
+            </a>
+            <a href="#fashion" class="category-item">
+                <div class="category-circle">👕</div>
+                <span class="category-name">أزياء</span>
+            </a>
+            <a href="#sports" class="category-item">
+                <div class="category-circle">🏋️‍♂️</div>
+                <span class="category-name">رياضية</span>
+            </a>
+        </div>
+    </section>
+
+    <footer>
         <img src="108579.png" alt="متجر البستان" class="footer-logo-img">
-      </div>
-      <p class="about">متجرك المتنوع لكل ما يحتاجه منزلك وعائلتك، بجودة موثوقة وخدمة سريعة في الإمارات.</p>
-      <p class="about" data-ar="متجرك المتنوع لكل ما يحتاجه منزلك وعائلتك، بجودة موثوقة وخدمة سريعة في الإمارات." data-en="Your all-in-one store for everything your home and family need, with trusted quality and fast service across the UAE.">متجرك المتنوع لكل ما يحتاجه منزلك وعائلتك، بجودة موثوقة وخدمة سريعة في الإمارات.</p>
-    </div>
-    <div>
-      <h5>روابط سريعة</h5>
-      <h5 data-ar="روابط سريعة" data-en="Quick Links">روابط سريعة</h5>
-      <ul>
-        <li><a href="#categories">الأقسام</a></li>
-        <li><a href="#products">المنتجات</a></li>
-        <li><a href="#promo">العروض</a></li>
-        <li><a href="#categories" data-ar="الأقسام" data-en="Categories">الأقسام</a></li>
-        <li><a href="#products" data-ar="المنتجات" data-en="Products">المنتجات</a></li>
-        <li><a href="#promo" data-ar="العروض" data-en="Offers">العروض</a></li>
-      </ul>
-    </div>
-    <div>
-      <h5>خدمة العملاء</h5>
-      <h5 data-ar="خدمة العملاء" data-en="Customer Service">خدمة العملاء</h5>
-      <ul>
-        <li><a href="#">الشحن والتوصيل</a></li>
-        <li><a href="#">الإرجاع والاستبدال</a></li>
-        <li><a href="#">الأسئلة الشائعة</a></li>
-        <li><a href="#" data-ar="الشحن والتوصيل" data-en="Shipping & Delivery">الشحن والتوصيل</a></li>
-        <li><a href="#" data-ar="الإرجاع والاستبدال" data-en="Returns & Exchanges">الإرجاع والاستبدال</a></li>
-        <li><a href="#" data-ar="الأسئلة الشائعة" data-en="FAQ">الأسئلة الشائعة</a></li>
-      </ul>
-    </div>
-    <div>
-      <h5>تواصل معنا</h5>
-      <h5 data-ar="تواصل معنا" data-en="Contact Us">تواصل معنا</h5>
-      <ul>
-        <li>📞 +971 4 000 0000</li>
-        <li>📧 support@albostanstore.com</li>
-        <li>📍 دبي، الإمارات العربية المتحدة</li>
-        <li data-ar="📍 دبي، الإمارات العربية المتحدة" data-en="📍 Dubai, United Arab Emirates">📍 دبي، الإمارات العربية المتحدة</li>
-      </ul>
-    </div>
-  </div>
-  <div class="copyright">© 2026 AlBostan Store. جميع الحقوق محفوظة.</div>
-  <div class="copyright" data-ar="© 2026 AlBostan Store. جميع الحقوق محفوظة." data-en="© 2026 AlBostan Store. All rights reserved.">© 2026 AlBostan Store. جميع الحقوق محفوظة.</div>
-</footer>
+        <p class="footer-text">جميع الحقوق محفوظة © متجر البستان ٢٠٢٦</p>
+    </footer>
 
-<script>
-  let cart = [];
-  // ===== اللغة =====
-  let currentLang = 'ar';
-  const T = {
-    ar: { emptyCart: 'السلة فاضية، أضف منتجات من المتجر 🛍️', currency: 'د.إ' },
-    en: { emptyCart: 'Your cart is empty, add some products 🛍️', currency: 'AED' }
-  };
-  function applyLanguage(lang){
-    currentLang = lang;
-    document.documentElement.lang = lang;
-    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-    document.querySelectorAll('[data-ar]').forEach(el => {
-      el.textContent = lang === 'ar' ? el.dataset.ar : el.dataset.en;
-    });
-    document.querySelectorAll('[data-ar-placeholder]').forEach(el => {
-      el.placeholder = lang === 'ar' ? el.dataset.arPlaceholder : el.dataset.enPlaceholder;
-    });
-    document.getElementById('langToggle').textContent = lang === 'ar' ? 'EN' : 'AR';
-    renderCart();
-  }
-  document.getElementById('langToggle').addEventListener('click', () => {
-    applyLanguage(currentLang === 'ar' ? 'en' : 'ar');
-  });
-  // ===== السلة =====
-  let cart = []; // {nameAr, nameEn, price, emoji}
-
-  const cartCountEl = document.getElementById('cartCount');
-  const cartItemsList = document.getElementById('cartItemsList');
-@@ -441,27 +474,29 @@ <h5>تواصل معنا</h5>
-
-  function renderCart(){
-    cartCountEl.textContent = cart.length;
-    const cur = T[currentLang].currency;
-
-    if(cart.length === 0){
-      cartItemsList.innerHTML = '<p class="cart-empty">السلة فاضية، أضف منتجات من المتجر 🛍️</p>';
-      cartTotalEl.textContent = '0 د.إ';
-      cartItemsList.innerHTML = `<p class="cart-empty">${T[currentLang].emptyCart}</p>`;
-      cartTotalEl.textContent = `0 ${cur}`;
-      return;
-    }
-
-    let total = 0;
-    cartItemsList.innerHTML = cart.map((item, index) => {
-      total += item.price;
-      const name = currentLang === 'ar' ? item.nameAr : item.nameEn;
-      return `
-        <div class="cart-line">
-          <span class="ci-emoji">${item.emoji}</span>
-          <div class="ci-info">
-            <h5>${item.name}</h5>
-            <span>${item.price} د.إ</span>
-            <h5>${name}</h5>
-            <span>${item.price} ${cur}</span>
-          </div>
-          <button class="ci-remove" data-index="${index}">×</button>
-        </div>`;
-    }).join('');
-    cartTotalEl.textContent = total + ' د.إ';
-    cartTotalEl.textContent = `${total} ${cur}`;
-
-    cartItemsList.querySelectorAll('.ci-remove').forEach(btn => {
-      btn.addEventListener('click', () => {
-@@ -475,7 +510,8 @@ <h5>${item.name}</h5>
-    btn.addEventListener('click', () => {
-      const card = btn.closest('.prod-card');
-      cart.push({
-        name: card.dataset.name,
-        nameAr: card.dataset.nameAr,
-        nameEn: card.dataset.nameEn,
-        price: Number(card.dataset.price),
-        emoji: card.dataset.emoji
-      });
-@@ -492,6 +528,7 @@ <h5>${item.name}</h5>
-  document.getElementById('cartClose').addEventListener('click', closeCart);
-  cartOverlay.addEventListener('click', closeCart);
-
-  // ===== حساب المستخدم =====
-  const accountBtn = document.getElementById('accountBtn');
-  const accountDropdown = document.getElementById('accountDropdown');
-  accountBtn.addEventListener('click', (e) => {
-@@ -504,6 +541,7 @@ <h5>${item.name}</h5>
-    }
-  });
-
-  // ===== قائمة الموبايل =====
-  const menuToggle = document.querySelector('.menu-toggle');
-  const navLinks = document.querySelector('nav.links');
-  menuToggle.addEventListener('click', () => {
-@@ -512,7 +550,7 @@ <h5>${item.name}</h5>
-    navLinks.style.flexDirection = 'column';
-    navLinks.style.position = 'absolute';
-    navLinks.style.top = '70px';
-    navLinks.style.right = '24px';
-    navLinks.style.insetInlineEnd = '24px';
-    navLinks.style.background = '#F4ECDD';
-    navLinks.style.padding = '16px 24px';
-    navLinks.style.borderRadius = '16px';
-0 commit comments
-Comments
-0
- (0)
-Comment
-You're not receiving notifications from this thread.
-
-There are no files selected for viewing
-Copied!
+</body>
+</html>
