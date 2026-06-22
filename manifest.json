@@ -1,0 +1,27 @@
+{
+  "name": "AlBostan Store | متجر البستان",
+  "short_name": "AlBostan",
+  "description": "متجرك المتنوع لكل ما يحتاجه منزلك وعائلتك، بجودة موثوقة وخدمة سريعة في الإمارات.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#EFE9DD",
+  "theme_color": "#1A1A1A",
+  "orientation": "portrait-primary",
+  "dir": "rtl",
+  "lang": "ar",
+  "icons": [
+    {
+      "src": "108579.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "108579.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
