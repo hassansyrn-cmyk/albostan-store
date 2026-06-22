@@ -5,7 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AlBostan Store | متجرك المتنوع</title>
 
-<!-- Google Analytics (GA4) -->
+<meta name="description" content="متجر البستان الإلكتروني المتنوع في الإمارات - منتجات مختارة للعائلة والمنزل بأفضل الأسعار وبخدمة توصيل سريعة.">
+<link rel="canonical" href="https://albostanstore.online">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://albostanstore.online">
+<meta property="og:title" content="AlBostan Store | متجرك المتنوع">
+<meta property="og:description" content="متجر البستان الإلكتروني المتنوع في الإمارات - منتجات مختارة للعائلة والمنزل بأفضل الأسعار.">
+<meta property="og:image" content="108579.png">
+
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://albostanstore.online">
+<meta property="twitter:title" content="AlBostan Store | متجرك المتنوع">
+<meta property="twitter:description" content="متجر البستان الإلكتروني المتنوع في الإمارات - منتجات مختارة للعائلة والمنزل بأفضل الأسعار.">
+<meta property="twitter:image" content="108579.png">
+
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-THWNP61B6M"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -14,7 +28,6 @@
   gtag('config', 'G-THWNP61B6M');
 </script>
 
-<!-- PWA: تثبيت الموقع كتطبيق -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1A1A1A">
 <link rel="apple-touch-icon" href="108579.png">
@@ -287,13 +300,14 @@
     width:100%;
   }
 
-  /* --- المنتجات --- */
+  /* --- المنتجات والتحديثات الجديدة للبطاقة --- */
   .prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;}
   .prod-card{
     background:var(--white);border-radius:var(--radius);overflow:hidden;
     box-shadow:0 6px 18px -10px rgba(61,43,31,.25);
     transition:transform .25s, box-shadow .25s;
     cursor:pointer;
+    position:relative;
   }
   .prod-card:hover{transform:translateY(-6px);box-shadow:0 16px 28px -12px rgba(61,43,31,.35);}
   .prod-thumb{
@@ -313,12 +327,58 @@
   .prod-body h4{margin:6px 0 10px;font-size:1.02rem;font-weight:700;}
   .prod-foot{display:flex;align-items:center;justify-content:space-between;}
   .price{font-weight:800;color:var(--clay);font-size:1.1rem;}
+  
+  .price-old{
+    text-decoration:line-through;
+    color:#a39385;
+    font-size:0.85rem;
+    margin-inline-start:6px;
+    font-weight:500;
+  }
+  .prod-badge{
+    position:absolute;
+    top:12px;
+    right:12px;
+    background:#e63946;
+    color:#fff;
+    font-size:0.72rem;
+    font-weight:800;
+    padding:4px 10px;
+    border-radius:50px;
+    z-index:2;
+    box-shadow:0 4px 10px rgba(0,0,0,0.15);
+  }
+  html[dir="ltr"] .prod-badge { right:auto; left:12px; }
+
+  .out-of-stock-badge{
+    position:absolute;
+    inset:0;
+    background:rgba(255,255,255,0.75);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:3;
+  }
+  .out-of-stock-text{
+    background:#1A1A1A;
+    color:#fff;
+    padding:6px 14px;
+    border-radius:50px;
+    font-weight:700;
+    font-size:0.8rem;
+  }
+
   .add-btn{
     width:38px;height:38px;border-radius:50%;background:var(--olive);color:#fff;
     font-size:1.3rem;display:flex;align-items:center;justify-content:center;
     transition:background .2s, transform .2s;
   }
   .add-btn:hover{background:#566140;transform:scale(1.15) rotate(90deg);}
+  .add-btn:disabled{
+    background:#ccc;
+    cursor:not-allowed;
+    transform:none !important;
+  }
 
   /* --- Modal (نافذة التفاصيل) --- */
   .modal-overlay{
@@ -343,13 +403,15 @@
     background:var(--white);
     border-radius:30px;
     width:100%;
-    max-width:420px;
+    max-width:440px;
     padding:30px;
     position:relative;
     transform:scale(0.9);
     transition:transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     box-shadow:0 20px 40px rgba(0,0,0,0.2);
     text-align:center;
+    max-height:92vh;
+    overflow-y:auto;
   }
   .modal-overlay.open .modal-box{
     transform:scale(1);
@@ -357,7 +419,7 @@
   .modal-close{
     position:absolute;
     top:16px;
-    left:16px; /* For RTL */
+    left:16px;
     background:var(--sand);
     width:34px;
     height:34px;
@@ -368,6 +430,7 @@
     justify-content:center;
     font-weight:bold;
     color:var(--soil);
+    z-index:10;
   }
   html[dir="ltr"] .modal-close{ left:auto; right:16px; }
   .modal-emoji{
@@ -404,13 +467,31 @@
     font-size:1.4rem;
     font-weight:800;
     color:var(--clay);
-    margin-bottom:16px;
+    margin-bottom:12px;
   }
   .modal-desc{
     font-size:0.95rem;
     color:#5b4636;
     line-height:1.6;
-    margin-bottom:24px;
+    margin-bottom:20px;
+  }
+  
+  .modal-qty-container{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    margin-bottom:20px;
+  }
+  .modal-qty-label{
+    font-weight:700;
+    font-size:0.9rem;
+  }
+
+  .modal-action-btns {
+    display:flex;
+    flex-direction:column;
+    gap:10px;
   }
   .modal-add-btn{
     width:100%;
@@ -418,6 +499,60 @@
     align-items:center;
     justify-content:center;
     gap:10px;
+  }
+  .modal-direct-wa{
+    background:#25D366;
+    color:#fff;
+    box-shadow:none;
+  }
+  .modal-direct-wa:hover{
+    background:#1ebe57;
+  }
+
+  /* --- التنسيقات الخاصة بـ Checkout Form حقول الإدخال --- */
+  .form-group {
+    margin-bottom:14px;
+    text-align:start;
+  }
+  .form-group label {
+    display:block;
+    margin-bottom:5px;
+    font-weight:700;
+    font-size:0.88rem;
+    color:var(--soil);
+  }
+  .form-group input, .form-group select, .form-group textarea {
+    width:100%;
+    padding:11px 14px;
+    border-radius:12px;
+    border:2px solid var(--sand);
+    font-family:inherit;
+    font-size:0.95rem;
+    background:#fff;
+    outline:none;
+    transition:border-color 0.2s;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color:var(--soil);
+  }
+  .checkout-summary-box {
+    background:var(--cream);
+    border-radius:16px;
+    padding:14px;
+    margin:18px 0;
+    font-size:0.92rem;
+  }
+  .summary-row {
+    display:flex;
+    justify-content:between;
+    margin-bottom:6px;
+  }
+  .summary-row.total-row {
+    font-weight:800;
+    font-size:1.05rem;
+    border-top:1px dashed var(--sand);
+    padding-top:8px;
+    margin-top:8px;
   }
 
   /* --- الأسئلة الشائعة --- */
@@ -457,7 +592,7 @@
   .foot-wrap{max-width:1200px;margin:0 auto;padding:60px 24px 30px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;}
   .foot-wrap h5{font-size:1.05rem;margin-bottom:18px;color:var(--sand);}
   .foot-wrap ul li{margin-bottom:10px;opacity:.85;font-size:.92rem;}
-  .foot-wrap ul li:hover{opacity:1;color:var(--clay);}
+  .foot-wrap ul li:hover{opacity:1;color:var(--sand);}
   .foot-logo{margin-bottom:14px;}
   .footer-logo-img{height:70px;width:auto;background:var(--white);padding:6px;border-radius:12px;}
   .foot-wrap p.about{opacity:.75;font-size:.9rem;line-height:1.8;max-width:280px;}
@@ -547,6 +682,7 @@
       <img src="108579.png" alt="متجر البستان" class="header-logo-img" onerror="this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='">
     </a>
     <nav class="links">
+      <a href="#about" data-ar="من نحن" data-en="About Us">من نحن</a>
       <a href="#categories" data-ar="الأقسام" data-en="Categories">الأقسام</a>
       <a href="#products" data-ar="المنتجات" data-en="Products">المنتجات</a>
       <a href="#promo" data-ar="العروض" data-en="Offers">العروض</a>
@@ -608,6 +744,16 @@
   <path d="M0,30 C360,80 1080,-20 1440,30 L1440,60 L0,60 Z"></path>
 </svg>
 
+<section class="section" id="about" style="background:var(--white);">
+  <div class="section-head">
+    <p class="eyebrow" data-ar="تعرّف علينا" data-en="Who We Are">تعرّف علينا</p>
+    <h2 data-ar="من نحن" data-en="About Us">من نحن</h2>
+  </div>
+  <div style="max-width:800px; margin:0 auto; text-align:center; line-height:1.8; font-size:1.1rem; color:#5b4636; padding:0 10px;">
+    <p data-ar="متجر البستان هو متجر إلكتروني متنوع في الإمارات، يوفر منتجات مختارة للعائلة والمنزل بجودة موثوقة وأسعار مناسبة. نسعى لتقديم تجربة تسوق سهلة وسريعة عبر واتساب مع خدمة توصيل داخل الإمارات." data-en="AlBostan Store is a UAE-based online store offering selected products for families and homes with trusted quality and fair prices. We aim to provide an easy and fast shopping experience through WhatsApp with delivery across the UAE.">متجر البستان هو متجر إلكتروني متنوع في الإمارات، يوفر منتجات مختارة للعائلة والمنزل بجودة موثوقة وأسعار مناسبة. نسعى لتقديم تجربة تسوق سهلة وسريعة عبر واتساب مع خدمة توصيل داخل الإمارات.</p>
+  </div>
+</section>
+
 <section class="section categories" id="categories">
   <div class="section-head">
     <p class="eyebrow" data-ar="تصفّح حسب القسم" data-en="Browse by category">تصفّح حسب القسم</p>
@@ -662,6 +808,27 @@
   </div>
 </section>
 
+<section class="section" id="reviews" style="background:var(--white);">
+  <div class="section-head">
+    <p class="eyebrow" data-ar="ماذا يقول عملاؤنا" data-en="What our customers say">ماذا يقول عملاؤنا</p>
+    <h2 data-ar="آراء العملاء" data-en="Customer Reviews">آراء العملاء</h2>
+  </div>
+  <div class="why-grid">
+    <div class="why-card">
+      <div style="color:#FFD700; font-size:1.2rem; margin-bottom:10px;">★★★★★</div>
+      <p data-ar="خدمة ممتازة والتوصيل كان سريعًا." data-en="Excellent service and very fast delivery.">خدمة ممتازة والتوصيل كان سريعًا.</p>
+    </div>
+    <div class="why-card">
+      <div style="color:#FFD700; font-size:1.2rem; margin-bottom:10px;">★★★★★</div>
+      <p data-ar="المنتجات مرتبة والأسعار مناسبة." data-en="Neat products and very fair prices.">المنتجات مرتبة والأسعار مناسبة.</p>
+    </div>
+    <div class="why-card">
+      <div style="color:#FFD700; font-size:1.2rem; margin-bottom:10px;">★★★★★</div>
+      <p data-ar="تجربة سهلة عبر واتساب." data-en="A very smooth experience via WhatsApp.">تجربة سهلة عبر واتساب.</p>
+    </div>
+  </div>
+</section>
+
 <section class="section" id="products">
   <div class="section-head">
     <p class="eyebrow" data-ar="الأكثر طلبًا" data-en="Best Sellers">الأكثر طلبًا</p>
@@ -685,7 +852,7 @@
   </div>
 
   <div class="prod-grid" id="productGrid">
-    <div class="prod-card" data-name-ar="عسل طبيعي 500غ" data-name-en="Natural Honey 500g" data-price="35" data-emoji="🍯" data-img="images/honey.jpg" data-category-en="Grocery" data-category-ar="بقالة" data-desc-ar="عسل طبيعي نقي 100%، مثالي لتحلية مشروباتك أو استخدامه في الوصفات الصحية." data-desc-en="100% pure natural honey, perfect for sweetening your drinks or using in healthy recipes.">
+    <div class="prod-card" data-name-ar="عسل طبيعي 500غ" data-name-en="Natural Honey 500g" data-price="35" data-emoji="🍯" data-img="images/honey.jpg" data-category-en="Grocery" data-category-ar="بقالة" data-desc-ar="عسل طبيعي نقي 100%، مثالي لتحلية مشروباتك أو استخدامه في الوصفات الصحية." data-desc-en="100% pure natural honey, perfect for sweetening your drinks or using in healthy recipes." data-available="yes">
       <div class="prod-thumb" style="background:#EFE9DD;">
         <img src="images/honey.jpg" alt="عسل طبيعي 500غ" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <span class="prod-emoji-fallback">🍯</span>
@@ -697,7 +864,7 @@
       </div>
     </div>
     
-    <div class="prod-card" data-name-ar="سماعات لاسلكية" data-name-en="Wireless Headphones" data-price="129" data-emoji="🎧" data-img="images/headphones.jpg" data-category-en="Electronics" data-category-ar="إلكترونيات" data-desc-ar="سماعات لاسلكية بصوت نقي وعزل للضوضاء، تدوم طويلاً ببطارية قوية." data-desc-en="Wireless headphones with pure sound and noise cancellation, long-lasting battery.">
+    <div class="prod-card" data-name-ar="سماعات لاسلكية" data-name-en="Wireless Headphones" data-price="129" data-emoji="🎧" data-img="images/headphones.jpg" data-category-en="Electronics" data-category-ar="إلكترونيات" data-desc-ar="سماعات لاسلكية بصوت نقي وعزل للضوضاء، تدوم طويلاً ببطارية قوية." data-desc-en="Wireless headphones with pure sound and noise cancellation, long-lasting battery." data-available="yes">
       <div class="prod-thumb" style="background:#F5F2EC;">
         <img src="images/headphones.jpg" alt="سماعات لاسلكية" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <span class="prod-emoji-fallback">🎧</span>
@@ -708,82 +875,9 @@
         <div class="prod-foot"><span class="price" data-ar="129 د.إ" data-en="129 AED">129 د.إ</span><button class="add-btn" aria-label="أضف للسلة">+</button></div>
       </div>
     </div>
-    
-    <div class="prod-card" data-name-ar="حقيبة يد جلدية" data-name-en="Leather Handbag" data-price="95" data-emoji="👜" data-img="images/handbag.jpg" data-category-en="Fashion" data-category-ar="أزياء" data-desc-ar="حقيبة يد جلدية أنيقة بتصميم عصري، تناسب جميع مناسباتك اليومية." data-desc-en="Elegant leather handbag with a modern design, suitable for all your daily occasions.">
-      <div class="prod-thumb" style="background:#E3DBC8;">
-        <img src="images/handbag.jpg" alt="حقيبة يد جلدية" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-        <span class="prod-emoji-fallback">👜</span>
-      </div>
-      <div class="prod-body">
-        <p class="prod-cat" data-ar="أزياء" data-en="Fashion">أزياء</p>
-        <h4 data-ar="حقيبة يد جلدية" data-en="Leather Handbag">حقيبة يد جلدية</h4>
-        <div class="prod-foot"><span class="price" data-ar="95 د.إ" data-en="95 AED">95 د.إ</span><button class="add-btn" aria-label="أضف للسلة">+</button></div>
-      </div>
-    </div>
-    
-    <div class="prod-card" data-name-ar="نبتة زينة داخلية" data-name-en="Indoor Decorative Plant" data-price="48" data-emoji="🪴" data-img="images/plant.jpg" data-category-en="Home & Garden" data-category-ar="المنزل والحديقة" data-desc-ar="نبتة زينة داخلية تضفي لمسة من الطبيعة والجمال على ديكور منزلك." data-desc-en="Indoor decorative plant that adds a touch of nature and beauty to your home decor.">
-      <div class="prod-thumb" style="background:#ECE6D9;">
-        <img src="images/plant.jpg" alt="نبتة زينة داخلية" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-        <span class="prod-emoji-fallback">🪴</span>
-      </div>
-      <div class="prod-body">
-        <p class="prod-cat" data-ar="المنزل والحديقة" data-en="Home & Garden">المنزل والحديقة</p>
-        <h4 data-ar="نبتة زينة داخلية" data-en="Indoor Decorative Plant">نبتة زينة داخلية</h4>
-        <div class="prod-foot"><span class="price" data-ar="48 د.إ" data-en="48 AED">48 د.إ</span><button class="add-btn" aria-label="أضف للسلة">+</button></div>
-      </div>
-    </div>
-    
-    <div class="prod-card" data-name-ar="طقم عناية بالبشرة" data-name-en="Skincare Set" data-price="62" data-emoji="🧴" data-img="images/skincare.jpg" data-category-en="Personal Care" data-category-ar="العناية الشخصية" data-desc-ar="طقم عناية بالبشرة متكامل يمنحك نضارة وإشراقة يومية بخلاصات طبيعية." data-desc-en="Complete skincare set that gives you daily freshness and radiance with natural extracts.">
-      <div class="prod-thumb" style="background:#F0EDE5;">
-        <img src="images/skincare.jpg" alt="طقم عناية بالبشرة" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-        <span class="prod-emoji-fallback">🧴</span>
-      </div>
-      <div class="prod-body">
-        <p class="prod-cat" data-ar="العناية الشخصية" data-en="Personal Care">العناية الشخصية</p>
-        <h4 data-ar="طقم عناية بالبشرة" data-en="Skincare Set">طقم عناية بالبشرة</h4>
-        <div class="prod-foot"><span class="price" data-ar="62 د.إ" data-en="62 AED">62 د.إ</span><button class="add-btn" aria-label="أضف للسلة">+</button></div>
-      </div>
-    </div>
-    
-    <div class="prod-card" data-name-ar="لوحة مفاتيح ميكانيكية" data-name-en="Mechanical Keyboard" data-price="149" data-emoji="⌨️" data-img="images/keyboard.jpg" data-category-en="Electronics" data-category-ar="إلكترونيات" data-desc-ar="لوحة مفاتيح ميكانيكية سريعة الاستجابة، مصممة للمبرمجين وعشاق الألعاب." data-desc-en="Responsive mechanical keyboard, designed for programmers and gamers.">
-      <div class="prod-thumb" style="background:#EFE9DD;">
-        <img src="images/keyboard.jpg" alt="لوحة مفاتيح ميكانيكية" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-        <span class="prod-emoji-fallback">⌨️</span>
-      </div>
-      <div class="prod-body">
-        <p class="prod-cat" data-ar="إلكترونيات" data-en="Electronics">إلكترونيات</p>
-        <h4 data-ar="لوحة مفاتيح ميكانيكية" data-en="Mechanical Keyboard">لوحة مفاتيح ميكانيكية</h4>
-        <div class="prod-foot"><span class="price" data-ar="149 د.إ" data-en="149 AED">149 د.إ</span><button class="add-btn" aria-label="أضف للسلة">+</button></div>
-      </div>
-    </div>
-    
-    <div class="prod-card" data-name-ar="دب قطني محشو" data-name-en="Plush Teddy Bear" data-price="39" data-emoji="🧸" data-img="images/teddy.jpg" data-category-en="Kids" data-category-ar="أطفال" data-desc-ar="دب قطني محشو ناعم وآمن للأطفال، الهدية المثالية لأحبائك الصغار." data-desc-en="Soft and safe stuffed plush teddy bear, the perfect gift for your little ones.">
-      <div class="prod-thumb" style="background:#F5F2EC;">
-        <img src="images/teddy.jpg" alt="دب قطني محشو" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-        <span class="prod-emoji-fallback">🧸</span>
-      </div>
-      <div class="prod-body">
-        <p class="prod-cat" data-ar="أطفال" data-en="Kids">أطفال</p>
-        <h4 data-ar="دب قطني محشو" data-en="Plush Teddy Bear">دب قطني محشو</h4>
-        <div class="prod-foot"><span class="price" data-ar="39 د.إ" data-en="39 AED">39 د.إ</span><button class="add-btn" aria-label="أضف للسلة">+</button></div>
-      </div>
-    </div>
-    
-    <div class="prod-card" data-name-ar="سجادة يوغا" data-name-en="Yoga Mat" data-price="55" data-emoji="🏋️" data-img="images/yoga-mat.jpg" data-category-en="Sports" data-category-ar="رياضة" data-desc-ar="سجادة يوغا مريحة ومانعة للانزلاق، تضمن لك تمرينًا آمنًا في أي مكان." data-desc-en="Comfortable and non-slip yoga mat, ensuring a safe workout anywhere.">
-      <div class="prod-thumb" style="background:#E3DBC8;">
-        <img src="images/yoga-mat.jpg" alt="سجادة يوغا" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-        <span class="prod-emoji-fallback">🏋️</span>
-      </div>
-      <div class="prod-body">
-        <p class="prod-cat" data-ar="رياضة" data-en="Sports">رياضة</p>
-        <h4 data-ar="سجادة يوغا" data-en="Yoga Mat">سجادة يوغا</h4>
-        <div class="prod-foot"><span class="price" data-ar="55 د.إ" data-en="55 AED">55 د.إ</span><button class="add-btn" aria-label="أضف للسلة">+</button></div>
-      </div>
-    </div>
   </div>
 
   <div class="no-results" id="noResultsMsg" data-ar="لا توجد منتجات مطابقة" data-en="No matching products found">لا توجد منتجات مطابقة</div>
-
 </section>
 
 <section class="section" id="shipping-info">
@@ -794,22 +888,30 @@
   <div class="info-grid">
     <div class="info-card">
       <h4 data-ar="الشحن والتوصيل" data-en="Shipping & Delivery">الشحن والتوصيل</h4>
-      <p data-ar="نوفر خدمة التوصيل داخل الإمارات، ويتم تأكيد مدة التوصيل عبر واتساب بعد استلام الطلب." data-en="Delivery is available across the UAE. Delivery time will be confirmed via WhatsApp after receiving your order.">نوفر خدمة التوصيل داخل الإمارات، ويتم تأكيد مدة التوصيل عبر واتساب بعد استلام الطلب.</p>
+      <p data-ar="نوفر خدمة التوصيل لجميع إمارات الدولة، ويتم احتساب رسوم التوصيل تلقائيًا بناءً على إمارتك في صفحة الدفع." data-en="We deliver across all UAE emirates. Delivery fees are automatically calculated based on your emirate during checkout.">نوفر خدمة التوصيل لجميع إمارات الدولة، ويتم احتساب رسوم التوصيل تلقائيًا بناءً على إمارتك في صفحة الدفع.</p>
     </div>
     <div class="info-card">
       <h4 data-ar="الدفع" data-en="Payment">الدفع</h4>
-      <p data-ar="الدفع يتم حاليًا عند التواصل عبر واتساب. يمكن لاحقًا إضافة بوابة دفع إلكتروني." data-en="Payment is currently arranged through WhatsApp. Online payment can be added later.">الدفع يتم حاليًا عند التواصل عبر واتساب. يمكن لاحقًا إضافة بوابة دفع إلكتروني.</p>
+      <p data-ar="الدفع يتم نقدًا أو بالبطاقة عند الاستلام بعد تأكيد وتنسيق الطلب معكم عبر واتساب مباشرة." data-en="Payment is made via Cash or Card on Delivery after verifying and coordinating your order over WhatsApp.">الدفع يتم نقدًا أو بالبطاقة عند الاستلام بعد تأكيد وتنسيق الطلب معكم عبر واتساب مباشرة.</p>
     </div>
     <div class="info-card">
       <h4 data-ar="الإرجاع والاستبدال" data-en="Returns & Exchanges">الإرجاع والاستبدال</h4>
-      <p data-ar="يمكن طلب الإرجاع أو الاستبدال حسب حالة المنتج وسياسة المتجر." data-en="Returns or exchanges can be requested depending on the product condition and store policy.">يمكن طلب الإرجاع أو الاستبدال حسب حالة المنتج وسياسة المتجر.</p>
+      <p data-ar="يمكنك طلب الإرجاع أو الاستبدال خلال 14 يومًا من تاريخ الاستلام بشرط أن يكون المنتج بحالته الأصلية وغلافه الأصلي." data-en="You can request a return or exchange within 14 days of receipt, provided the product is in its original condition and packaging.">يمكنك طلب الإرجاع أو الاستبدال خلال 14 يومًا من تاريخ الاستلام بشرط أن يكون المنتج بحالته الأصلية وغلافه الأصلي.</p>
+    </div>
+    <div class="info-card">
+      <h4 data-ar="مدة تجهيز الطلب" data-en="Processing Time">مدة تجهيز الطلب</h4>
+      <p data-ar="يتم تجهيز وشحن الطلبات خلال 24 إلى 48 ساعة كحد أقصى لتصل إلى باب منزلك في أسرع وقت." data-en="Orders are processed and shipped within 24 to 48 hours maximum to reach your doorstep as fast as possible.">يتم تجهيز وشحن الطلبات خلال 24 إلى 48 ساعة كحد أقصى لتصل إلى باب منزلك في أسرع وقت.</p>
+    </div>
+    <div class="info-card">
+      <h4 data-ar="التواصل والدعم" data-en="Support & Contact">التواصل والدعم</h4>
+      <p data-ar="فريق الدعم الفني متواجد دائمًا لخدمتكم والإجابة على استفساراتكم عبر الواتساب على مدار الساعة." data-en="Our support team is always available to assist you and answer all your inquiries via WhatsApp around the clock.">فريق الدعم الفني متواجد دائمًا لخدمتكم والإجابة على استفساراتكم عبر الواتساب على مدار الساعة.</p>
     </div>
   </div>
 </section>
 
 <section class="section" id="faq">
   <div class="section-head">
-    <p class="eyebrow" data-ar="هل لديك سؤال؟" data-en="Have a question?">هل لديك سؤال؟</p>
+    <p class="eyebrow" data-ar="هل لديك سؤال؟" data-en="Have a question?">هل لديك سؤال?</p>
     <h2 data-ar="الأسئلة الشائعة" data-en="Frequently Asked Questions">الأسئلة الشائعة</h2>
   </div>
   <div class="faq-list">
@@ -819,7 +921,7 @@
         <span class="faq-icon">+</span>
       </button>
       <div class="faq-answer">
-        <p data-ar="أضف المنتجات إلى السلة ثم اضغط إتمام الشراء، وسيتم فتح واتساب برسالة الطلب." data-en="Add products to the cart, then click Checkout. WhatsApp will open with your order message.">أضف المنتجات إلى السلة ثم اضغط إتمام الشراء، وسيتم فتح واتساب برسالة الطلب.</p>
+        <p data-ar="أضف المنتجات إلى السلة ثم اضغط إتمام الشراء، وعبي بيانات عنوانك، ثم سيتم فتح واتساب برسالة الطلب المنظمة." data-en="Add products to the cart, click Checkout, fill in your address info, and WhatsApp will open with a structured order summary.">أضف المنتجات إلى السلة ثم اضغط إتمام الشراء، وعبي بيانات عنوانك، ثم سيتم فتح واتساب برسالة الطلب المنظمة.</p>
       </div>
     </div>
     <div class="faq-item">
@@ -828,25 +930,7 @@
         <span class="faq-icon">+</span>
       </button>
       <div class="faq-answer">
-        <p data-ar="نعم، يتم تأكيد تفاصيل التوصيل عبر واتساب." data-en="Yes, delivery details are confirmed via WhatsApp.">نعم، يتم تأكيد تفاصيل التوصيل عبر واتساب.</p>
-      </div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-question">
-        <span data-ar="هل الدفع الإلكتروني متوفر؟" data-en="Is online payment available?">هل الدفع الإلكتروني متوفر؟</span>
-        <span class="faq-icon">+</span>
-      </button>
-      <div class="faq-answer">
-        <p data-ar="حاليًا الطلب يتم عبر واتساب، ويمكن إضافة الدفع الإلكتروني لاحقًا." data-en="Currently orders are handled via WhatsApp. Online payment can be added later.">حاليًا الطلب يتم عبر واتساب، ويمكن إضافة الدفع الإلكتروني لاحقًا.</p>
-      </div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-question">
-        <span data-ar="هل الأسعار تشمل التوصيل؟" data-en="Do prices include delivery?">هل الأسعار تشمل التوصيل؟</span>
-        <span class="faq-icon">+</span>
-      </button>
-      <div class="faq-answer">
-        <p data-ar="رسوم التوصيل يتم تأكيدها حسب المنطقة عبر واتساب." data-en="Delivery fees are confirmed via WhatsApp depending on the area.">رسوم التوصيل يتم تأكيدها حسب المنطقة عبر واتساب.</p>
+        <p data-ar="نعم، نوصل لكافة الإمارات وتتراوح الرسوم بين 15 إلى 25 درهم حسب الإمارة." data-en="Yes, we deliver to all emirates, and delivery fees range from 15 to 25 AED depending on the emirate.">نعم، نوصل لكافة الإمارات وتتراوح الرسوم بين 15 إلى 25 درهم حسب الإمارة.</p>
       </div>
     </div>
   </div>
@@ -874,9 +958,9 @@
     <div>
       <h5 data-ar="روابط سريعة" data-en="Quick Links">روابط سريعة</h5>
       <ul>
+        <li><a href="#about" data-ar="من نحن" data-en="About Us">من نحن</a></li>
         <li><a href="#categories" data-ar="الأقسام" data-en="Categories">الأقسام</a></li>
         <li><a href="#products" data-ar="المنتجات" data-en="Products">المنتجات</a></li>
-        <li><a href="#promo" data-ar="العروض" data-en="Offers">العروض</a></li>
       </ul>
     </div>
     <div>
@@ -890,9 +974,10 @@
     <div>
       <h5 data-ar="تواصل معنا" data-en="Contact Us">تواصل معنا</h5>
       <ul>
-        <li>📞 +971 4 000 0000</li>
-        <li>📧 support@albostanstore.com</li>
-        <li data-ar="📍 دبي، الإمارات العربية المتحدة" data-en="📍 Dubai, United Arab Emirates">📍 دبي، الإمارات العربية المتحدة</li>
+        <li>📞 <a href="https://wa.me/971501554132" target="_blank" style="direction:ltr; display:inline-block;">+971 50 155 4132</a></li>
+        <li>📧 support@albostanstore.online</li>
+        <li data-ar="📍 الإمارات العربية المتحدة" data-en="📍 United Arab Emirates">📍 الإمارات العربية المتحدة</li>
+        <li data-ar="🕒 يوميًا من 9 صباحًا إلى 10 مساءً" data-en="🕒 Daily: 9 AM to 10 PM">🕒 يوميًا من 9 صباحًا إلى 10 مساءً</li>
       </ul>
     </div>
   </div>
@@ -907,19 +992,107 @@
   <div class="modal-box">
     <button class="modal-close" id="modalClose">×</button>
     <img class="modal-img" id="mImg" src="" alt="">
-    <div class="modal-emoji" id="mEmoji">🍯</div>
-    <div class="modal-cat" id="mCat">بقالة</div>
-    <h3 class="modal-title" id="mTitle">عسل طبيعي 500غ</h3>
-    <div class="modal-price" id="mPrice">35 د.إ</div>
-    <p class="modal-desc" id="mDesc">وصف المنتج يظهر هنا.</p>
-    <button class="btn-primary modal-add-btn" id="mAddBtn">
-      <span data-ar="إضافة للسلة" data-en="Add to Cart">إضافة للسلة</span>
-      <span>🛒</span>
-    </button>
+    <div class="modal-emoji" id="mEmoji">🛒</div>
+    <div class="modal-cat" id="mCat"></div>
+    <h3 class="modal-title" id="mTitle"></h3>
+    <div class="modal-price" id="mPrice"></div>
+    <p class="modal-desc" id="mDesc"></p>
+    
+    <div class="modal-qty-container">
+      <span class="modal-qty-label" data-ar="الكمية:" data-en="Quantity:">الكمية:</span>
+      <div class="cart-qty-ctrl">
+        <button id="mQtyMinus">-</button>
+        <span id="mQtyText">1</span>
+        <button id="mQtyPlus">+</button>
+      </div>
+    </div>
+
+    <div class="modal-action-btns">
+      <button class="btn-primary modal-add-btn" id="mAddBtn">
+        <span data-ar="إضافة للسلة" data-en="Add to Cart">إضافة للسلة</span>
+        <span>🛒</span>
+      </button>
+      <button class="btn-primary modal-add-btn modal-direct-wa" id="mDirectWaBtn">
+        <span data-ar="اطلب هذا المنتج عبر واتساب" data-en="Order this item via WhatsApp">اطلب هذا المنتج عبر واتساب</span>
+        <span>💬</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="checkoutModal">
+  <div class="modal-box" style="text-align:start;">
+    <button class="modal-close" id="checkoutClose">×</button>
+    <h3 class="modal-title" style="text-align:center; margin-bottom:20px;" data-ar="إتمام الطلب" data-en="Checkout">إتمام الطلب</h3>
+    
+    <form id="checkoutForm" onsubmit="return false;">
+      <div class="form-group">
+        <label data-ar="الاسم الكامل" data-en="Full Name">الاسم الكامل</label>
+        <input type="text" id="custName" required data-ar-placeholder="أدخل اسمك الكامل" data-en-placeholder="Enter your full name">
+      </div>
+      
+      <div class="form-group">
+        <label data-ar="رقم الهاتف" data-en="Phone Number">رقم الهاتف</label>
+        <input type="tel" id="custPhone" placeholder="05XXXXXXXX" required>
+      </div>
+      
+      <div class="form-group">
+        <label data-ar="الإمارة" data-en="Emirate">الإمارة</label>
+        <select id="custEmirate" required>
+          <option value="" data-ar="اختر الإمارة" data-en="Select Emirate">اختر الإمارة</option>
+          <option value="Abu Dhabi" data-ar="أبوظبي" data-en="Abu Dhabi">أبوظبي</option>
+          <option value="Dubai" data-ar="دبي" data-en="Dubai">دبي</option>
+          <option value="Sharjah" data-ar="الشارقة" data-en="Sharjah">الشارقة</option>
+          <option value="Ajman" data-ar="عجمان" data-en="Ajman">عجمان</option>
+          <option value="Ras Al Khaimah" data-ar="رأس الخيمة" data-en="Ras Al Khaimah">رأس الخيمة</option>
+          <option value="Fujairah" data-ar="الفجيرة" data-en="Fujairah">الفجيرة</option>
+          <option value="Um Al Quwain" data-ar="أم القيوين" data-en="Um Al Quwain">أم القيوين</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label data-ar="العنوان التفصيلي" data-en="Detailed Address">العنوان التفصيلي</label>
+        <input type="text" id="custAddress" required data-ar-placeholder="المنطقة، اسم الشارع، رقم المنزل" data-en-placeholder="Area, street name, villa/apartment number">
+      </div>
+      
+      <div class="form-group">
+        <label data-ar="ملاحظات (اختياري)" data-en="Notes (Optional)">ملاحظات (اختياري)</label>
+        <textarea id="custNotes" rows="2" data-ar-placeholder="أي ملاحظات إضافية بخصوص التوصيل..." data-en-placeholder="Any extra delivery notes..."></textarea>
+      </div>
+      
+      <div class="checkout-summary-box">
+        <div class="summary-row">
+          <span data-ar="قيمة المنتجات:" data-en="Items Total:">قيمة المنتجات:</span>
+          <span id="summarySubtotal">0 AED</span>
+        </div>
+        <div class="summary-row">
+          <span data-ar="رسوم التوصيل:" data-en="Delivery Fee:">رسوم التوصيل:</span>
+          <span id="summaryDelivery">0 AED</span>
+        </div>
+        <div class="summary-row total-row">
+          <span data-ar="الإجمالي النهائي:" data-en="Grand Total:">الإجمالي النهائي:</span>
+          <span id="summaryGrandTotal">0 AED</span>
+        </div>
+      </div>
+      
+      <button type="submit" class="btn-primary" style="width:100%; text-align:center;" data-ar="إرسال الطلب عبر واتساب 💬" data-en="Send Order via WhatsApp 💬">إرسال الطلب عبر واتساب 💬</button>
+    </form>
   </div>
 </div>
 
 <script>
+  // ===== الإعدادات الثابتة ورسوم التوصيل =====
+  const whatsappNumber = '971501554132';
+  const deliveryFees = {
+    'Abu Dhabi': 15,
+    'Dubai': 20,
+    'Sharjah': 20,
+    'Ajman': 20,
+    'Ras Al Khaimah': 25,
+    'Fujairah': 25,
+    'Um Al Quwain': 25
+  };
+
   // ===== اللغة والترجمة =====
   let currentLang = 'ar';
   const T = {
@@ -930,7 +1103,9 @@
       removed: 'تم حذف المنتج من السلة',
       emptyCartCheckout: 'السلة فارغة، أضف منتجات أولًا 🛍️',
       noResults: 'لا توجد منتجات مطابقة',
-      waInquiry: 'مرحبًا، أريد الاستفسار عن متجر البستان'
+      waInquiry: 'مرحبًا، أريد الاستفسار عن متجر البستان',
+      outOfStock: 'غير متوفر',
+      directWaMsg: 'مرحبًا متجر البستان، أريد طلب هذا المنتج بشكل مباشر:\n'
     },
     en: {
       emptyCart: 'Your cart is empty, please add products first 🛍️',
@@ -939,9 +1114,21 @@
       removed: 'Item removed from cart',
       emptyCartCheckout: 'Your cart is empty, please add products first 🛍️',
       noResults: 'No matching products found',
-      waInquiry: 'Hello, I would like to ask about AlBostan Store'
+      waInquiry: 'Hello, I would like to ask about AlBostan Store',
+      outOfStock: 'Out of Stock',
+      directWaMsg: 'Hello AlBostan Store, I would like to order this item directly:\n'
     }
   };
+
+  function escapeHTML(str) {
+    if (!str) return '';
+    return str.toString()
+              .replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+  }
 
   function applyLanguage(lang){
     currentLang = lang;
@@ -957,13 +1144,13 @@
 
     document.getElementById('langToggle').textContent = lang === 'ar' ? 'EN' : 'AR';
     
-    // تحديث النافذة إذا كانت مفتوحة
     if(currentModalProduct){
       updateModalContent();
     }
     
     renderCart();
     filterProducts();
+    updateCheckoutSummary();
   }
 
   document.getElementById('langToggle').addEventListener('click', () => {
@@ -985,10 +1172,8 @@
     }, 1500);
   }
 
-  // ===== السلة بالكميات =====
+  // ===== السلة بالكميات المخرنة =====
   let cart = JSON.parse(localStorage.getItem('albostan_cart')) || [];
-  
-  // تحويل السلة القديمة للصيغة الجديدة (إضافة quantity إذا لم تكن موجودة)
   cart = cart.map(item => {
     if(item.quantity === undefined) item.quantity = 1;
     return item;
@@ -1004,6 +1189,10 @@
     localStorage.setItem('albostan_cart', JSON.stringify(cart));
   }
 
+  function getCartSubtotal() {
+    return cart.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
+  }
+
   function renderCart(){
     const totalQty = cart.reduce((sum, item) => sum + item.quantity, 0);
     cartCountEl.textContent = totalQty;
@@ -1016,16 +1205,15 @@
       return;
     }
 
-    let total = 0;
+    let total = getCartSubtotal();
     cartItemsList.innerHTML = cart.map((item, index) => {
-      const itemTotal = item.price * item.quantity;
-      total += itemTotal;
+      const itemTotal = Number(item.price) * item.quantity;
       const name = currentLang === 'ar' ? item.nameAr : item.nameEn;
       return `
         <div class="cart-line">
-          <span class="ci-emoji">${item.emoji}</span>
+          <span class="ci-emoji">${escapeHTML(item.emoji)}</span>
           <div class="ci-info">
-            <h5>${name}</h5>
+            <h5>${escapeHTML(name)}</h5>
             <span>${itemTotal} ${cur}</span>
           </div>
           <div class="cart-qty-ctrl">
@@ -1040,18 +1228,20 @@
     cartTotalEl.textContent = `${total} ${cur}`;
     saveCart();
 
-    // إضافة أحداث الأزرار داخل السلة
+    // أحداث الكميات داخل السلة الجانبية
     cartItemsList.querySelectorAll('.qty-btn-plus').forEach(btn => {
       btn.addEventListener('click', () => {
         const idx = Number(btn.dataset.index);
         cart[idx].quantity++;
         renderCart();
+        trackGAEvent('add_to_cart', { item_name: cart[idx].nameEn, value: cart[idx].price });
       });
     });
 
     cartItemsList.querySelectorAll('.qty-btn-minus').forEach(btn => {
       btn.addEventListener('click', () => {
         const idx = Number(btn.dataset.index);
+        trackGAEvent('remove_from_cart', { item_name: cart[idx].nameEn, value: cart[idx].price });
         cart[idx].quantity--;
         if(cart[idx].quantity <= 0){
           cart.splice(idx, 1);
@@ -1063,46 +1253,42 @@
 
     cartItemsList.querySelectorAll('.ci-remove').forEach(btn => {
       btn.addEventListener('click', () => {
-        cart.splice(Number(btn.dataset.index), 1);
+        const idx = Number(btn.dataset.index);
+        trackGAEvent('remove_from_cart', { item_name: cart[idx].nameEn, value: cart[idx].price });
+        cart.splice(idx, 1);
         renderCart();
         showToast(T[currentLang].removed);
       });
     });
   }
 
-  function addToCart(productData){
+  function addToCart(productData, customQty = 1){
+    if(productData.available === 'no') return;
+    
     const existing = cart.find(item => item.nameAr === productData.nameAr);
     if(existing){
-      existing.quantity++;
+      existing.quantity += customQty;
     } else {
       cart.push({
         nameAr: productData.nameAr,
         nameEn: productData.nameEn,
         price: Number(productData.price),
-        emoji: productData.emoji,
-        quantity: 1
+        emoji: productData.emoji || '🛒',
+        quantity: customQty
       });
     }
     renderCart();
     showToast(T[currentLang].added);
-
-    if(typeof gtag === 'function'){
-      gtag('event', 'add_to_cart', {
-        item_name: productData.nameEn || productData.nameAr,
-        value: Number(productData.price) || 0,
-        currency: 'AED'
-      });
-    }
+    trackGAEvent('add_to_cart', { item_name: productData.nameEn, value: Number(productData.price) });
   }
 
-  // ربط أزرار الإضافة وفتح نافذة التفاصيل لكل بطاقات المنتجات (يعمل مع المنتجات الثابتة وأيضًا منتجات الشيت)
   function bindProductCardEvents(){
     document.querySelectorAll('.prod-card .add-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
-        e.stopPropagation(); // لمنع فتح النافذة
+        e.stopPropagation();
         const card = btn.closest('.prod-card');
-        addToCart(card.dataset);
-
+        if(card.dataset.available === 'no') return;
+        addToCart(card.dataset, 1);
         btn.style.transform = 'scale(1.3) rotate(90deg)';
         setTimeout(() => btn.style.transform = '', 150);
       });
@@ -1115,83 +1301,107 @@
     });
   }
 
-  function openCart(){
-    cartDrawer.classList.add('open');
-    cartOverlay.classList.add('open');
-  }
-
-  function closeCart(){
-    cartDrawer.classList.remove('open');
-    cartOverlay.classList.remove('open');
-  }
+  function openCart(){ cartDrawer.classList.add('open'); cartOverlay.classList.add('open'); }
+  function closeCart(){ cartDrawer.classList.remove('open'); cartOverlay.classList.remove('open'); }
 
   document.getElementById('cartBtn').addEventListener('click', openCart);
   document.getElementById('cartClose').addEventListener('click', closeCart);
   cartOverlay.addEventListener('click', closeCart);
 
-  // ===== الواتساب وإتمام الشراء =====
-  const checkoutBtn = document.getElementById('checkoutBtn');
-  const whatsappNumber = '971501554132';
+  // ===== Checkout Modal (إتمام الطلب) =====
+  const checkoutModal = document.getElementById('checkoutModal');
+  const checkoutClose = document.getElementById('checkoutClose');
+  const custEmirateSelect = document.getElementById('custEmirate');
 
-  checkoutBtn.addEventListener('click', (e) => {
+  document.getElementById('checkoutBtn').addEventListener('click', (e) => {
     e.preventDefault();
-    
     if(cart.length === 0){
       showToast(T[currentLang].emptyCartCheckout);
       return;
     }
+    closeCart();
+    checkoutModal.classList.add('open');
+    updateCheckoutSummary();
+    trackGAEvent('begin_checkout', { value: getCartSubtotal() });
+  });
 
-    let message = '';
-    let total = 0;
+  checkoutClose.addEventListener('click', () => checkoutModal.classList.remove('open'));
 
-    if(currentLang === 'ar'){
-      message += 'مرحبًا، أريد إتمام طلب من متجر البستان:\n\n';
-      message += 'المنتجات:\n';
-      cart.forEach((item, index) => {
-        const itemTotal = item.price * item.quantity;
-        message += `${index + 1}. ${item.nameAr} × ${item.quantity} - ${itemTotal} ${T['ar'].currency}\n`;
-        total += itemTotal;
+  custEmirateSelect.addEventListener('change', updateCheckoutSummary);
+
+  function updateCheckoutSummary() {
+    const subtotal = getCartSubtotal();
+    const emirate = custEmirateSelect.value;
+    const fee = deliveryFees[emirate] || 0;
+    const grandTotal = subtotal + fee;
+
+    const cur = T[currentLang].currency;
+    document.getElementById('summarySubtotal').textContent = `${subtotal} ${cur}`;
+    document.getElementById('summaryDelivery').textContent = emirate ? `${fee} ${cur}` : `0 ${cur}`;
+    document.getElementById('summaryGrandTotal').textContent = `${grandTotal} ${cur}`;
+  }
+
+  document.getElementById('checkoutForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const name = document.getElementById('custName').value.trim();
+    const phone = document.getElementById('custPhone').value.trim();
+    const emirate = custEmirateSelect.value;
+    const address = document.getElementById('custAddress').value.trim();
+    const notes = document.getElementById('custNotes').value.trim();
+    
+    const subtotal = getCartSubtotal();
+    const fee = deliveryFees[emirate] || 0;
+    const grandTotal = subtotal + fee;
+
+    let msg = '';
+    if(currentLang === 'ar') {
+      msg += `طلب جديد من متجر البستان 🧾\n\n`;
+      msg += `👤 بيانات العميل:\n`;
+      msg += `- الاسم: ${name}\n`;
+      msg += `- الهاتف: ${phone}\n`;
+      msg += `- الإمارة: ${emirate}\n`;
+      msg += `- العنوان: ${address}\n`;
+      if(notes) msg += `- ملاحظات: ${notes}\n`;
+      msg += `\n📦 المنتجات المطلوبة:\n`;
+      cart.forEach((item, idx) => {
+        msg += `${idx+1}. ${item.nameAr} [الكمية: ${item.quantity}] (${item.price} د.إ)\n`;
       });
-      message += `\nالإجمالي: ${total} ${T['ar'].currency}\n\n`;
-      message += 'الاسم:\nالعنوان:\nملاحظات:';
+      msg += `\n💵 تفاصيل الحساب:\n`;
+      msg += `- قيمة المنتجات: ${subtotal} د.إ\n`;
+      msg += `- رسوم التوصيل: ${fee} د.إ\n`;
+      msg += `- الإجمالي النهائي: ${grandTotal} د.إ\n`;
     } else {
-      message += 'Hello, I would like to place an order from AlBostan Store:\n\n';
-      message += 'Products:\n';
-      cart.forEach((item, index) => {
-        const itemTotal = item.price * item.quantity;
-        message += `${index + 1}. ${item.nameEn} × ${item.quantity} - ${itemTotal} ${T['en'].currency}\n`;
-        total += itemTotal;
+      msg += `New Order from AlBostan Store 🧾\n\n`;
+      msg += `👤 Customer Details:\n`;
+      msg += `- Name: ${name}\n`;
+      msg += `- Phone: ${phone}\n`;
+      msg += `- Emirate: ${emirate}\n`;
+      msg += `- Address: ${address}\n`;
+      if(notes) msg += `- Notes: ${notes}\n`;
+      msg += `\n📦 Items Ordered:\n`;
+      cart.forEach((item, idx) => {
+        msg += `${idx+1}. ${item.nameEn} [Qty: ${item.quantity}] (${item.price} AED)\n`;
       });
-      message += `\nTotal: ${total} ${T['en'].currency}\n\n`;
-      message += 'Name:\nAddress:\nNotes:';
+      msg += `\n💵 Summary:\n`;
+      msg += `- Subtotal: ${subtotal} AED\n`;
+      msg += `- Delivery Fee: ${fee} AED\n`;
+      msg += `- Grand Total: ${grandTotal} AED\n`;
     }
 
-    const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-    window.open(waUrl, '_blank');
-
-    if(typeof gtag === 'function'){
-      gtag('event', 'generate_lead', {
-        method: 'whatsapp_checkout',
-        value: total,
-        currency: 'AED'
-      });
-    }
+    trackGAEvent('whatsapp_checkout', { value: grandTotal });
+    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+    checkoutModal.classList.remove('open');
   });
 
   // ===== زر واتساب العائم (استفسار سريع) =====
-  const waFloatBtn = document.getElementById('waFloatBtn');
-  waFloatBtn.addEventListener('click', (e) => {
+  document.getElementById('waFloatBtn').addEventListener('click', (e) => {
     e.preventDefault();
-    const inquiryMsg = T[currentLang].waInquiry;
-    const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(inquiryMsg)}`;
-    window.open(waUrl, '_blank');
-
-    if(typeof gtag === 'function'){
-      gtag('event', 'contact_whatsapp', { method: 'floating_button' });
-    }
+    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(T[currentLang].waInquiry)}`, '_blank');
+    trackGAEvent('contact_whatsapp', { method: 'floating_button' });
   });
 
-  // ===== البحث والتصفية =====
+  // ===== البحث والتصفية وعرض الأقسام =====
   const searchInput = document.getElementById('searchInput');
   const filterButtons = document.querySelectorAll('.filter-btn');
   const noResultsMsg = document.getElementById('noResultsMsg');
@@ -1219,16 +1429,13 @@
       }
     });
 
-    if(visibleCount === 0){
-      noResultsMsg.style.display = 'block';
-    } else {
-      noResultsMsg.style.display = 'none';
-    }
+    noResultsMsg.style.display = (visibleCount === 0) ? 'block' : 'none';
   }
 
   searchInput.addEventListener('input', (e) => {
     currentSearchQuery = e.target.value.toLowerCase().trim();
     filterProducts();
+    trackGAEvent('search', { search_term: currentSearchQuery });
   });
 
   filterButtons.forEach(btn => {
@@ -1237,23 +1444,21 @@
       btn.classList.add('active');
       currentCategory = btn.dataset.cat;
       filterProducts();
+      trackGAEvent('category_filter', { category: currentCategory });
     });
   });
 
-  // وظيفة لاستخدامها في روابط الأقسام الدائرية
   window.setFilter = function(cat) {
     currentCategory = cat;
     filterButtons.forEach(b => {
-      if(b.dataset.cat === cat){
-        b.classList.add('active');
-      } else {
-        b.classList.remove('active');
-      }
+      if(b.dataset.cat === cat) b.classList.add('active');
+      else b.classList.remove('active');
     });
     filterProducts();
-  }
+    trackGAEvent('category_filter', { category: cat });
+  };
 
-  // ===== نافذة تفاصيل المنتج (Modal) =====
+  // ===== نافذة تفاصيل المنتج المطورة المحسنة =====
   const modalOverlay = document.getElementById('productModal');
   const modalClose = document.getElementById('modalClose');
   const mImg = document.getElementById('mImg');
@@ -1263,17 +1468,39 @@
   const mPrice = document.getElementById('mPrice');
   const mDesc = document.getElementById('mDesc');
   const mAddBtn = document.getElementById('mAddBtn');
+  const mDirectWaBtn = document.getElementById('mDirectWaBtn');
+  const mQtyText = document.getElementById('mQtyText');
   
   let currentModalProduct = null;
+  let modalSelectedQty = 1;
 
   function updateModalContent(){
     if(!currentModalProduct) return;
     const data = currentModalProduct;
-    mEmoji.textContent = data.emoji;
     mCat.textContent = currentLang === 'ar' ? data.categoryAr : data.categoryEn;
     mTitle.textContent = currentLang === 'ar' ? data.nameAr : data.nameEn;
-    mPrice.textContent = `${data.price} ${T[currentLang].currency}`;
     mDesc.textContent = currentLang === 'ar' ? data.descAr : data.descEn;
+    mQtyText.textContent = modalSelectedQty;
+
+    // معالجة الأسعار والخصومات والتوفر داخل المودال
+    const cur = T[currentLang].currency;
+    let priceHtml = `<span style="color:var(--clay); font-weight:800;">${data.price} ${cur}</span>`;
+    if(data.oldPrice && Number(data.oldPrice) > Number(data.price)) {
+      priceHtml += `<span class="price-old">${data.oldPrice} ${cur}</span>`;
+      if(data.discount) {
+        priceHtml += ` <span style="background:#e63946; color:#fff; font-size:0.75rem; padding:2px 8px; border-radius:50px;">${data.discount}</span>`;
+      }
+    }
+    
+    if(data.available === 'no') {
+      priceHtml += ` <span style="background:#1A1A1A; color:#fff; font-size:0.75rem; padding:2px 8px; border-radius:50px; margin-inline-start:6px;">${T[currentLang].outOfStock}</span>`;
+      mAddBtn.disabled = true;
+      mDirectWaBtn.disabled = true;
+    } else {
+      mAddBtn.disabled = false;
+      mDirectWaBtn.disabled = false;
+    }
+    mPrice.innerHTML = priceHtml;
 
     if(data.img){
       mEmoji.style.display = 'none';
@@ -1282,131 +1509,95 @@
       mImg.onerror = function(){
         mImg.style.display = 'none';
         mEmoji.style.display = 'inline-block';
+        mEmoji.textContent = data.emoji || '🛒';
       };
     } else {
       mImg.style.display = 'none';
       mEmoji.style.display = 'inline-block';
+      mEmoji.textContent = data.emoji || '🛒';
     }
   }
 
   function openModal(productData){
     currentModalProduct = productData;
+    modalSelectedQty = 1;
     updateModalContent();
     modalOverlay.classList.add('open');
+    trackGAEvent('product_view', { item_name: productData.nameEn });
   }
 
-  function closeModal(){
-    modalOverlay.classList.remove('open');
-    currentModalProduct = null;
-  }
-
+  function closeModal(){ modalOverlay.classList.remove('open'); currentModalProduct = null; }
   modalClose.addEventListener('click', closeModal);
-  modalOverlay.addEventListener('click', (e) => {
-    if(e.target === modalOverlay) closeModal();
+  modalOverlay.addEventListener('click', (e) => { if(e.target === modalOverlay) closeModal(); });
+
+  document.getElementById('mQtyPlus').addEventListener('click', () => {
+    modalSelectedQty++;
+    mQtyText.textContent = modalSelectedQty;
+  });
+  document.getElementById('mQtyMinus').addEventListener('click', () => {
+    if(modalSelectedQty > 1) {
+      modalSelectedQty--;
+      mQtyText.textContent = modalSelectedQty;
+    }
   });
 
   mAddBtn.addEventListener('click', () => {
-    if(currentModalProduct){
-      addToCart(currentModalProduct);
+    if(currentModalProduct && currentModalProduct.available !== 'no'){
+      addToCart(currentModalProduct, modalSelectedQty);
       closeModal();
     }
   });
 
-  // ===== الأسئلة الشائعة (Accordion) =====
+  mDirectWaBtn.addEventListener('click', () => {
+    if(!currentModalProduct || currentModalProduct.available === 'no') return;
+    const data = currentModalProduct;
+    const name = currentLang === 'ar' ? data.nameAr : data.nameEn;
+    let text = `${T[currentLang].directWaMsg}- ${name} [${modalSelectedQty}]\n- السعر: ${data.price} ${T[currentLang].currency}`;
+    trackGAEvent('contact_whatsapp', { method: 'direct_product_button' });
+    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`, '_blank');
+  });
+
+  // ===== الأسئلة الشائعة Accordion =====
   document.querySelectorAll('.faq-question').forEach(question => {
     question.addEventListener('click', () => {
-      const item = question.closest('.faq-item');
-      item.classList.toggle('open');
+      question.closest('.faq-item').classList.toggle('open');
     });
   });
 
-  // ===== حساب المستخدم =====
+  // ===== القوائم والقوائم المنسدلة للكل =====
   const accountBtn = document.getElementById('accountBtn');
   const accountDropdown = document.getElementById('accountDropdown');
-
-  function closeAccountDropdown(){
-    accountDropdown.classList.remove('open');
-    accountBtn.setAttribute('aria-expanded', 'false');
-  }
+  const menuToggle = document.getElementById('menuToggle');
+  const navLinks = document.querySelector('nav.links');
 
   accountBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     accountDropdown.classList.toggle('open');
-    accountBtn.setAttribute('aria-expanded', accountDropdown.classList.contains('open') ? 'true' : 'false');
   });
-
-  // إغلاق أي قوائم عند النقر خارجها
-  document.addEventListener('click', (e) => {
-    if(!accountDropdown.contains(e.target) && e.target !== accountBtn){
-      closeAccountDropdown();
-    }
-  });
-
-  // ===== قائمة الموبايل المحسّنة =====
-  const menuToggle = document.getElementById('menuToggle');
-  const navLinks = document.querySelector('nav.links');
-
-  function isMobileScreen(){
-    return window.matchMedia('(max-width: 680px)').matches;
-  }
-
-  function openMobileMenu(){
-    if(!menuToggle || !navLinks || !isMobileScreen()) return;
-    navLinks.classList.add('mobile-open');
-    menuToggle.textContent = '×';
-    menuToggle.setAttribute('aria-expanded', 'true');
-  }
-
-  function closeMobileMenu(){
-    if(!menuToggle || !navLinks) return;
-    navLinks.classList.remove('mobile-open');
-    menuToggle.textContent = '☰';
-    menuToggle.setAttribute('aria-expanded', 'false');
-  }
 
   menuToggle.addEventListener('click', (e) => {
     e.stopPropagation();
-    if(navLinks.classList.contains('mobile-open')){
-      closeMobileMenu();
-    } else {
-      openMobileMenu();
-    }
+    navLinks.classList.toggle('mobile-open');
+    menuToggle.textContent = navLinks.classList.contains('mobile-open') ? '×' : '☰';
   });
 
-  navLinks.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      closeMobileMenu();
-    });
-  });
-
-  document.addEventListener('click', (e) => {
-    if(
-      isMobileScreen() &&
-      navLinks.classList.contains('mobile-open') &&
-      !navLinks.contains(e.target) &&
-      e.target !== menuToggle
-    ){
-      closeMobileMenu();
+  document.addEventListener('click', () => {
+    accountDropdown.classList.remove('open');
+    if(window.matchMedia('(max-width: 680px)').matches) {
+      navLinks.classList.remove('mobile-open');
+      menuToggle.textContent = '☰';
     }
   });
 
   document.addEventListener('keydown', (e) => {
     if(e.key === 'Escape'){
-      closeMobileMenu();
-      closeAccountDropdown();
+      checkoutModal.classList.remove('open');
+      modalOverlay.classList.remove('open');
       closeCart();
-      closeModal();
     }
   });
 
-  window.addEventListener('resize', () => {
-    if(!isMobileScreen()){
-      closeMobileMenu();
-    }
-  });
-
-  // ===== ربط المنتجات بـ Google Sheet =====
-  // رابط CSV الناتج عن شيت Google الخاص بمنتجات المتجر
+  // ===== جلب وعرض البيانات من قوقل شيت بحماية XSS وتحديث فوري =====
   const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1kdO5E6o8FW3X2qHQefOa9tlH0Qdnoqzuwx7UvPyyqTU/gviz/tq?tqx=out:csv&sheet=Products';
 
   function parseCSV(text){
@@ -1418,14 +1609,12 @@
         if(char === '"'){
           if(text[i + 1] === '"'){ field += '"'; i++; }
           else { inQuotes = false; }
-        } else {
-          field += char;
-        }
+        } else { field += char; }
       } else {
         if(char === '"'){ inQuotes = true; }
         else if(char === ','){ row.push(field); field = ''; }
         else if(char === '\n'){ row.push(field); rows.push(row); row = []; field = ''; }
-        else if(char === '\r'){ /* تجاهل */ }
+        else if(char === '\r'){ }
         else { field += char; }
       }
     }
@@ -1439,32 +1628,76 @@
     grid.innerHTML = '';
 
     products.forEach(p => {
+      // حماية وتنظيف النصوص XSS Clean
+      const nameAr = escapeHTML(p.nameAr);
+      const nameEn = escapeHTML(p.nameEn);
+      const price = escapeHTML(p.price);
+      const oldPrice = escapeHTML(p.oldPrice);
+      const discount = escapeHTML(p.discount);
+      const emoji = escapeHTML(p.emoji || '🛒');
+      const img = escapeHTML(p.img);
+      const categoryAr = escapeHTML(p.categoryAr);
+      const categoryEn = escapeHTML(p.categoryEn);
+      const descAr = escapeHTML(p.descAr);
+      const descEn = escapeHTML(p.descEn);
+      const available = escapeHTML(p.available || 'yes').toLowerCase();
+      const badgeAr = escapeHTML(p.badgeAr);
+      const badgeEn = escapeHTML(p.badgeEn);
+
       const card = document.createElement('div');
       card.className = 'prod-card';
-      card.dataset.nameAr = p.nameAr || '';
-      card.dataset.nameEn = p.nameEn || '';
-      card.dataset.price = p.price || '0';
-      card.dataset.emoji = p.emoji || '🛒';
-      card.dataset.img = p.img || '';
-      card.dataset.categoryEn = p.categoryEn || '';
-      card.dataset.categoryAr = p.categoryAr || '';
-      card.dataset.descAr = p.descAr || '';
-      card.dataset.descEn = p.descEn || '';
+      
+      // التخزين بـ Dataset للوظائف البرمجية والأزرار
+      card.dataset.nameAr = nameAr;
+      card.dataset.nameEn = nameEn;
+      card.dataset.price = price;
+      card.dataset.oldPrice = oldPrice;
+      card.dataset.discount = discount;
+      card.dataset.emoji = emoji;
+      card.dataset.img = img;
+      card.dataset.categoryAr = categoryAr;
+      card.dataset.categoryEn = categoryEn;
+      card.dataset.descAr = descAr;
+      card.dataset.descEn = descEn;
+      card.dataset.available = available;
 
-      const priceVal = p.price || '0';
+      // شارات الخصومات والعناوين
+      let badgeHtml = '';
+      if(currentLang === 'ar' && badgeAr) badgeHtml = `<div class="prod-badge">${badgeAr}</div>`;
+      else if(currentLang === 'en' && badgeEn) badgeHtml = `<div class="prod-badge">${badgeEn}</div>`;
+      else if(oldPrice && Number(oldPrice) > Number(price) && discount) {
+        badgeHtml = `<div class="prod-badge">${discount}</div>`;
+      }
+
+      // حالة عدم التوفر
+      let stockOverlayHtml = '';
+      if(available === 'no') {
+        const textLabel = currentLang === 'ar' ? T.ar.outOfStock : T.en.outOfStock;
+        stockOverlayHtml = `<div class="out-of-stock-badge"><span class="out-of-stock-text">${textLabel}</span></div>`;
+      }
+
+      // حساب وعرض السعر والقديم إن وجد
+      let priceDisplayHtml = `<span class="price">${price} ${T[currentLang].currency}</span>`;
+      if(oldPrice && Number(oldPrice) > Number(price)) {
+        priceDisplayHtml = `<span class="price">${price} ${T[currentLang].currency}</span><span class="price-old">${oldPrice} ${T[currentLang].currency}</span>`;
+      }
+
       card.innerHTML = `
+        ${badgeHtml}
+        ${stockOverlayHtml}
         <div class="prod-thumb" style="background:#EFE9DD;">
-          <img src="${p.img || ''}" alt="" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <span class="prod-emoji-fallback">${p.emoji || '🛒'}</span>
+          <img src="${img}" alt="" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <span class="prod-emoji-fallback">${emoji}</span>
         </div>
         <div class="prod-body">
-          <p class="prod-cat" data-ar="${p.categoryAr || ''}" data-en="${p.categoryEn || ''}">${currentLang === 'ar' ? (p.categoryAr || '') : (p.categoryEn || '')}</p>
-          <h4 data-ar="${p.nameAr || ''}" data-en="${p.nameEn || ''}">${currentLang === 'ar' ? (p.nameAr || '') : (p.nameEn || '')}</h4>
+          <p class="prod-cat" data-ar="${categoryAr}" data-en="${categoryEn}">${currentLang === 'ar' ? categoryAr : categoryEn}</p>
+          <h4 data-ar="${nameAr}" data-en="${nameEn}">${currentLang === 'ar' ? nameAr : nameEn}</h4>
           <div class="prod-foot">
-            <span class="price" data-ar="${priceVal} د.إ" data-en="${priceVal} AED">${currentLang === 'ar' ? priceVal + ' د.إ' : priceVal + ' AED'}</span>
-            <button class="add-btn" aria-label="أضف للسلة">+</button>
+            ${priceDisplayHtml}
+            <button class="add-btn" aria-label="أضف للسلة" ${available === 'no' ? 'disabled' : ''}>+</button>
           </div>
         </div>`;
+      
       grid.appendChild(card);
     });
 
@@ -1474,11 +1707,13 @@
 
   async function loadProductsFromSheet(){
     try{
-      const res = await fetch(SHEET_CSV_URL);
+      // منع تخزين الـ Cache لضمان استدعاء فوري لحظي للتحديثات الجديدة البسيطة
+      const cacheBuster = `&_cb=${new Date().getTime()}`;
+      const res = await fetch(SHEET_CSV_URL + cacheBuster);
       if(!res.ok) return;
       const text = await res.text();
       const rows = parseCSV(text).filter(r => r.length > 1 && r.some(c => c.trim() !== ''));
-      if(rows.length < 2) return; // لا توجد بيانات منتجات بعد العنوان
+      if(rows.length < 2) return;
 
       const headers = rows[0].map(h => h.trim());
       const products = rows.slice(1).map(r => {
@@ -1491,11 +1726,18 @@
         renderProductsFromSheet(products);
       }
     } catch(err){
-      console.warn('تعذر تحميل المنتجات من الشيت، سيتم عرض المنتجات الافتراضية', err);
+      console.warn('قوقل شيت غير متاح حاليًا، سيتم استخدام المنتجات الاحتياطية بالمشروع', err);
     }
   }
 
-  // ===== تثبيت الموقع كتطبيق (PWA) =====
+  // ===== الدالة المساعدة الآمنة لـ Google Analytics Events =====
+  function trackGAEvent(eventName, params = {}) {
+    if(typeof gtag === 'function') {
+      gtag('event', eventName, params);
+    }
+  }
+
+  // ===== تثبيت الموقع كتطبيق (PWA) واكتشاف السيرفس وركر =====
   let deferredInstallPrompt = null;
   const installBtn = document.getElementById('installBtn');
 
@@ -1510,9 +1752,7 @@
       if(!deferredInstallPrompt) return;
       deferredInstallPrompt.prompt();
       const choice = await deferredInstallPrompt.userChoice;
-      if(typeof gtag === 'function'){
-        gtag('event', 'pwa_install_prompt', { outcome: choice.outcome });
-      }
+      trackGAEvent('pwa_install_prompt', { outcome: choice.outcome });
       deferredInstallPrompt = null;
       installBtn.style.display = 'none';
     });
@@ -1520,22 +1760,21 @@
 
   window.addEventListener('appinstalled', () => {
     if(installBtn) installBtn.style.display = 'none';
-    if(typeof gtag === 'function'){ gtag('event', 'pwa_installed'); }
+    trackGAEvent('pwa_installed');
   });
 
   if('serviceWorker' in navigator){
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('sw.js').catch((err) => {
-        console.warn('تعذر تسجيل Service Worker', err);
+        console.warn('Service Worker registration skipped or failed', err);
       });
     });
   }
 
-  // تفعيل السلة عند التحميل
+  // التشغيل الأولي الفوري عند فتح المتجر
   bindProductCardEvents();
   renderCart();
   loadProductsFromSheet();
-
 </script>
 
 </body>
