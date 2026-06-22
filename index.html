@@ -29,7 +29,7 @@
 </script>
 
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1A1A1A">
+<meta name="theme-color" content="#1F5E3B">
 <link rel="apple-touch-icon" href="108579.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -39,12 +39,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=El+Messiri:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --cream:#EFE9DD;
-    --soil:#1A1A1A;
-    --clay:#1A1A1A;
-    --olive:#3A3A3A;
-    --sand:#E3DBC8;
-    --gold:#1A1A1A;
+    --cream:#F5F7F5;
+    --soil:#181A19;
+    --clay:#1F5E3B;
+    --olive:#1F5E3B;
+    --sand:#E8ECE9;
+    --gold:#C9A227;
     --white:#FFFFFF;
     --radius:22px;
   }
@@ -64,9 +64,9 @@
 
   header{
     position:sticky;top:0;z-index:50;
-    background:rgba(244,236,221,0.92);
+    background:rgba(245,247,245,0.92);
     backdrop-filter:blur(8px);
-    border-bottom:1px solid rgba(61,43,31,0.08);
+    border-bottom:1px solid rgba(31,94,59,0.1);
   }
   .nav-wrap{
     max-width:1200px;margin:0 auto;padding:16px 24px;
@@ -87,7 +87,7 @@
     width:auto;border-radius:50px;padding:0 16px;font-weight:800;font-size:.85rem;
     background:var(--soil);color:var(--cream);height:38px;
   }
-  .lang-btn:hover{transform:translateY(-3px);background:#3A3A3A;}
+  .lang-btn:hover{transform:translateY(-3px);background:#15452A;}
 
   @keyframes float{
     0%,100%{transform:translateY(0) rotate(0deg);}
@@ -97,7 +97,7 @@
     0%{opacity:0;transform:scale(.6);}
     100%{opacity:1;transform:scale(1);}
   }
-  .cart-count{position:absolute;top:-6px;left:-6px;background:var(--clay);color:#fff;font-size:.65rem;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+  .cart-count{position:absolute;top:-6px;left:-6px;background:var(--gold);color:#fff;font-size:.65rem;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
   .menu-toggle{display:none;background:none;font-size:1.6rem;color:var(--soil);}
 
   .account-dropdown{
@@ -123,22 +123,22 @@
   }
   .cart-drawer.open{left:0;}
   .cart-head{display:flex;align-items:center;justify-content:space-between;padding:20px;border-bottom:1px solid var(--sand);}
-  .cart-head h3{font-family:'El Messiri',serif;font-size:1.3rem;}
-  .cart-close{background:var(--sand);width:32px;height:32px;border-radius:50%;font-size:1.1rem;}
+  .cart-head h3{font-family:'El Messiri',serif;font-size:1.3rem;color:var(--clay);}
+  .cart-close{background:var(--sand);width:32px;height:32px;border-radius:50%;font-size:1.1rem;color:var(--clay);}
   .cart-items{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:14px;}
   .cart-empty{text-align:center;opacity:.6;padding:40px 10px;font-size:.95rem;}
   .cart-line{display:flex;align-items:center;gap:10px;background:var(--cream);border-radius:14px;padding:12px;}
   .cart-line .ci-emoji{font-size:1.6rem;}
   .cart-line .ci-info{flex:1;}
   .cart-line .ci-info h5{font-size:.92rem;font-weight:700;margin-bottom:4px;}
-  .cart-line .ci-info span{font-size:.85rem;color:var(--olive);font-weight:600;}
+  .cart-line .ci-info span{font-size:.85rem;color:var(--clay);font-weight:600;}
   .cart-qty-ctrl{display:flex;align-items:center;gap:6px;background:var(--sand);padding:4px 6px;border-radius:8px;}
   .cart-qty-ctrl button{background:var(--white);width:22px;height:22px;border-radius:4px;font-weight:bold;font-size:1rem;color:var(--soil);display:flex;align-items:center;justify-content:center;transition:background 0.2s;}
   .cart-qty-ctrl button:hover{background:#ccc;}
   .cart-qty-ctrl span{font-size:0.85rem;font-weight:bold;min-width:14px;text-align:center;}
-  .cart-line .ci-remove{background:none;color:#a33;font-size:1.4rem;font-weight:700;margin-inline-start:4px;}
+  .cart-line .ci-remove{background:none;color:#e63946;font-size:1.4rem;font-weight:700;margin-inline-start:4px;}
   .cart-foot{padding:18px 20px;border-top:1px solid var(--sand);}
-  .cart-total{display:flex;justify-content:space-between;font-weight:800;margin-bottom:14px;font-size:1.05rem;}
+  .cart-total{display:flex;justify-content:space-between;font-weight:800;margin-bottom:14px;font-size:1.05rem;color:var(--clay);}
   .cart-foot .btn-primary{width:100%;text-align:center;display:block;}
 
   /* --- Toast --- */
@@ -147,7 +147,7 @@
     bottom:30px;
     left:50%;
     transform:translateX(-50%) translateY(20px);
-    background:#1A1A1A;
+    background:var(--clay);
     color:#fff;
     padding:12px 22px;
     border-radius:50px;
@@ -156,7 +156,7 @@
     pointer-events:none;
     transition:.3s;
     z-index:999;
-    box-shadow:0 10px 24px rgba(0,0,0,.25);
+    box-shadow:0 10px 24px rgba(31,94,59,.3);
     text-align:center;
     white-space:nowrap;
   }
@@ -171,20 +171,20 @@
     position:relative;
   }
   .hero-text h1{font-family:'El Messiri',serif;font-weight:700;font-size:3.4rem;line-height:1.25;color:var(--soil);}
-  .hero-text h1 em{color:var(--clay);font-style:normal;}
-  .hero-text p{margin:22px 0 32px;font-size:1.12rem;line-height:1.9;color:#5b4636;max-width:480px;}
+  .hero-text h1 em{color:var(--gold);font-style:normal;}
+  .hero-text p{margin:22px 0 32px;font-size:1.12rem;line-height:1.9;color:#4A524D;max-width:480px;}
   .cta-row{display:flex;gap:14px;flex-wrap:wrap;}
   .btn-primary{
     background:var(--clay);color:#fff;padding:15px 34px;border-radius:50px;
     font-weight:700;font-size:1rem;transition:background .2s, transform .2s;
-    box-shadow:0 10px 24px -8px rgba(181,101,29,.6);
+    box-shadow:0 10px 24px -8px rgba(31,94,59,.4);
   }
-  .btn-primary:hover{background:#3A3A3A;transform:translateY(-2px);}
-  .btn-ghost{background:transparent;color:var(--soil);padding:15px 28px;border-radius:50px;font-weight:700;border:2px solid var(--soil);}
-  .btn-ghost:hover{background:var(--soil);color:var(--cream);}
+  .btn-primary:hover{background:#15452A;transform:translateY(-2px);}
+  .btn-ghost{background:transparent;color:var(--clay);padding:15px 28px;border-radius:50px;font-weight:700;border:2px solid var(--clay);}
+  .btn-ghost:hover{background:var(--clay);color:var(--white);}
 
   .hero-visual{position:relative;height:380px;}
-  .blob{position:absolute;border-radius:42% 58% 65% 35% / 45% 40% 60% 55%;background:radial-gradient(circle at 35% 30%,#EEF4E8,#D8E8CE 80%);}
+  .blob{position:absolute;border-radius:42% 58% 65% 35% / 45% 40% 60% 55%;background:radial-gradient(circle at 35% 30%,#F0F4F1,#D9E2DC 80%);}
   .blob.b1{width:320px;height:320px;top:10px;right:30px;}
   .hero-logo-display{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;}
   .hero-logo-img{width:280px;height:auto;mix-blend-mode:multiply;animation:float 5s ease-in-out infinite;}
@@ -194,8 +194,8 @@
 
   .section{max-width:1200px;margin:0 auto;padding:70px 24px;}
   .section-head{text-align:center;margin-bottom:48px;}
-  .eyebrow{color:var(--olive);font-weight:700;letter-spacing:1px;font-size:.9rem;}
-  .section-head h2{font-family:'El Messiri',serif;font-size:2.4rem;margin-top:8px;}
+  .eyebrow{color:var(--gold);font-weight:700;letter-spacing:1px;font-size:.9rem;}
+  .section-head h2{font-family:'El Messiri',serif;font-size:2.4rem;margin-top:8px;color:var(--clay);}
 
   .categories{background:var(--white);}
   .cat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:20px;}
@@ -204,39 +204,39 @@
   .cat-circle{
     width:96px;height:96px;border-radius:50%;
     display:flex;align-items:center;justify-content:center;font-size:2.2rem;
-    box-shadow:0 12px 22px -10px rgba(61,43,31,.35);
+    box-shadow:0 12px 22px -10px rgba(31,94,59,.25);
     transition:transform .35s cubic-bezier(.34,1.56,.64,1);
   }
   .cat-item:hover .cat-circle{transform:scale(1.12) rotate(-8deg);}
-  .cat-item span{font-weight:700;font-size:.92rem;}
+  .cat-item span{font-weight:700;font-size:.92rem;color:var(--soil);}
 
   .promo{
-    background:linear-gradient(120deg,#3D2B1F,#6B4226);
+    background:linear-gradient(120deg,#153B24,#1F5E3B);
     color:var(--cream);border-radius:32px;max-width:1200px;margin:0 auto;
     padding:48px 50px;display:flex;align-items:center;justify-content:space-between;
     gap:30px;flex-wrap:wrap;
   }
-  .promo h3{font-family:'El Messiri',serif;font-size:2.1rem;color:var(--sand);}
+  .promo h3{font-family:'El Messiri',serif;font-size:2.1rem;color:var(--gold);}
   .promo p{margin-top:10px;opacity:.85;max-width:420px;}
-  .promo .btn-primary{background:#FFFFFF;color:#1A1A1A;box-shadow:none;}
-  .promo .btn-primary:hover{background:#E3DBC8;}
+  .promo .btn-primary{background:var(--gold);color:#fff;box-shadow:none;}
+  .promo .btn-primary:hover{background:#B38F1F;}
 
   /* --- لماذا تختار متجر البستان --- */
   .why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;}
   .why-card{
     background:var(--white);border-radius:var(--radius);padding:30px 22px;text-align:center;
-    box-shadow:0 6px 18px -10px rgba(61,43,31,.25);transition:transform .25s;
+    box-shadow:0 6px 18px -10px rgba(31,94,59,.15);transition:transform .25s;
   }
   .why-card:hover{transform:translateY(-6px);}
   .why-icon{font-size:2.4rem;margin-bottom:14px;}
-  .why-card h4{font-family:'El Messiri',serif;font-size:1.08rem;margin-bottom:8px;color:var(--soil);}
-  .why-card p{font-size:.88rem;color:#5b4636;line-height:1.7;}
+  .why-card h4{font-family:'El Messiri',serif;font-size:1.08rem;margin-bottom:8px;color:var(--clay);}
+  .why-card p{font-size:.88rem;color:#4A524D;line-height:1.7;}
 
   /* --- معلومات مهمة قبل الطلب --- */
   .info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
   .info-card{background:var(--sand);border-radius:var(--radius);padding:28px 24px;}
-  .info-card h4{font-family:'El Messiri',serif;font-size:1.05rem;margin-bottom:10px;color:var(--soil);}
-  .info-card p{font-size:.9rem;color:#5b4636;line-height:1.75;}
+  .info-card h4{font-family:'El Messiri',serif;font-size:1.05rem;margin-bottom:10px;color:var(--clay);}
+  .info-card p{font-size:.9rem;color:#4A524D;line-height:1.75;}
 
   /* --- البحث والتصفية --- */
   .search-filter-wrap{
@@ -263,7 +263,7 @@
     transition:border-color 0.3s;
   }
   .search-box input:focus{
-    border-color:var(--soil);
+    border-color:var(--clay);
   }
   .filter-cats{
     display:flex;
@@ -278,23 +278,23 @@
     border-radius:50px;
     font-weight:700;
     font-size:0.9rem;
-    color:var(--olive);
+    color:var(--clay);
     transition:all 0.2s;
   }
   .filter-btn:hover{
     background:var(--sand);
-    color:var(--soil);
+    color:var(--clay);
   }
   .filter-btn.active{
-    background:var(--soil);
+    background:var(--clay);
     color:var(--white);
-    border-color:var(--soil);
+    border-color:var(--clay);
   }
   .no-results{
     text-align:center;
     font-size:1.1rem;
     font-weight:700;
-    color:var(--olive);
+    color:var(--clay);
     margin-top:20px;
     display:none;
     width:100%;
@@ -304,12 +304,12 @@
   .prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;}
   .prod-card{
     background:var(--white);border-radius:var(--radius);overflow:hidden;
-    box-shadow:0 6px 18px -10px rgba(61,43,31,.25);
+    box-shadow:0 6px 18px -10px rgba(31,94,59,.15);
     transition:transform .25s, box-shadow .25s;
     cursor:pointer;
     position:relative;
   }
-  .prod-card:hover{transform:translateY(-6px);box-shadow:0 16px 28px -12px rgba(61,43,31,.35);}
+  .prod-card:hover{transform:translateY(-6px);box-shadow:0 16px 28px -12px rgba(31,94,59,.25);}
   .prod-thumb{
     height:160px;display:flex;align-items:center;justify-content:center;font-size:3.4rem;
     transition:transform .35s cubic-bezier(.34,1.56,.64,1);
@@ -323,14 +323,14 @@
     display:none;position:absolute;inset:0;align-items:center;justify-content:center;font-size:3.4rem;
   }
   .prod-body{padding:18px;}
-  .prod-cat{color:var(--olive);font-size:.78rem;font-weight:700;letter-spacing:.5px;}
-  .prod-body h4{margin:6px 0 10px;font-size:1.02rem;font-weight:700;}
+  .prod-cat{color:var(--gold);font-size:.78rem;font-weight:700;letter-spacing:.5px;}
+  .prod-body h4{margin:6px 0 10px;font-size:1.02rem;font-weight:700;color:var(--soil);}
   .prod-foot{display:flex;align-items:center;justify-content:space-between;}
   .price{font-weight:800;color:var(--clay);font-size:1.1rem;}
   
   .price-old{
     text-decoration:line-through;
-    color:#a39385;
+    color:#8CA095;
     font-size:0.85rem;
     margin-inline-start:6px;
     font-weight:500;
@@ -360,7 +360,7 @@
     z-index:3;
   }
   .out-of-stock-text{
-    background:#1A1A1A;
+    background:var(--clay);
     color:#fff;
     padding:6px 14px;
     border-radius:50px;
@@ -369,11 +369,11 @@
   }
 
   .add-btn{
-    width:38px;height:38px;border-radius:50%;background:var(--olive);color:#fff;
+    width:38px;height:38px;border-radius:50%;background:var(--gold);color:#fff;
     font-size:1.3rem;display:flex;align-items:center;justify-content:center;
     transition:background .2s, transform .2s;
   }
-  .add-btn:hover{background:#566140;transform:scale(1.15) rotate(90deg);}
+  .add-btn:hover{background:#B38F1F;transform:scale(1.15) rotate(90deg);}
   .add-btn:disabled{
     background:#ccc;
     cursor:not-allowed;
@@ -429,7 +429,7 @@
     align-items:center;
     justify-content:center;
     font-weight:bold;
-    color:var(--soil);
+    color:var(--clay);
     z-index:10;
   }
   html[dir="ltr"] .modal-close{ left:auto; right:16px; }
@@ -453,7 +453,7 @@
   }
   .modal-cat{
     font-size:0.85rem;
-    color:var(--olive);
+    color:var(--gold);
     font-weight:700;
     margin-bottom:4px;
   }
@@ -461,7 +461,7 @@
     font-family:'El Messiri',serif;
     font-size:1.6rem;
     margin-bottom:8px;
-    color:var(--soil);
+    color:var(--clay);
   }
   .modal-price{
     font-size:1.4rem;
@@ -471,7 +471,7 @@
   }
   .modal-desc{
     font-size:0.95rem;
-    color:#5b4636;
+    color:#4A524D;
     line-height:1.6;
     margin-bottom:20px;
   }
@@ -486,6 +486,7 @@
   .modal-qty-label{
     font-weight:700;
     font-size:0.9rem;
+    color:var(--soil);
   }
 
   .modal-action-btns {
@@ -533,7 +534,7 @@
     transition:border-color 0.2s;
   }
   .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-    border-color:var(--soil);
+    border-color:var(--clay);
   }
   .checkout-summary-box {
     background:var(--cream);
@@ -553,24 +554,25 @@
     border-top:1px dashed var(--sand);
     padding-top:8px;
     margin-top:8px;
+    color:var(--clay);
   }
 
   /* --- الأسئلة الشائعة --- */
   .faq-list{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:14px;}
   .faq-item{
     background:var(--white);border-radius:18px;overflow:hidden;
-    box-shadow:0 4px 14px -8px rgba(61,43,31,.2);
+    box-shadow:0 4px 14px -8px rgba(31,94,59,.15);
   }
   .faq-question{
     width:100%;display:flex;align-items:center;justify-content:space-between;gap:14px;
     padding:18px 22px;font-weight:700;font-size:1rem;background:none;
-    text-align:start;color:var(--soil);
+    text-align:start;color:var(--clay);
   }
-  .faq-question .faq-icon{transition:transform .3s;font-size:1.3rem;flex-shrink:0;color:var(--olive);}
+  .faq-question .faq-icon{transition:transform .3s;font-size:1.3rem;flex-shrink:0;color:var(--gold);}
   .faq-item.open .faq-question .faq-icon{transform:rotate(45deg);}
   .faq-answer{max-height:0;overflow:hidden;transition:max-height .35s ease;padding:0 22px;}
   .faq-item.open .faq-answer{max-height:300px;padding-bottom:18px;}
-  .faq-answer p{font-size:.92rem;color:#5b4636;line-height:1.75;}
+  .faq-answer p{font-size:.92rem;color:#4A524D;line-height:1.75;}
 
   /* --- زر واتساب العائم --- */
   .wa-float{
@@ -582,21 +584,21 @@
   .wa-float:hover{transform:scale(1.1);}
 
   .newsletter{background:var(--sand);border-radius:32px;max-width:1200px;margin:0 auto 70px;padding:50px;text-align:center;}
-  .newsletter h3{font-family:'El Messiri',serif;font-size:2rem;margin-bottom:10px;}
-  .newsletter p{color:#5b4636;margin-bottom:26px;}
+  .newsletter h3{font-family:'El Messiri',serif;font-size:2rem;margin-bottom:10px;color:var(--clay);}
+  .newsletter p{color:#4A524D;margin-bottom:26px;}
   .news-form{display:flex;max-width:460px;margin:0 auto;gap:10px;}
   .news-form input{flex:1;padding:14px 18px;border-radius:50px;border:none;font-family:inherit;font-size:.95rem;}
-  .news-form button{background:var(--soil);color:var(--cream);padding:14px 28px;border-radius:50px;font-weight:700;}
+  .news-form button{background:var(--clay);color:var(--white);padding:14px 28px;border-radius:50px;font-weight:700;}
 
-  footer{background:var(--soil);color:var(--cream);}
+  footer{background:#112E1D;color:var(--cream);}
   .foot-wrap{max-width:1200px;margin:0 auto;padding:60px 24px 30px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;}
-  .foot-wrap h5{font-size:1.05rem;margin-bottom:18px;color:var(--sand);}
+  .foot-wrap h5{font-size:1.05rem;margin-bottom:18px;color:var(--gold);}
   .foot-wrap ul li{margin-bottom:10px;opacity:.85;font-size:.92rem;}
-  .foot-wrap ul li:hover{opacity:1;color:var(--sand);}
+  .foot-wrap ul li:hover{opacity:1;color:var(--gold);}
   .foot-logo{margin-bottom:14px;}
   .footer-logo-img{height:70px;width:auto;background:var(--white);padding:6px;border-radius:12px;}
   .foot-wrap p.about{opacity:.75;font-size:.9rem;line-height:1.8;max-width:280px;}
-  .copyright{border-top:1px solid rgba(244,236,221,.12);padding:20px 24px;text-align:center;font-size:.85rem;opacity:.65;}
+  .copyright{border-top:1px solid rgba(255,255,255,.08);padding:20px 24px;text-align:center;font-size:.85rem;opacity:.65;}
 
   @media (max-width:980px){
     .hero{grid-template-columns:1fr;}
@@ -614,7 +616,7 @@
       position:absolute;
       top:86px;
       inset-inline:24px;
-      background:#F4ECDD;
+      background:#F5F7F5;
       padding:18px 22px;
       border-radius:18px;
       box-shadow:0 12px 28px rgba(0,0,0,.14);
@@ -749,7 +751,7 @@
     <p class="eyebrow" data-ar="تعرّف علينا" data-en="Who We Are">تعرّف علينا</p>
     <h2 data-ar="من نحن" data-en="About Us">من نحن</h2>
   </div>
-  <div style="max-width:800px; margin:0 auto; text-align:center; line-height:1.8; font-size:1.1rem; color:#5b4636; padding:0 10px;">
+  <div style="max-width:800px; margin:0 auto; text-align:center; line-height:1.8; font-size:1.1rem; color:#4A524D; padding:0 10px;">
     <p data-ar="متجر البستان هو متجر إلكتروني متنوع في الإمارات، يوفر منتجات مختارة للعائلة والمنزل بجودة موثوقة وأسعار مناسبة. نسعى لتقديم تجربة تسوق سهلة وسريعة عبر واتساب مع خدمة توصيل داخل الإمارات." data-en="AlBostan Store is a UAE-based online store offering selected products for families and homes with trusted quality and fair prices. We aim to provide an easy and fast shopping experience through WhatsApp with delivery across the UAE.">متجر البستان هو متجر إلكتروني متنوع في الإمارات، يوفر منتجات مختارة للعائلة والمنزل بجودة موثوقة وأسعار مناسبة. نسعى لتقديم تجربة تسوق سهلة وسريعة عبر واتساب مع خدمة توصيل داخل الإمارات.</p>
   </div>
 </section>
@@ -760,12 +762,12 @@
     <h2 data-ar="أقسام المتجر" data-en="Store Categories">أقسام المتجر</h2>
   </div>
   <div class="cat-grid">
-    <a href="#products" class="cat-item" onclick="setFilter('Grocery')"><div class="cat-circle" style="background:#EFE9DD;border:1.5px solid #1A1A1A;">🥕</div><span data-ar="بقالة" data-en="Grocery">بقالة</span></a>
-    <a href="#products" class="cat-item" onclick="setFilter('Electronics')"><div class="cat-circle" style="background:#F5F2EC;border:1.5px solid #1A1A1A;">📱</div><span data-ar="إلكترونيات" data-en="Electronics">إلكترونيات</span></a>
-    <a href="#products" class="cat-item" onclick="setFilter('Fashion')"><div class="cat-circle" style="background:#E3DBC8;border:1.5px solid #1A1A1A;">👕</div><span data-ar="أزياء" data-en="Fashion">أزياء</span></a>
-    <a href="#products" class="cat-item" onclick="setFilter('Home & Garden')"><div class="cat-circle" style="background:#FFFFFF;border:1.5px solid #1A1A1A;">🏠</div><span data-ar="المنزل والحديقة" data-en="Home & Garden">المنزل والحديقة</span></a>
-    <a href="#products" class="cat-item" onclick="setFilter('Kids')"><div class="cat-circle" style="background:#ECE6D9;border:1.5px solid #1A1A1A;">🧸</div><span data-ar="أطفال" data-en="Kids">أطفال</span></a>
-    <a href="#products" class="cat-item" onclick="setFilter('Sports')"><div class="cat-circle" style="background:#F0EDE5;border:1.5px solid #1A1A1A;">🏋️</div><span data-ar="رياضة" data-en="Sports">رياضة</span></a>
+    <a href="#products" class="cat-item" onclick="setFilter('Grocery')"><div class="cat-circle" style="background:var(--white);border:1.5px solid var(--clay);">🥕</div><span data-ar="بقالة" data-en="Grocery">بقالة</span></a>
+    <a href="#products" class="cat-item" onclick="setFilter('Electronics')"><div class="cat-circle" style="background:var(--white);border:1.5px solid var(--clay);">📱</div><span data-ar="إلكترونيات" data-en="Electronics">إلكترونيات</span></a>
+    <a href="#products" class="cat-item" onclick="setFilter('Fashion')"><div class="cat-circle" style="background:var(--white);border:1.5px solid var(--clay);">👕</div><span data-ar="أزياء" data-en="Fashion">أزياء</span></a>
+    <a href="#products" class="cat-item" onclick="setFilter('Home & Garden')"><div class="cat-circle" style="background:var(--white);border:1.5px solid var(--clay);">🏠</div><span data-ar="المنزل والحديقة" data-en="Home & Garden">المنزل والحديقة</span></a>
+    <a href="#products" class="cat-item" onclick="setFilter('Kids')"><div class="cat-circle" style="background:var(--white);border:1.5px solid var(--clay);">🧸</div><span data-ar="أطفال" data-en="Kids">أطفال</span></a>
+    <a href="#products" class="cat-item" onclick="setFilter('Sports')"><div class="cat-circle" style="background:var(--white);border:1.5px solid var(--clay);">🏋️</div><span data-ar="رياضة" data-en="Sports">رياضة</span></a>
   </div>
 </section>
 
@@ -853,7 +855,7 @@
 
   <div class="prod-grid" id="productGrid">
     <div class="prod-card" data-name-ar="عسل طبيعي 500غ" data-name-en="Natural Honey 500g" data-price="35" data-emoji="🍯" data-img="images/honey.jpg" data-category-en="Grocery" data-category-ar="بقالة" data-desc-ar="عسل طبيعي نقي 100%، مثالي لتحلية مشروباتك أو استخدامه في الوصفات الصحية." data-desc-en="100% pure natural honey, perfect for sweetening your drinks or using in healthy recipes." data-available="yes">
-      <div class="prod-thumb" style="background:#EFE9DD;">
+      <div class="prod-thumb" style="background:var(--sand);">
         <img src="images/honey.jpg" alt="عسل طبيعي 500غ" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <span class="prod-emoji-fallback">🍯</span>
       </div>
@@ -865,7 +867,7 @@
     </div>
     
     <div class="prod-card" data-name-ar="سماعات لاسلكية" data-name-en="Wireless Headphones" data-price="129" data-emoji="🎧" data-img="images/headphones.jpg" data-category-en="Electronics" data-category-ar="إلكترونيات" data-desc-ar="سماعات لاسلكية بصوت نقي وعزل للضوضاء، تدوم طويلاً ببطارية قوية." data-desc-en="Wireless headphones with pure sound and noise cancellation, long-lasting battery." data-available="yes">
-      <div class="prod-thumb" style="background:#F5F2EC;">
+      <div class="prod-thumb" style="background:var(--sand);">
         <img src="images/headphones.jpg" alt="سماعات لاسلكية" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <span class="prod-emoji-fallback">🎧</span>
       </div>
@@ -911,7 +913,7 @@
 
 <section class="section" id="faq">
   <div class="section-head">
-    <p class="eyebrow" data-ar="هل لديك سؤال؟" data-en="Have a question?">هل لديك سؤال?</p>
+    <p class="eyebrow" data-ar="هل لديك سؤال؟" data-en="Have a question?">هل لديك سؤال؟</p>
     <h2 data-ar="الأسئلة الشائعة" data-en="Frequently Asked Questions">الأسئلة الشائعة</h2>
   </div>
   <div class="faq-list">
@@ -1493,7 +1495,7 @@
     }
     
     if(data.available === 'no') {
-      priceHtml += ` <span style="background:#1A1A1A; color:#fff; font-size:0.75rem; padding:2px 8px; border-radius:50px; margin-inline-start:6px;">${T[currentLang].outOfStock}</span>`;
+      priceHtml += ` <span style="background:var(--clay); color:#fff; font-size:0.75rem; padding:2px 8px; border-radius:50px; margin-inline-start:6px;">${T[currentLang].outOfStock}</span>`;
       mAddBtn.disabled = true;
       mDirectWaBtn.disabled = true;
     } else {
@@ -1685,7 +1687,7 @@
       card.innerHTML = `
         ${badgeHtml}
         ${stockOverlayHtml}
-        <div class="prod-thumb" style="background:#EFE9DD;">
+        <div class="prod-thumb" style="background:var(--sand);">
           <img src="${img}" alt="" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
           <span class="prod-emoji-fallback">${emoji}</span>
         </div>
