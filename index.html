@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AlBostan Store | متجرك المتنوع</title>
+
+<!-- Google Analytics (GA4) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-THWNP61B6M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-THWNP61B6M');
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=El+Messiri:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -1066,6 +1076,14 @@
     }
     renderCart();
     showToast(T[currentLang].added);
+
+    if(typeof gtag === 'function'){
+      gtag('event', 'add_to_cart', {
+        item_name: productData.nameEn || productData.nameAr,
+        value: Number(productData.price) || 0,
+        currency: 'AED'
+      });
+    }
   }
 
   // ربط أزرار الإضافة وفتح نافذة التفاصيل لكل بطاقات المنتجات (يعمل مع المنتجات الثابتة وأيضًا منتجات الشيت)
@@ -1141,6 +1159,14 @@
 
     const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
     window.open(waUrl, '_blank');
+
+    if(typeof gtag === 'function'){
+      gtag('event', 'generate_lead', {
+        method: 'whatsapp_checkout',
+        value: total,
+        currency: 'AED'
+      });
+    }
   });
 
   // ===== زر واتساب العائم (استفسار سريع) =====
@@ -1150,6 +1176,10 @@
     const inquiryMsg = T[currentLang].waInquiry;
     const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(inquiryMsg)}`;
     window.open(waUrl, '_blank');
+
+    if(typeof gtag === 'function'){
+      gtag('event', 'contact_whatsapp', { method: 'floating_button' });
+    }
   });
 
   // ===== البحث والتصفية =====
