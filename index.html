@@ -14,6 +14,14 @@
   gtag('config', 'G-THWNP61B6M');
 </script>
 
+<!-- PWA: تثبيت الموقع كتطبيق -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1A1A1A">
+<link rel="apple-touch-icon" href="108579.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AlBostan Store">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=El+Messiri:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -546,6 +554,7 @@
     </nav>
     <div class="nav-icons">
       <button class="icon-btn lang-btn" id="langToggle">EN</button>
+      <button class="icon-btn" id="installBtn" aria-label="تثبيت التطبيق" style="display:none;">📲</button>
       <button class="icon-btn" id="accountBtn" aria-label="حسابي" aria-expanded="false">👤</button>
       <div class="account-dropdown" id="accountDropdown">
         <a href="#" data-ar="تسجيل الدخول" data-en="Login">تسجيل الدخول</a>
@@ -1484,6 +1493,42 @@
     } catch(err){
       console.warn('تعذر تحميل المنتجات من الشيت، سيتم عرض المنتجات الافتراضية', err);
     }
+  }
+
+  // ===== تثبيت الموقع كتطبيق (PWA) =====
+  let deferredInstallPrompt = null;
+  const installBtn = document.getElementById('installBtn');
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+    if(installBtn) installBtn.style.display = 'flex';
+  });
+
+  if(installBtn){
+    installBtn.addEventListener('click', async () => {
+      if(!deferredInstallPrompt) return;
+      deferredInstallPrompt.prompt();
+      const choice = await deferredInstallPrompt.userChoice;
+      if(typeof gtag === 'function'){
+        gtag('event', 'pwa_install_prompt', { outcome: choice.outcome });
+      }
+      deferredInstallPrompt = null;
+      installBtn.style.display = 'none';
+    });
+  }
+
+  window.addEventListener('appinstalled', () => {
+    if(installBtn) installBtn.style.display = 'none';
+    if(typeof gtag === 'function'){ gtag('event', 'pwa_installed'); }
+  });
+
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch((err) => {
+        console.warn('تعذر تسجيل Service Worker', err);
+      });
+    });
   }
 
   // تفعيل السلة عند التحميل
