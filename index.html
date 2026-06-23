@@ -2904,6 +2904,327 @@
   }
 })();
 </script>
+<script>
+/* =========================================================
+   AlBostan Store - رقم الطلب + تاريخ ووقت الطلب
+   يضيف رقم طلب تلقائي وتاريخ الطلب داخل Checkout ورسالة واتساب
+   لا يغير السلة أو الدفع أو Google Sheet
+   ========================================================= */
+
+(function(){
+  if(window.__albostanOrderMetaFeatureLoaded) return;
+  window.__albostanOrderMetaFeatureLoaded = true;
+
+  const LAST_ORDER_META_KEY = 'albostan_last_order_meta';
+
+  function getEl(id){
+    return document.getElementById(id);
+  }
+
+  function getLang(){
+    try{
+      return typeof currentLang !== 'undefined' ? currentLang : 'ar';
+    }catch(e){
+      return 'ar';
+    }
+  }
+
+  function pad(num){
+    return String(num).padStart(2, '0');
+  }
+
+  function createOrderDateObject(){
+    const d = new Date();
+
+    return {
+      iso: d.toISOString(),
+      year: d.getFullYear(),
+      month: pad(d.getMonth() + 1),
+      day: pad(d.getDate()),
+      hour: pad(d.getHours()),
+      minute: pad(d.getMinutes())
+    };
+  }
+
+  function formatOrderDateForDisplay(dateObj){
+    if(!dateObj) return '';
+
+    const datePart = `${dateObj.day}/${dateObj.month}/${dateObj.year}`;
+    const timePart = `${dateObj.hour}:${dateObj.minute}`;
+
+    return `${datePart} - ${timePart}`;
+  }
+
+  function generateOrderId(dateObj){
+    const d = dateObj || createOrderDateObject();
+    const random = Math.floor(1000 + Math.random() * 9000);
+
+    return `ABS-${d.year}${d.month}${d.day}-${d.hour}${d.minute}-${random}`;
+  }
+
+  function createPendingOrderMeta(){
+    const dateObj = createOrderDateObject();
+
+    return {
+      orderId: generateOrderId(dateObj),
+      orderDate: dateObj
+    };
+  }
+
+  function getPendingOrderMeta(){
+    if(!window.__albostanPendingOrderMeta){
+      window.__albostanPendingOrderMeta = createPendingOrderMeta();
+    }
+
+    return window.__albostanPendingOrderMeta;
+  }
+
+  function resetPendingOrderMeta(){
+    window.__albostanPendingOrderMeta = null;
+  }
+
+  function saveLastOrderMeta(meta){
+    try{
+      if(!meta) return;
+
+      localStorage.setItem(LAST_ORDER_META_KEY, JSON.stringify({
+        orderId: meta.orderId,
+        orderDate: meta.orderDate,
+        savedAt: new Date().toISOString()
+      }));
+    }catch(e){}
+  }
+
+  function isCheckoutAllowed(){
+    try{
+      if(typeof cart !== 'undefined' && Array.isArray(cart) && cart.length === 0){
+        return false;
+      }
+
+      if(typeof getCartSubtotal === 'function'){
+        const subtotal = Number(getCartSubtotal());
+        if(subtotal < 30) return false;
+      }
+
+      return true;
+    }catch(e){
+      return true;
+    }
+  }
+
+  function createOrderMetaBox(){
+    if(getEl('checkoutOrderMetaBox')) return;
+
+    const summaryBox = document.querySelector('.checkout-summary-box');
+    if(!summaryBox) return;
+
+    const box = document.createElement('div');
+    box.id = 'checkoutOrderMetaBox';
+    box.style.cssText = `
+      background:var(--cream);
+      border:1px dashed var(--sand);
+      border-radius:14px;
+      padding:10px 12px;
+      margin:14px 0;
+      text-align:center;
+      font-size:.9rem;
+      font-weight:700;
+      color:var(--clay);
+      line-height:1.8;
+    `;
+
+    summaryBox.insertAdjacentElement('beforebegin', box);
+  }
+
+  function updateOrderMetaBox(){
+    createOrderMetaBox();
+
+    const box = getEl('checkoutOrderMetaBox');
+    if(!box) return;
+
+    const meta = getPendingOrderMeta();
+    const formattedDate = formatOrderDateForDisplay(meta.orderDate);
+
+    if(getLang() === 'ar'){
+      box.innerHTML = `
+        <div>رقم الطلب: ${meta.orderId}</div>
+        <div>تاريخ الطلب: ${formattedDate}</div>
+      `;
+    }else{
+      box.innerHTML = `
+        <div>Order ID: ${meta.orderId}</div>
+        <div>Order Date: ${formattedDate}</div>
+      `;
+    }
+  }
+
+  function isCheckoutMessage(text){
+    if(!text) return false;
+
+    return (
+      text.includes('طلب جديد من متجر البستان') ||
+      text.includes('New Order from AlBostan Store')
+    );
+  }
+
+  function insertOrderMetaIntoMessage(message, meta){
+    if(!message || !meta) return message;
+
+    if(
+      message.includes('رقم الطلب:') ||
+      message.includes('Order ID:') ||
+      message.includes('تاريخ الطلب:') ||
+      message.includes('Order Date:')
+    ){
+      return message;
+    }
+
+    const formattedDate = formatOrderDateForDisplay(meta.orderDate);
+
+    if(message.includes('طلب جديد من متجر البستان')){
+      return message.replace(
+        'طلب جديد من متجر البستان 🧾',
+        `طلب جديد من متجر البستان 🧾\nرقم الطلب: ${meta.orderId}\nتاريخ الطلب: ${formattedDate}`
+      );
+    }
+
+    if(message.includes('New Order from AlBostan Store')){
+      return message.replace(
+        'New Order from AlBostan Store 🧾',
+        `New Order from AlBostan Store 🧾\nOrder ID: ${meta.orderId}\nOrder Date: ${formattedDate}`
+      );
+    }
+
+    if(getLang() === 'ar'){
+      return `رقم الطلب: ${meta.orderId}\nتاريخ الطلب: ${formattedDate}\n${message}`;
+    }
+
+    return `Order ID: ${meta.orderId}\nOrder Date: ${formattedDate}\n${message}`;
+  }
+
+  function hookCheckoutOpen(){
+    const checkoutBtn = getEl('checkoutBtn');
+    if(!checkoutBtn || checkoutBtn.dataset.orderMetaHooked) return;
+
+    checkoutBtn.dataset.orderMetaHooked = 'yes';
+
+    checkoutBtn.addEventListener('click', function(){
+      setTimeout(function(){
+        if(!isCheckoutAllowed()) return;
+
+        window.__albostanPendingOrderMeta = createPendingOrderMeta();
+        updateOrderMetaBox();
+      }, 0);
+    });
+  }
+
+  function hookCheckoutClose(){
+    const checkoutClose = getEl('checkoutClose');
+    const checkoutModal = getEl('checkoutModal');
+
+    if(checkoutClose && !checkoutClose.dataset.orderMetaCloseHooked){
+      checkoutClose.dataset.orderMetaCloseHooked = 'yes';
+      checkoutClose.addEventListener('click', function(){
+        resetPendingOrderMeta();
+      });
+    }
+
+    if(checkoutModal && !checkoutModal.dataset.orderMetaOverlayHooked){
+      checkoutModal.dataset.orderMetaOverlayHooked = 'yes';
+      checkoutModal.addEventListener('click', function(e){
+        if(e.target === checkoutModal){
+          resetPendingOrderMeta();
+        }
+      });
+    }
+  }
+
+  function hookCheckoutSubmit(){
+    const checkoutForm = getEl('checkoutForm');
+    if(!checkoutForm || checkoutForm.dataset.orderMetaSubmitHooked) return;
+
+    checkoutForm.dataset.orderMetaSubmitHooked = 'yes';
+
+    checkoutForm.addEventListener('submit', function(){
+      if(!isCheckoutAllowed()) return;
+
+      if(!window.__albostanPendingOrderMeta){
+        window.__albostanPendingOrderMeta = createPendingOrderMeta();
+      }
+
+      updateOrderMetaBox();
+    }, true);
+  }
+
+  function patchWindowOpenForOrderMeta(){
+    if(window.__albostanWindowOpenOrderMetaPatched) return;
+    window.__albostanWindowOpenOrderMetaPatched = true;
+
+    const originalOpen = window.open;
+
+    window.open = function(url, target, features){
+      try{
+        if(
+          typeof url === 'string' &&
+          url.includes('wa.me/') &&
+          url.includes('text=')
+        ){
+          const parsedUrl = new URL(url, window.location.href);
+          const text = parsedUrl.searchParams.get('text') || '';
+
+          if(isCheckoutMessage(text)){
+            const meta = getPendingOrderMeta();
+            const updatedText = insertOrderMetaIntoMessage(text, meta);
+
+            parsedUrl.searchParams.set('text', updatedText);
+            url = parsedUrl.toString();
+
+            saveLastOrderMeta(meta);
+
+            setTimeout(function(){
+              resetPendingOrderMeta();
+            }, 700);
+          }
+        }
+      }catch(e){
+        console.warn('Order meta injection skipped safely', e);
+      }
+
+      return originalOpen.call(window, url, target, features);
+    };
+  }
+
+  function hookLanguageButton(){
+    const langBtn = getEl('langToggle');
+    if(!langBtn || langBtn.dataset.orderMetaLangHooked) return;
+
+    langBtn.dataset.orderMetaLangHooked = 'yes';
+
+    langBtn.addEventListener('click', function(){
+      setTimeout(function(){
+        const box = getEl('checkoutOrderMetaBox');
+        if(box && window.__albostanPendingOrderMeta){
+          updateOrderMetaBox();
+        }
+      }, 0);
+    });
+  }
+
+  function initOrderMetaFeature(){
+    hookCheckoutOpen();
+    hookCheckoutClose();
+    hookCheckoutSubmit();
+    hookLanguageButton();
+    patchWindowOpenForOrderMeta();
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', initOrderMetaFeature);
+  }else{
+    initOrderMetaFeature();
+  }
+})();
+</script>
 
 </body>
 </html>
