@@ -3940,6 +3940,247 @@
   }
 })();
 </script>
+<script>
+/* =========================================================
+   AlBostan Store - ترتيب الصفحة وتحديث السياسات
+   - إزالة آراء العملاء غير الحقيقية
+   - تقريب المنتجات للأعلى
+   - تحديث التوصيل إلى 2-5 أيام
+   - تحديث الإرجاع إلى 48 ساعة
+   - تأكيد COD فقط
+   ========================================================= */
+
+(function(){
+  if(window.__albostanPageOrderPoliciesLoaded) return;
+  window.__albostanPageOrderPoliciesLoaded = true;
+
+  function getEl(id){
+    return document.getElementById(id);
+  }
+
+  function getLang(){
+    try{
+      return typeof currentLang !== 'undefined' ? currentLang : 'ar';
+    }catch(e){
+      return 'ar';
+    }
+  }
+
+  function localizeElement(el){
+    if(!el || !el.dataset) return;
+
+    if(el.dataset.ar && el.dataset.en){
+      el.textContent = getLang() === 'ar' ? el.dataset.ar : el.dataset.en;
+    }
+  }
+
+  function insertAfter(referenceNode, newNode){
+    if(!referenceNode || !newNode || !referenceNode.parentNode) return;
+    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+  }
+
+  function moveBefore(referenceNode, movingNode){
+    if(!referenceNode || !movingNode || !referenceNode.parentNode) return;
+    referenceNode.parentNode.insertBefore(movingNode, referenceNode);
+  }
+
+  function removeFakeReviews(){
+    const reviews = getEl('reviews');
+    if(reviews){
+      reviews.remove();
+    }
+  }
+
+  function reorderPageSections(){
+    const categories = getEl('categories');
+    const howTo = getEl('albostanHowToOrderSection');
+    const products = getEl('products');
+    const promo = getEl('promo');
+    const track = getEl('trackOrderSection');
+    const shipping = getEl('shipping-info');
+    const faq = getEl('faq');
+    const about = getEl('about');
+    const why = getEl('why-us');
+    const footer = getEl('contact');
+
+    const newsletterBox = document.querySelector('.newsletter');
+    const newsletterSection = newsletterBox ? newsletterBox.closest('section') : null;
+
+    /*
+      الترتيب الجديد:
+      الأقسام -> كيف تطلب -> المنتجات -> العروض -> تتبع الطلب
+      -> معلومات الشحن -> FAQ -> من نحن -> لماذا نحن -> newsletter -> footer
+    */
+
+    if(categories && howTo){
+      moveBefore(howTo, categories);
+    }else if(categories && products){
+      moveBefore(products, categories);
+    }
+
+    if(howTo && products){
+      moveBefore(products, howTo);
+    }
+
+    if(products && promo){
+      insertAfter(products, promo);
+    }
+
+    if(promo && track){
+      insertAfter(promo, track);
+    }else if(products && track){
+      insertAfter(products, track);
+    }
+
+    if(track && shipping){
+      insertAfter(track, shipping);
+    }else if(promo && shipping){
+      insertAfter(promo, shipping);
+    }
+
+    if(shipping && faq){
+      insertAfter(shipping, faq);
+    }
+
+    if(faq && about){
+      insertAfter(faq, about);
+    }
+
+    if(about && why){
+      insertAfter(about, why);
+    }
+
+    if(why && newsletterSection){
+      insertAfter(why, newsletterSection);
+    }
+
+    if(newsletterSection && footer){
+      insertAfter(newsletterSection, footer);
+    }
+  }
+
+  function updateShippingPaymentReturnTexts(){
+    const infoCards = document.querySelectorAll('.info-card');
+
+    infoCards.forEach(card => {
+      const title = card.querySelector('h4');
+      const paragraph = card.querySelector('p');
+
+      if(!title || !paragraph) return;
+
+      const titleAr = title.dataset.ar || title.textContent.trim();
+      const titleEn = title.dataset.en || title.textContent.trim();
+
+      const isShipping =
+        titleAr === 'الشحن والتوصيل' ||
+        titleAr === 'الشحن' ||
+        titleEn === 'Shipping & Delivery' ||
+        titleEn === 'Shipping';
+
+      const isPayment =
+        titleAr === 'الدفع' ||
+        titleEn === 'Payment';
+
+      const isReturn =
+        titleAr === 'الإرجاع والاستبدال' ||
+        titleAr === 'الإرجاع' ||
+        titleEn === 'Returns & Exchanges' ||
+        titleEn === 'Returns';
+
+      const isProcessing =
+        titleAr === 'مدة تجهيز الطلب' ||
+        titleEn === 'Processing Time';
+
+      if(isShipping){
+        paragraph.dataset.ar = 'نوفر التوصيل داخل الإمارات، وتظهر رسوم التوصيل حسب الإمارة أثناء إتمام الطلب. مدة التوصيل المتوقعة عادةً من 2 إلى 5 أيام من تأكيد الطلب عبر واتساب.';
+        paragraph.dataset.en = 'We deliver across the UAE, and delivery fees are shown based on the selected emirate during checkout. Expected delivery time is usually 2 to 5 days after confirming the order via WhatsApp.';
+        localizeElement(paragraph);
+      }
+
+      if(isPayment){
+        paragraph.dataset.ar = 'الدفع متاح نقدًا عند الاستلام فقط بعد تأكيد وتنسيق الطلب معكم عبر واتساب مباشرة.';
+        paragraph.dataset.en = 'Payment is Cash on Delivery only after confirming and coordinating your order directly via WhatsApp.';
+        localizeElement(paragraph);
+      }
+
+      if(isReturn){
+        paragraph.dataset.ar = 'يمكنك طلب الإرجاع أو الاستبدال خلال 48 ساعة من تاريخ الاستلام، بشرط أن يكون المنتج بحالته الأصلية وغلافه الأصلي، وبعد مراجعة الطلب عبر واتساب.';
+        paragraph.dataset.en = 'You can request a return or exchange within 48 hours of receipt, provided the product is in its original condition and packaging, after reviewing the request via WhatsApp.';
+        localizeElement(paragraph);
+      }
+
+      if(isProcessing){
+        paragraph.dataset.ar = 'يتم تجهيز الطلب بعد تأكيده عبر واتساب، وتكون مدة التوصيل المتوقعة عادةً من 2 إلى 5 أيام داخل الإمارات حسب الإمارة وتوفر المنتج.';
+        paragraph.dataset.en = 'Orders are prepared after WhatsApp confirmation, and expected delivery is usually within 2 to 5 days across the UAE depending on the emirate and product availability.';
+        localizeElement(paragraph);
+      }
+    });
+  }
+
+  function updateFaqTexts(){
+    document.querySelectorAll('.faq-answer p').forEach(p => {
+      const ar = p.dataset.ar || '';
+      const en = p.dataset.en || '';
+
+      if(
+        ar.includes('تتراوح الرسوم بين 15 إلى 25') ||
+        en.includes('delivery fees range from 15 to 25')
+      ){
+        p.dataset.ar = 'نعم، نوصل لكافة الإمارات. رسوم التوصيل تُحسب حسب الإمارة، ومدة التوصيل المتوقعة عادةً من 2 إلى 5 أيام من تأكيد الطلب عبر واتساب.';
+        p.dataset.en = 'Yes, we deliver across all UAE emirates. Delivery fees are calculated based on the emirate, and expected delivery is usually 2 to 5 days after confirming the order via WhatsApp.';
+        localizeElement(p);
+      }
+    });
+  }
+
+  function updateCheckoutRelatedTexts(){
+    const minAlert = getEl('minOrderAlert');
+    if(minAlert){
+      localizeElement(minAlert);
+    }
+
+    const paymentSelect = getEl('paymentMethod');
+    if(paymentSelect){
+      const option = paymentSelect.querySelector('option');
+      if(option){
+        option.dataset.ar = 'نقدًا عند الاستلام فقط';
+        option.dataset.en = 'Cash on Delivery only';
+        option.textContent = getLang() === 'ar' ? option.dataset.ar : option.dataset.en;
+      }
+    }
+  }
+
+  function hookLanguageButton(){
+    const langBtn = getEl('langToggle');
+    if(!langBtn || langBtn.dataset.pageOrderPolicyLangHooked) return;
+
+    langBtn.dataset.pageOrderPolicyLangHooked = 'yes';
+
+    langBtn.addEventListener('click', function(){
+      setTimeout(function(){
+        updateShippingPaymentReturnTexts();
+        updateFaqTexts();
+        updateCheckoutRelatedTexts();
+      }, 0);
+    });
+  }
+
+  function initPageOrderAndPolicies(){
+    removeFakeReviews();
+    reorderPageSections();
+    updateShippingPaymentReturnTexts();
+    updateFaqTexts();
+    updateCheckoutRelatedTexts();
+    hookLanguageButton();
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', initPageOrderAndPolicies);
+  }else{
+    initPageOrderAndPolicies();
+  }
+})();
+</script>
 
 </body>
 </html>
