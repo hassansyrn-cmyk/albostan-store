@@ -3225,6 +3225,721 @@
   }
 })();
 </script>
+<script>
+/* =========================================================
+   AlBostan Store - آخر طلب + تتبع آخر طلب + إعادة الطلب
+   + تحسين رسالة واتساب + قسم كيف تطلب
+   لا يغير Google Sheet ولا يكسر السلة أو الدفع
+   ========================================================= */
+
+(function(){
+  if(window.__albostanLastOrderAndHowToFeatureLoaded) return;
+  window.__albostanLastOrderAndHowToFeatureLoaded = true;
+
+  const LAST_ORDER_DETAILS_KEY = 'albostan_last_order_details';
+
+  function getEl(id){
+    return document.getElementById(id);
+  }
+
+  function getLang(){
+    try{
+      return typeof currentLang !== 'undefined' ? currentLang : 'ar';
+    }catch(e){
+      return 'ar';
+    }
+  }
+
+  function getText(ar, en){
+    return getLang() === 'ar' ? ar : en;
+  }
+
+  function pad(num){
+    return String(num).padStart(2, '0');
+  }
+
+  function createFallbackOrderDate(){
+    const d = new Date();
+    return {
+      iso: d.toISOString(),
+      year: d.getFullYear(),
+      month: pad(d.getMonth() + 1),
+      day: pad(d.getDate()),
+      hour: pad(d.getHours()),
+      minute: pad(d.getMinutes())
+    };
+  }
+
+  function formatOrderDate(dateObj){
+    if(!dateObj) return '';
+
+    if(typeof dateObj === 'string'){
+      try{
+        const d = new Date(dateObj);
+        if(!isNaN(d.getTime())){
+          return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} - ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        }
+      }catch(e){}
+      return dateObj;
+    }
+
+    if(dateObj.day && dateObj.month && dateObj.year){
+      return `${dateObj.day}/${dateObj.month}/${dateObj.year} - ${dateObj.hour || '00'}:${dateObj.minute || '00'}`;
+    }
+
+    return '';
+  }
+
+  function generateFallbackOrderId(dateObj){
+    const d = dateObj || createFallbackOrderDate();
+    const random = Math.floor(1000 + Math.random() * 9000);
+    return `ABS-${d.year}${d.month}${d.day}-${d.hour}${d.minute}-${random}`;
+  }
+
+  function getOrderMetaSafe(){
+    try{
+      if(window.__albostanPendingOrderMeta && window.__albostanPendingOrderMeta.orderId){
+        return window.__albostanPendingOrderMeta;
+      }
+    }catch(e){}
+
+    const orderDate = createFallbackOrderDate();
+    const orderId = generateFallbackOrderId(orderDate);
+
+    window.__albostanPendingOrderMeta = {
+      orderId,
+      orderDate
+    };
+
+    return window.__albostanPendingOrderMeta;
+  }
+
+  function formatMoney(value){
+    const n = Number(value || 0);
+    return n % 1 === 0 ? String(n) : n.toFixed(2);
+  }
+
+  function getCurrency(){
+    return getLang() === 'ar' ? 'د.إ' : 'AED';
+  }
+
+  function getCartItemsSafe(){
+    try{
+      if(typeof cart !== 'undefined' && Array.isArray(cart)){
+        return cart.map(item => ({
+          nameAr: item.nameAr || '',
+          nameEn: item.nameEn || item.nameAr || '',
+          price: Number(item.price || 0),
+          quantity: Number(item.quantity || 1),
+          emoji: item.emoji || '🛒'
+        }));
+      }
+    }catch(e){}
+    return [];
+  }
+
+  function getCheckoutValuesSafe(){
+    const nameEl = getEl('custName');
+    const phoneEl = getEl('custPhone');
+    const emirateEl = getEl('custEmirate');
+    const addressEl = getEl('custAddress');
+    const notesEl = getEl('custNotes');
+    const couponEl = getEl('couponCode');
+
+    const subtotal = typeof getCartSubtotal === 'function' ? Number(getCartSubtotal()) : 0;
+    const emirate = emirateEl ? emirateEl.value : '';
+    const deliveryFee = typeof deliveryFees !== 'undefined' && deliveryFees[emirate] ? Number(deliveryFees[emirate]) : 0;
+
+    const coupon = couponEl ? couponEl.value.trim().toUpperCase() : '';
+    let discount = 0;
+
+    if(coupon === 'BOSTAN10'){
+      discount = subtotal * 0.10;
+      if(discount > 10) discount = 10;
+    }
+
+    const grandTotal = subtotal - discount + deliveryFee;
+
+    return {
+      name: nameEl ? nameEl.value.trim() : '',
+      phone: phoneEl ? phoneEl.value.trim() : '',
+      emirate,
+      address: addressEl ? addressEl.value.trim() : '',
+      notes: notesEl ? notesEl.value.trim() : '',
+      coupon,
+      subtotal,
+      discount,
+      deliveryFee,
+      grandTotal,
+      paymentMethodAr: 'نقدًا عند الاستلام فقط (COD)',
+      paymentMethodEn: 'Cash on Delivery only (COD)'
+    };
+  }
+
+  function isCheckoutMessage(text){
+    if(!text) return false;
+
+    return (
+      text.includes('طلب جديد من متجر البستان') ||
+      text.includes('New Order from AlBostan Store')
+    );
+  }
+
+  function buildProfessionalWhatsAppMessage(meta){
+    const values = getCheckoutValuesSafe();
+    const items = getCartItemsSafe();
+    const dateText = formatOrderDate(meta.orderDate);
+    const curAr = 'د.إ';
+    const curEn = 'AED';
+
+    if(getLang() === 'ar'){
+      let msg = '';
+      msg += `طلب جديد من متجر البستان 🧾\n`;
+      msg += `رقم الطلب: ${meta.orderId}\n`;
+      msg += `تاريخ الطلب: ${dateText}\n\n`;
+
+      msg += `👤 بيانات العميل:\n`;
+      msg += `- الاسم: ${values.name}\n`;
+      msg += `- الهاتف: ${values.phone}\n`;
+      msg += `- الإمارة: ${values.emirate}\n`;
+      msg += `- العنوان: ${values.address}\n`;
+
+      if(values.notes){
+        msg += `- ملاحظات: ${values.notes}\n`;
+      }
+
+      msg += `\n💳 طريقة الدفع:\n`;
+      msg += `- ${values.paymentMethodAr}\n`;
+      msg += `- سيتم تأكيد الطلب عبر واتساب قبل التجهيز والتوصيل.\n\n`;
+
+      msg += `📦 المنتجات المطلوبة:\n`;
+      items.forEach((item, index) => {
+        msg += `${index + 1}. ${item.nameAr} - الكمية: ${item.quantity} - السعر: ${item.price} ${curAr}\n`;
+      });
+
+      msg += `\n💵 تفاصيل الحساب:\n`;
+      msg += `- قيمة المنتجات قبل الخصم: ${formatMoney(values.subtotal)} ${curAr}\n`;
+
+      if(values.discount > 0){
+        msg += `- الكوبون المستخدم: ${values.coupon}\n`;
+        msg += `- قيمة الخصم: ${formatMoney(values.discount)} ${curAr}\n`;
+      }
+
+      msg += `- رسوم التوصيل: ${formatMoney(values.deliveryFee)} ${curAr}\n`;
+      msg += `- الإجمالي النهائي: ${formatMoney(values.grandTotal)} ${curAr}\n\n`;
+
+      msg += `✅ تأكيد مهم:\n`;
+      msg += `الدفع نقدًا عند الاستلام فقط، وسيتم التواصل مع العميل لتأكيد الطلب قبل التوصيل.`;
+
+      return msg;
+    }
+
+    let msg = '';
+    msg += `New Order from AlBostan Store 🧾\n`;
+    msg += `Order ID: ${meta.orderId}\n`;
+    msg += `Order Date: ${dateText}\n\n`;
+
+    msg += `👤 Customer Details:\n`;
+    msg += `- Name: ${values.name}\n`;
+    msg += `- Phone: ${values.phone}\n`;
+    msg += `- Emirate: ${values.emirate}\n`;
+    msg += `- Address: ${values.address}\n`;
+
+    if(values.notes){
+      msg += `- Notes: ${values.notes}\n`;
+    }
+
+    msg += `\n💳 Payment Method:\n`;
+    msg += `- ${values.paymentMethodEn}\n`;
+    msg += `- The order will be confirmed via WhatsApp before preparation and delivery.\n\n`;
+
+    msg += `📦 Items Ordered:\n`;
+    items.forEach((item, index) => {
+      msg += `${index + 1}. ${item.nameEn} - Qty: ${item.quantity} - Price: ${item.price} ${curEn}\n`;
+    });
+
+    msg += `\n💵 Summary:\n`;
+    msg += `- Items total before discount: ${formatMoney(values.subtotal)} ${curEn}\n`;
+
+    if(values.discount > 0){
+      msg += `- Coupon used: ${values.coupon}\n`;
+      msg += `- Discount: ${formatMoney(values.discount)} ${curEn}\n`;
+    }
+
+    msg += `- Delivery fee: ${formatMoney(values.deliveryFee)} ${curEn}\n`;
+    msg += `- Grand total: ${formatMoney(values.grandTotal)} ${curEn}\n\n`;
+
+    msg += `✅ Important Confirmation:\n`;
+    msg += `Payment is Cash on Delivery only, and the order will be confirmed with the customer before delivery.`;
+
+    return msg;
+  }
+
+  function saveLastOrderDetails(meta){
+    try{
+      const values = getCheckoutValuesSafe();
+      const items = getCartItemsSafe();
+
+      if(!items.length) return;
+
+      const order = {
+        orderId: meta.orderId,
+        orderDate: meta.orderDate,
+        customer: {
+          name: values.name,
+          phone: values.phone,
+          emirate: values.emirate,
+          address: values.address
+        },
+        items,
+        coupon: values.discount > 0 ? values.coupon : '',
+        subtotal: values.subtotal,
+        discount: values.discount,
+        deliveryFee: values.deliveryFee,
+        grandTotal: values.grandTotal,
+        paymentMethodAr: values.paymentMethodAr,
+        paymentMethodEn: values.paymentMethodEn,
+        savedAt: new Date().toISOString()
+      };
+
+      localStorage.setItem(LAST_ORDER_DETAILS_KEY, JSON.stringify(order));
+      renderLastOrderBox();
+    }catch(e){
+      console.warn('Saving last order skipped safely', e);
+    }
+  }
+
+  function loadLastOrderDetails(){
+    try{
+      const raw = localStorage.getItem(LAST_ORDER_DETAILS_KEY);
+      if(!raw) return null;
+
+      const order = JSON.parse(raw);
+      if(!order || typeof order !== 'object') return null;
+      if(!order.orderId || !Array.isArray(order.items)) return null;
+
+      return order;
+    }catch(e){
+      try{ localStorage.removeItem(LAST_ORDER_DETAILS_KEY); }catch(err){}
+      return null;
+    }
+  }
+
+  function addAddonStyles(){
+    if(getEl('albostanLastOrderHowToStyles')) return;
+
+    const style = document.createElement('style');
+    style.id = 'albostanLastOrderHowToStyles';
+    style.textContent = `
+      .albostan-how-to-section{
+        max-width:1200px;
+        margin:0 auto;
+        padding:70px 24px;
+      }
+      .albostan-how-to-box{
+        background:var(--white);
+        border-radius:32px;
+        padding:38px 28px;
+        box-shadow:0 6px 18px -10px rgba(31,94,59,.15);
+      }
+      .albostan-steps-grid{
+        display:grid;
+        grid-template-columns:repeat(5,1fr);
+        gap:16px;
+        margin-top:26px;
+      }
+      .albostan-step-card{
+        background:var(--cream);
+        border:1px solid var(--sand);
+        border-radius:18px;
+        padding:18px 14px;
+        text-align:center;
+      }
+      .albostan-step-icon{
+        font-size:2rem;
+        margin-bottom:8px;
+      }
+      .albostan-step-card h4{
+        font-family:'El Messiri',serif;
+        color:var(--clay);
+        font-size:1rem;
+        margin-bottom:6px;
+      }
+      .albostan-step-card p{
+        font-size:.88rem;
+        color:#4A524D;
+        line-height:1.7;
+      }
+      .albostan-cod-note{
+        margin-top:22px;
+        background:#EAF7EF;
+        color:var(--clay);
+        border:1px solid rgba(31,94,59,.15);
+        border-radius:18px;
+        padding:14px 18px;
+        text-align:center;
+        font-weight:700;
+        line-height:1.8;
+      }
+      .last-order-box{
+        margin-top:22px;
+        background:var(--cream);
+        border:1px solid var(--sand);
+        border-radius:18px;
+        padding:16px;
+        text-align:start;
+      }
+      .last-order-box h4{
+        font-family:'El Messiri',serif;
+        color:var(--clay);
+        margin-bottom:8px;
+        font-size:1.1rem;
+      }
+      .last-order-box p{
+        color:#4A524D;
+        font-size:.9rem;
+        line-height:1.7;
+        margin-bottom:6px;
+      }
+      .last-order-actions{
+        display:flex;
+        gap:10px;
+        margin-top:12px;
+        flex-wrap:wrap;
+      }
+      .last-order-actions button{
+        flex:1;
+        min-width:160px;
+        padding:11px 16px;
+        border-radius:50px;
+        font-weight:700;
+      }
+      .last-order-track-btn{
+        background:#25D366;
+        color:#fff;
+      }
+      .last-order-repeat-btn{
+        background:var(--clay);
+        color:#fff;
+      }
+      @media(max-width:980px){
+        .albostan-steps-grid{
+          grid-template-columns:repeat(2,1fr);
+        }
+      }
+      @media(max-width:680px){
+        .albostan-steps-grid{
+          grid-template-columns:1fr;
+        }
+        .last-order-actions{
+          flex-direction:column;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function insertHowToOrderSection(){
+    if(getEl('albostanHowToOrderSection')) return;
+
+    const productsSection = getEl('products');
+    if(!productsSection) return;
+
+    const section = document.createElement('section');
+    section.className = 'albostan-how-to-section';
+    section.id = 'albostanHowToOrderSection';
+
+    section.innerHTML = `
+      <div class="albostan-how-to-box">
+        <div class="section-head" style="margin-bottom:0;">
+          <p class="eyebrow" data-ar="خطوات سهلة وواضحة" data-en="Simple and clear steps">خطوات سهلة وواضحة</p>
+          <h2 data-ar="كيف تطلب من متجر البستان؟" data-en="How to order from AlBostan Store?">كيف تطلب من متجر البستان؟</h2>
+        </div>
+
+        <div class="albostan-steps-grid">
+          <div class="albostan-step-card">
+            <div class="albostan-step-icon">🛍️</div>
+            <h4 data-ar="اختر المنتجات" data-en="Choose products">اختر المنتجات</h4>
+            <p data-ar="تصفح الأقسام واختر المنتجات المناسبة لك ولعائلتك." data-en="Browse categories and choose the products that suit you and your family.">تصفح الأقسام واختر المنتجات المناسبة لك ولعائلتك.</p>
+          </div>
+
+          <div class="albostan-step-card">
+            <div class="albostan-step-icon">🛒</div>
+            <h4 data-ar="أضف للسلة" data-en="Add to cart">أضف للسلة</h4>
+            <p data-ar="أضف المنتجات للسلة وحدد الكمية المطلوبة بسهولة." data-en="Add products to the cart and select the required quantity easily.">أضف المنتجات للسلة وحدد الكمية المطلوبة بسهولة.</p>
+          </div>
+
+          <div class="albostan-step-card">
+            <div class="albostan-step-icon">📍</div>
+            <h4 data-ar="أدخل بيانات التوصيل" data-en="Enter delivery details">أدخل بيانات التوصيل</h4>
+            <p data-ar="اكتب الاسم والهاتف والإمارة والعنوان التفصيلي." data-en="Enter your name, phone, emirate, and detailed address.">اكتب الاسم والهاتف والإمارة والعنوان التفصيلي.</p>
+          </div>
+
+          <div class="albostan-step-card">
+            <div class="albostan-step-icon">💬</div>
+            <h4 data-ar="أرسل عبر واتساب" data-en="Send via WhatsApp">أرسل عبر واتساب</h4>
+            <p data-ar="سيتم تجهيز رسالة الطلب تلقائيًا مع رقم الطلب والتاريخ." data-en="Your order message will be prepared automatically with order ID and date.">سيتم تجهيز رسالة الطلب تلقائيًا مع رقم الطلب والتاريخ.</p>
+          </div>
+
+          <div class="albostan-step-card">
+            <div class="albostan-step-icon">💵</div>
+            <h4 data-ar="الدفع عند الاستلام" data-en="Cash on Delivery">الدفع عند الاستلام</h4>
+            <p data-ar="ادفع نقدًا عند استلام الطلب بعد تأكيده عبر واتساب." data-en="Pay cash when receiving the order after confirming it via WhatsApp.">ادفع نقدًا عند استلام الطلب بعد تأكيده عبر واتساب.</p>
+          </div>
+        </div>
+
+        <div class="albostan-cod-note"
+          data-ar="لطمأنتك: الدفع نقدًا عند الاستلام فقط، ويتم تأكيد الطلب معك عبر واتساب قبل التجهيز والتوصيل."
+          data-en="For your reassurance: payment is Cash on Delivery only, and the order is confirmed with you via WhatsApp before preparation and delivery.">
+          لطمأنتك: الدفع نقدًا عند الاستلام فقط، ويتم تأكيد الطلب معك عبر واتساب قبل التجهيز والتوصيل.
+        </div>
+      </div>
+    `;
+
+    productsSection.insertAdjacentElement('beforebegin', section);
+    localizeAddonUI();
+  }
+
+  function ensureLastOrderBox(){
+    if(getEl('albostanLastOrderBox')) return;
+
+    const trackSection = getEl('trackOrderSection');
+    if(!trackSection) return;
+
+    const trackBox = trackSection.querySelector('.track-order-section');
+    if(!trackBox) return;
+
+    const box = document.createElement('div');
+    box.id = 'albostanLastOrderBox';
+    box.className = 'last-order-box';
+
+    trackBox.appendChild(box);
+  }
+
+  function renderLastOrderBox(){
+    ensureLastOrderBox();
+
+    const box = getEl('albostanLastOrderBox');
+    if(!box) return;
+
+    const order = loadLastOrderDetails();
+
+    if(!order){
+      box.innerHTML = `
+        <h4 data-ar="آخر طلب من هذا الجهاز" data-en="Last order from this device">آخر طلب من هذا الجهاز</h4>
+        <p data-ar="لا يوجد طلب محفوظ حتى الآن. بعد إرسال أول طلب عبر واتساب سيظهر هنا رقم الطلب لتتبعه بسهولة."
+           data-en="No saved order yet. After sending your first order via WhatsApp, the order number will appear here for easy tracking.">
+          لا يوجد طلب محفوظ حتى الآن. بعد إرسال أول طلب عبر واتساب سيظهر هنا رقم الطلب لتتبعه بسهولة.
+        </p>
+      `;
+      localizeAddonUI();
+      return;
+    }
+
+    const dateText = formatOrderDate(order.orderDate);
+    const itemCount = order.items.reduce((sum, item) => sum + Number(item.quantity || 1), 0);
+    const cur = getCurrency();
+
+    if(getLang() === 'ar'){
+      box.innerHTML = `
+        <h4>آخر طلب من هذا الجهاز</h4>
+        <p><strong>رقم الطلب:</strong> ${order.orderId}</p>
+        <p><strong>تاريخ الطلب:</strong> ${dateText}</p>
+        <p><strong>عدد المنتجات:</strong> ${itemCount}</p>
+        <p><strong>الإجمالي:</strong> ${formatMoney(order.grandTotal)} ${cur}</p>
+        <p><strong>طريقة الدفع:</strong> نقدًا عند الاستلام فقط</p>
+
+        <div class="last-order-actions">
+          <button type="button" class="last-order-track-btn" id="trackLastOrderBtn">تتبع آخر طلب عبر واتساب 💬</button>
+          <button type="button" class="last-order-repeat-btn" id="repeatLastOrderBtn">إعادة طلب آخر طلب 🛒</button>
+        </div>
+      `;
+    }else{
+      box.innerHTML = `
+        <h4>Last order from this device</h4>
+        <p><strong>Order ID:</strong> ${order.orderId}</p>
+        <p><strong>Order Date:</strong> ${dateText}</p>
+        <p><strong>Items count:</strong> ${itemCount}</p>
+        <p><strong>Total:</strong> ${formatMoney(order.grandTotal)} ${cur}</p>
+        <p><strong>Payment:</strong> Cash on Delivery only</p>
+
+        <div class="last-order-actions">
+          <button type="button" class="last-order-track-btn" id="trackLastOrderBtn">Track last order via WhatsApp 💬</button>
+          <button type="button" class="last-order-repeat-btn" id="repeatLastOrderBtn">Repeat last order 🛒</button>
+        </div>
+      `;
+    }
+
+    const trackBtn = getEl('trackLastOrderBtn');
+    const repeatBtn = getEl('repeatLastOrderBtn');
+
+    if(trackBtn){
+      trackBtn.addEventListener('click', function(){
+        trackLastOrderViaWhatsApp(order);
+      });
+    }
+
+    if(repeatBtn){
+      repeatBtn.addEventListener('click', function(){
+        repeatLastOrder(order);
+      });
+    }
+  }
+
+  function trackLastOrderViaWhatsApp(order){
+    if(!order) return;
+
+    const dateText = formatOrderDate(order.orderDate);
+
+    let msg = '';
+
+    if(getLang() === 'ar'){
+      msg += `مرحبًا متجر البستان، أريد تتبع آخر طلب.\n`;
+      msg += `رقم الطلب: ${order.orderId}\n`;
+      msg += `تاريخ الطلب: ${dateText}\n`;
+      if(order.customer && order.customer.phone){
+        msg += `رقم الهاتف: ${order.customer.phone}\n`;
+      }
+    }else{
+      msg += `Hello AlBostan Store, I would like to track my last order.\n`;
+      msg += `Order ID: ${order.orderId}\n`;
+      msg += `Order Date: ${dateText}\n`;
+      if(order.customer && order.customer.phone){
+        msg += `Phone: ${order.customer.phone}\n`;
+      }
+    }
+
+    try{
+      window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+    }catch(e){}
+  }
+
+  function repeatLastOrder(order){
+    if(!order || !Array.isArray(order.items) || !order.items.length) return;
+
+    try{
+      if(typeof cart === 'undefined' || !Array.isArray(cart)){
+        showToast(getText('تعذر إعادة الطلب حاليًا', 'Could not repeat the order now'));
+        return;
+      }
+
+      order.items.forEach(savedItem => {
+        const existing = cart.find(item => item.nameAr === savedItem.nameAr);
+
+        if(existing){
+          existing.quantity += Number(savedItem.quantity || 1);
+        }else{
+          cart.push({
+            nameAr: savedItem.nameAr,
+            nameEn: savedItem.nameEn || savedItem.nameAr,
+            price: Number(savedItem.price || 0),
+            emoji: savedItem.emoji || '🛒',
+            quantity: Number(savedItem.quantity || 1)
+          });
+        }
+      });
+
+      if(typeof renderCart === 'function'){
+        renderCart();
+      }
+
+      if(typeof openCart === 'function'){
+        openCart();
+      }
+
+      showToast(
+        getText(
+          'تمت إضافة آخر طلب إلى السلة 🛒',
+          'Last order has been added to the cart 🛒'
+        )
+      );
+    }catch(e){
+      console.warn('Repeat last order skipped safely', e);
+      showToast(getText('تعذر إعادة الطلب حاليًا', 'Could not repeat the order now'));
+    }
+  }
+
+  function localizeAddonUI(){
+    const lang = getLang();
+
+    document.querySelectorAll('#albostanHowToOrderSection [data-ar], #albostanLastOrderBox [data-ar]').forEach(el => {
+      el.textContent = lang === 'ar' ? el.dataset.ar : el.dataset.en;
+    });
+  }
+
+  function patchWhatsAppCheckoutMessage(){
+    if(window.__albostanProfessionalCheckoutMessagePatched) return;
+    window.__albostanProfessionalCheckoutMessagePatched = true;
+
+    const previousOpen = window.open;
+
+    window.open = function(url, target, features){
+      try{
+        if(
+          typeof url === 'string' &&
+          url.includes('wa.me/') &&
+          url.includes('text=')
+        ){
+          const parsedUrl = new URL(url, window.location.href);
+          const currentText = parsedUrl.searchParams.get('text') || '';
+
+          if(isCheckoutMessage(currentText)){
+            const meta = getOrderMetaSafe();
+            const improvedMsg = buildProfessionalWhatsAppMessage(meta);
+
+            parsedUrl.searchParams.set('text', improvedMsg);
+            url = parsedUrl.toString();
+
+            saveLastOrderDetails(meta);
+
+            if(typeof showToast === 'function'){
+              showToast(
+                getText(
+                  'تم تجهيز طلبك، سيتم فتح واتساب الآن 💬',
+                  'Your order is ready, WhatsApp will open now 💬'
+                )
+              );
+            }
+          }
+        }
+      }catch(e){
+        console.warn('Professional checkout message skipped safely', e);
+      }
+
+      return previousOpen.call(window, url, target, features);
+    };
+  }
+
+  function hookLanguageButton(){
+    const langBtn = getEl('langToggle');
+    if(!langBtn || langBtn.dataset.lastOrderHowToLangHooked) return;
+
+    langBtn.dataset.lastOrderHowToLangHooked = 'yes';
+
+    langBtn.addEventListener('click', function(){
+      setTimeout(function(){
+        localizeAddonUI();
+        renderLastOrderBox();
+      }, 0);
+    });
+  }
+
+  function initLastOrderAndHowToFeature(){
+    addAddonStyles();
+    insertHowToOrderSection();
+    ensureLastOrderBox();
+    renderLastOrderBox();
+    patchWhatsAppCheckoutMessage();
+    hookLanguageButton();
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', initLastOrderAndHowToFeature);
+  }else{
+    initLastOrderAndHowToFeature();
+  }
+})();
+</script>
 
 </body>
 </html>
