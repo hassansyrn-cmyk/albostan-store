@@ -2620,6 +2620,290 @@
   renderWishlist();
   loadProductsFromSheet();
 </script>
+<script>
+/* =========================================================
+   AlBostan Store - حفظ بيانات العميل للطلبات القادمة
+   هذا ليس نظام حسابات حقيقي، ولا يحفظ كلمات مرور أو بيانات دفع
+   ========================================================= */
+
+(function(){
+  const CUSTOMER_STORAGE_KEY = 'albostan_customer_details';
+
+  function getEl(id){
+    return document.getElementById(id);
+  }
+
+  function getCurrentLangSafe(){
+    return typeof currentLang !== 'undefined' ? currentLang : 'ar';
+  }
+
+  function getText(ar, en){
+    return getCurrentLangSafe() === 'ar' ? ar : en;
+  }
+
+  function safeParseCustomerDetails(){
+    try{
+      const raw = localStorage.getItem(CUSTOMER_STORAGE_KEY);
+      if(!raw) return null;
+
+      const data = JSON.parse(raw);
+      if(!data || typeof data !== 'object') return null;
+
+      return {
+        name: typeof data.name === 'string' ? data.name : '',
+        phone: typeof data.phone === 'string' ? data.phone : '',
+        emirate: typeof data.emirate === 'string' ? data.emirate : '',
+        address: typeof data.address === 'string' ? data.address : ''
+      };
+    }catch(e){
+      try{ localStorage.removeItem(CUSTOMER_STORAGE_KEY); }catch(err){}
+      return null;
+    }
+  }
+
+  function addCustomerDetailsStyles(){
+    if(getEl('savedCustomerDetailsStyle')) return;
+
+    const style = document.createElement('style');
+    style.id = 'savedCustomerDetailsStyle';
+    style.textContent = `
+      .saved-customer-box{
+        background:var(--cream);
+        border:1px solid var(--sand);
+        border-radius:16px;
+        padding:12px 14px;
+        margin-bottom:14px;
+      }
+      .saved-customer-label{
+        display:flex;
+        align-items:center;
+        gap:8px;
+        font-weight:700;
+        font-size:.9rem;
+        color:var(--soil);
+        cursor:pointer;
+        user-select:none;
+      }
+      .saved-customer-label input{
+        width:16px;
+        height:16px;
+        accent-color:var(--clay);
+        flex-shrink:0;
+      }
+      .clear-saved-details-btn{
+        margin-top:10px;
+        background:transparent;
+        color:var(--clay);
+        font-weight:700;
+        font-size:.85rem;
+        text-decoration:underline;
+        padding:0;
+      }
+      .clear-saved-details-btn:hover{
+        color:#15452A;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function injectSavedCustomerDetailsUI(){
+    if(getEl('saveCustomerDetailsCheck')) return;
+
+    const addressInput = getEl('custAddress');
+    if(!addressInput) return;
+
+    const addressGroup = addressInput.closest('.form-group');
+    if(!addressGroup) return;
+
+    const box = document.createElement('div');
+    box.className = 'saved-customer-box';
+    box.id = 'savedCustomerDetailsBox';
+
+    box.innerHTML = `
+      <label class="saved-customer-label">
+        <input type="checkbox" id="saveCustomerDetailsCheck">
+        <span data-ar="حفظ بياناتي للطلبات القادمة" data-en="Save my details for next orders">
+          حفظ بياناتي للطلبات القادمة
+        </span>
+      </label>
+      <button type="button" class="clear-saved-details-btn" id="clearSavedDetailsBtn"
+        data-ar="حذف بياناتي المحفوظة"
+        data-en="Clear saved details">
+        حذف بياناتي المحفوظة
+      </button>
+    `;
+
+    addressGroup.insertAdjacentElement('afterend', box);
+
+    const clearBtn = getEl('clearSavedDetailsBtn');
+    if(clearBtn){
+      clearBtn.addEventListener('click', clearSavedCustomerDetails);
+    }
+
+    localizeSavedCustomerDetailsUI();
+  }
+
+  function localizeSavedCustomerDetailsUI(){
+    const lang = getCurrentLangSafe();
+
+    document.querySelectorAll('#savedCustomerDetailsBox [data-ar]').forEach(el => {
+      el.textContent = lang === 'ar' ? el.dataset.ar : el.dataset.en;
+    });
+  }
+
+  window.saveCustomerDetails = function saveCustomerDetails(){
+    const saveCheck = getEl('saveCustomerDetailsCheck');
+    if(!saveCheck || !saveCheck.checked) return;
+
+    const nameEl = getEl('custName');
+    const phoneEl = getEl('custPhone');
+    const emirateEl = getEl('custEmirate');
+    const addressEl = getEl('custAddress');
+
+    if(!nameEl || !phoneEl || !emirateEl || !addressEl) return;
+
+    const details = {
+      name: nameEl.value.trim(),
+      phone: phoneEl.value.trim(),
+      emirate: emirateEl.value,
+      address: addressEl.value.trim()
+    };
+
+    try{
+      localStorage.setItem(CUSTOMER_STORAGE_KEY, JSON.stringify(details));
+    }catch(e){
+      console.warn('Could not save customer details', e);
+    }
+  };
+
+  window.loadSavedCustomerDetails = function loadSavedCustomerDetails(){
+    const data = safeParseCustomerDetails();
+    if(!data) return;
+
+    const nameEl = getEl('custName');
+    const phoneEl = getEl('custPhone');
+    const emirateEl = getEl('custEmirate');
+    const addressEl = getEl('custAddress');
+    const saveCheck = getEl('saveCustomerDetailsCheck');
+
+    if(nameEl && data.name) nameEl.value = data.name;
+    if(phoneEl && data.phone) phoneEl.value = data.phone;
+    if(emirateEl && data.emirate) emirateEl.value = data.emirate;
+    if(addressEl && data.address) addressEl.value = data.address;
+
+    if(saveCheck) saveCheck.checked = true;
+
+    if(typeof updateCheckoutSummary === 'function'){
+      updateCheckoutSummary();
+    }
+  };
+
+  window.clearSavedCustomerDetails = function clearSavedCustomerDetails(){
+    try{
+      localStorage.removeItem(CUSTOMER_STORAGE_KEY);
+    }catch(e){}
+
+    const saveCheck = getEl('saveCustomerDetailsCheck');
+    if(saveCheck) saveCheck.checked = false;
+
+    if(typeof showToast === 'function'){
+      showToast(
+        getText(
+          'تم حذف بياناتك المحفوظة',
+          'Your saved details have been cleared'
+        )
+      );
+    }
+  };
+
+  function attachCustomerDetailsEvents(){
+    const checkoutBtn = getEl('checkoutBtn');
+    const checkoutForm = getEl('checkoutForm');
+
+    if(checkoutBtn && !checkoutBtn.dataset.savedCustomerHooked){
+      checkoutBtn.dataset.savedCustomerHooked = 'yes';
+
+      checkoutBtn.addEventListener('click', function(){
+        setTimeout(function(){
+          injectSavedCustomerDetailsUI();
+          loadSavedCustomerDetails();
+          localizeSavedCustomerDetailsUI();
+        }, 0);
+      });
+    }
+
+    if(checkoutForm && !checkoutForm.dataset.savedCustomerSubmitHooked){
+      checkoutForm.dataset.savedCustomerSubmitHooked = 'yes';
+
+      checkoutForm.addEventListener('submit', function(){
+        try{
+          if(typeof getCartSubtotal === 'function'){
+            const subtotal = getCartSubtotal();
+            if(Number(subtotal) < 30) return;
+          }
+
+          saveCustomerDetails();
+        }catch(e){
+          console.warn('Customer details save skipped safely', e);
+        }
+      }, true);
+    }
+  }
+
+  function fixCODTextIfNeeded(){
+    try{
+      const paymentCards = Array.from(document.querySelectorAll('.info-card'));
+      paymentCards.forEach(card => {
+        const title = card.querySelector('h4');
+        const paragraph = card.querySelector('p');
+
+        if(!title || !paragraph) return;
+
+        const isPaymentCard =
+          title.dataset.ar === 'الدفع' ||
+          title.dataset.en === 'Payment' ||
+          title.textContent.trim() === 'الدفع' ||
+          title.textContent.trim() === 'Payment';
+
+        if(isPaymentCard){
+          paragraph.dataset.ar = 'الدفع متاح نقدًا عند الاستلام فقط بعد تأكيد وتنسيق الطلب معكم عبر واتساب مباشرة.';
+          paragraph.dataset.en = 'Payment is Cash on Delivery only after confirming and coordinating your order directly via WhatsApp.';
+          paragraph.textContent = getCurrentLangSafe() === 'ar'
+            ? paragraph.dataset.ar
+            : paragraph.dataset.en;
+        }
+      });
+    }catch(e){}
+  }
+
+  function hookLanguageButtonForSavedDetails(){
+    const langBtn = getEl('langToggle');
+    if(!langBtn || langBtn.dataset.savedCustomerLangHooked) return;
+
+    langBtn.dataset.savedCustomerLangHooked = 'yes';
+    langBtn.addEventListener('click', function(){
+      setTimeout(function(){
+        localizeSavedCustomerDetailsUI();
+        fixCODTextIfNeeded();
+      }, 0);
+    });
+  }
+
+  function initSavedCustomerDetailsFeature(){
+    addCustomerDetailsStyles();
+    injectSavedCustomerDetailsUI();
+    attachCustomerDetailsEvents();
+    hookLanguageButtonForSavedDetails();
+    fixCODTextIfNeeded();
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', initSavedCustomerDetailsFeature);
+  }else{
+    initSavedCustomerDetailsFeature();
+  }
+})();
+</script>
 
 </body>
 </html>
