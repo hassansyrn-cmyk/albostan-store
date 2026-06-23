@@ -180,7 +180,7 @@
     box-shadow:0 10px 24px -8px rgba(31,94,59,.4);
   }
   .btn-primary:hover{background:#15452A;transform:translateY(-2px);}
-  .btn-ghost{background:transparent;color:var(--clay);padding:15px 28px;border-radius:50px;font-weight:700;border:2px solid var(--clay);}
+  .btn-ghost{background:transparent;color:var(--clay);padding:15px 28px;border-radius:50px;font-weight:700;border:2px solid var(--clay); transition:all .2s;}
   .btn-ghost:hover{background:var(--clay);color:var(--white);}
 
   .hero-visual{position:relative;height:380px;}
@@ -221,7 +221,6 @@
   .promo .btn-primary{background:var(--gold);color:#fff;box-shadow:none;}
   .promo .btn-primary:hover{background:#B38F1F;}
 
-  /* --- لماذا تختار متجر البستان --- */
   .why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;}
   .why-card{
     background:var(--white);border-radius:var(--radius);padding:30px 22px;text-align:center;
@@ -232,13 +231,12 @@
   .why-card h4{font-family:'El Messiri',serif;font-size:1.08rem;margin-bottom:8px;color:var(--clay);}
   .why-card p{font-size:.88rem;color:#4A524D;line-height:1.7;}
 
-  /* --- معلومات مهمة قبل الطلب --- */
   .info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
   .info-card{background:var(--sand);border-radius:var(--radius);padding:28px 24px;}
   .info-card h4{font-family:'El Messiri',serif;font-size:1.05rem;margin-bottom:10px;color:var(--clay);}
   .info-card p{font-size:.9rem;color:#4A524D;line-height:1.75;}
 
-  /* --- البحث والتصفية --- */
+  /* --- البحث والتصفية المتطورة --- */
   .search-filter-wrap{
     margin-bottom:40px;
     display:flex;
@@ -248,7 +246,7 @@
   }
   .search-box{
     width:100%;
-    max-width:500px;
+    max-width:600px;
     position:relative;
   }
   .search-box input{
@@ -265,6 +263,38 @@
   .search-box input:focus{
     border-color:var(--clay);
   }
+  
+  /* فلاتر الأسعار المتقدمة */
+  .advanced-filters {
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:12px;
+    width:100%;
+    max-width:800px;
+  }
+  .advanced-filters input, .advanced-filters select {
+    padding:10px 16px;
+    border-radius:50px;
+    border:2px solid var(--sand);
+    font-family:inherit;
+    font-size:0.95rem;
+    background:var(--white);
+    outline:none;
+    transition:border-color 0.3s;
+    flex:1;
+    min-width:140px;
+  }
+  .advanced-filters input:focus, .advanced-filters select:focus {
+    border-color:var(--clay);
+  }
+  .filter-reset-btn {
+    padding:10px 20px;
+    font-size:0.95rem;
+    border-radius:50px;
+    flex-shrink:0;
+  }
+
   .filter-cats{
     display:flex;
     flex-wrap:wrap;
@@ -300,7 +330,6 @@
     width:100%;
   }
 
-  /* --- المنتجات والتحديثات الجديدة للبطاقة --- */
   .prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;}
   .prod-card{
     background:var(--white);border-radius:var(--radius);overflow:hidden;
@@ -510,7 +539,7 @@
     background:#1ebe57;
   }
 
-  /* --- التنسيقات الخاصة بـ Checkout Form حقول الإدخال --- */
+  /* --- التنسيقات الخاصة بـ Checkout Form --- */
   .form-group {
     margin-bottom:14px;
     text-align:start;
@@ -545,7 +574,7 @@
   }
   .summary-row {
     display:flex;
-    justify-content:between;
+    justify-content:space-between;
     margin-bottom:6px;
   }
   .summary-row.total-row {
@@ -557,7 +586,6 @@
     color:var(--clay);
   }
 
-  /* --- الأسئلة الشائعة --- */
   .faq-list{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:14px;}
   .faq-item{
     background:var(--white);border-radius:18px;overflow:hidden;
@@ -574,7 +602,6 @@
   .faq-item.open .faq-answer{max-height:300px;padding-bottom:18px;}
   .faq-answer p{font-size:.92rem;color:#4A524D;line-height:1.75;}
 
-  /* --- زر واتساب العائم --- */
   .wa-float{
     position:fixed;bottom:24px;right:24px;width:58px;height:58px;border-radius:50%;
     background:#25D366;color:#fff;display:flex;align-items:center;justify-content:center;
@@ -654,6 +681,9 @@
     .prod-grid{grid-template-columns:1fr;}
     .why-grid{grid-template-columns:1fr;}
     .wa-float{width:52px;height:52px;font-size:1.5rem;bottom:18px;right:18px;}
+    
+    .advanced-filters { flex-direction: column; }
+    .filter-reset-btn { width: 100%; }
   }
 
   @media (min-width:681px){
@@ -841,6 +871,18 @@
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="ابحث عن منتج..." data-ar-placeholder="ابحث عن منتج..." data-en-placeholder="Search for a product...">
     </div>
+    
+    <div class="advanced-filters" id="advancedFilters">
+      <input type="number" id="minPrice" min="0" placeholder="الحد الأدنى للسعر" data-ar-placeholder="الحد الأدنى للسعر" data-en-placeholder="Min Price">
+      <input type="number" id="maxPrice" min="0" placeholder="الحد الأقصى للسعر" data-ar-placeholder="الحد الأقصى للسعر" data-en-placeholder="Max Price">
+      <select id="priceSort">
+        <option value="default" data-ar="الترتيب الافتراضي" data-en="Default Sort">الترتيب الافتراضي</option>
+        <option value="low-high" data-ar="السعر: من الأقل للأعلى" data-en="Price: Low to High">السعر: من الأقل للأعلى</option>
+        <option value="high-low" data-ar="السعر: من الأعلى للأقل" data-en="Price: High to Low">السعر: من الأعلى للأقل</option>
+      </select>
+      <button id="resetFiltersBtn" class="btn-ghost filter-reset-btn" data-ar="إعادة ضبط" data-en="Reset Filters">إعادة ضبط</button>
+    </div>
+
     <div class="filter-cats" id="filterButtons">
       <button class="filter-btn active" data-cat="all" data-ar="الكل" data-en="All">الكل</button>
       <button class="filter-btn" data-cat="Grocery" data-ar="بقالة" data-en="Grocery">بقالة</button>
@@ -854,7 +896,7 @@
   </div>
 
   <div class="prod-grid" id="productGrid">
-    <div class="prod-card" data-name-ar="عسل طبيعي 500غ" data-name-en="Natural Honey 500g" data-price="35" data-emoji="🍯" data-img="images/honey.jpg" data-category-en="Grocery" data-category-ar="بقالة" data-desc-ar="عسل طبيعي نقي 100%، مثالي لتحلية مشروباتك أو استخدامه في الوصفات الصحية." data-desc-en="100% pure natural honey, perfect for sweetening your drinks or using in healthy recipes." data-available="yes">
+    <div class="prod-card" data-index="0" data-name-ar="عسل طبيعي 500غ" data-name-en="Natural Honey 500g" data-price="35" data-emoji="🍯" data-img="images/honey.jpg" data-category-en="Grocery" data-category-ar="بقالة" data-desc-ar="عسل طبيعي نقي 100%، مثالي لتحلية مشروباتك أو استخدامه في الوصفات الصحية." data-desc-en="100% pure natural honey, perfect for sweetening your drinks or using in healthy recipes." data-available="yes">
       <div class="prod-thumb" style="background:var(--sand);">
         <img src="images/honey.jpg" alt="عسل طبيعي 500غ" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <span class="prod-emoji-fallback">🍯</span>
@@ -866,7 +908,7 @@
       </div>
     </div>
     
-    <div class="prod-card" data-name-ar="سماعات لاسلكية" data-name-en="Wireless Headphones" data-price="129" data-emoji="🎧" data-img="images/headphones.jpg" data-category-en="Electronics" data-category-ar="إلكترونيات" data-desc-ar="سماعات لاسلكية بصوت نقي وعزل للضوضاء، تدوم طويلاً ببطارية قوية." data-desc-en="Wireless headphones with pure sound and noise cancellation, long-lasting battery." data-available="yes">
+    <div class="prod-card" data-index="1" data-name-ar="سماعات لاسلكية" data-name-en="Wireless Headphones" data-price="129" data-emoji="🎧" data-img="images/headphones.jpg" data-category-en="Electronics" data-category-ar="إلكترونيات" data-desc-ar="سماعات لاسلكية بصوت نقي وعزل للضوضاء، تدوم طويلاً ببطارية قوية." data-desc-en="Wireless headphones with pure sound and noise cancellation, long-lasting battery." data-available="yes">
       <div class="prod-thumb" style="background:var(--sand);">
         <img src="images/headphones.jpg" alt="سماعات لاسلكية" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <span class="prod-emoji-fallback">🎧</span>
@@ -1174,7 +1216,7 @@
     }, 1500);
   }
 
-  // ===== السلة بالكميات المخرنة =====
+  // ===== السلة =====
   let cart = JSON.parse(localStorage.getItem('albostan_cart')) || [];
   cart = cart.map(item => {
     if(item.quantity === undefined) item.quantity = 1;
@@ -1230,7 +1272,6 @@
     cartTotalEl.textContent = `${total} ${cur}`;
     saveCart();
 
-    // أحداث الكميات داخل السلة الجانبية
     cartItemsList.querySelectorAll('.qty-btn-plus').forEach(btn => {
       btn.addEventListener('click', () => {
         const idx = Number(btn.dataset.index);
@@ -1310,7 +1351,7 @@
   document.getElementById('cartClose').addEventListener('click', closeCart);
   cartOverlay.addEventListener('click', closeCart);
 
-  // ===== Checkout Modal (إتمام الطلب) =====
+  // ===== Checkout Modal =====
   const checkoutModal = document.getElementById('checkoutModal');
   const checkoutClose = document.getElementById('checkoutClose');
   const custEmirateSelect = document.getElementById('custEmirate');
@@ -1396,34 +1437,48 @@
     checkoutModal.classList.remove('open');
   });
 
-  // ===== زر واتساب العائم (استفسار سريع) =====
+  // ===== زر واتساب العائم =====
   document.getElementById('waFloatBtn').addEventListener('click', (e) => {
     e.preventDefault();
     window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(T[currentLang].waInquiry)}`, '_blank');
     trackGAEvent('contact_whatsapp', { method: 'floating_button' });
   });
 
-  // ===== البحث والتصفية وعرض الأقسام =====
+  // ===== البحث والتصفية المتقدمة =====
   const searchInput = document.getElementById('searchInput');
+  const minPriceInput = document.getElementById('minPrice');
+  const maxPriceInput = document.getElementById('maxPrice');
+  const priceSortSelect = document.getElementById('priceSort');
+  const resetFiltersBtn = document.getElementById('resetFiltersBtn');
   const filterButtons = document.querySelectorAll('.filter-btn');
   const noResultsMsg = document.getElementById('noResultsMsg');
+  const productGrid = document.getElementById('productGrid');
 
   let currentCategory = 'all';
   let currentSearchQuery = '';
+  let minPriceValue = '';
+  let maxPriceValue = '';
+  let sortOption = 'default';
 
   function filterProducts(){
-    const productCards = document.querySelectorAll('.prod-card');
+    let productCards = Array.from(productGrid.querySelectorAll('.prod-card'));
     let visibleCount = 0;
     
+    // 1. تطبيق فلاتر (البحث، التصنيف، السعر)
     productCards.forEach(card => {
       const nameAr = card.dataset.nameAr.toLowerCase();
       const nameEn = card.dataset.nameEn.toLowerCase();
       const catEn = card.dataset.categoryEn;
+      const price = Number(card.dataset.price);
 
       const matchesSearch = nameAr.includes(currentSearchQuery) || nameEn.includes(currentSearchQuery);
       const matchesCategory = currentCategory === 'all' || catEn === currentCategory;
+      
+      const minP = minPriceValue !== '' ? Number(minPriceValue) : 0;
+      const maxP = maxPriceValue !== '' ? Number(maxPriceValue) : Infinity;
+      const matchesPrice = price >= minP && price <= maxP;
 
-      if(matchesSearch && matchesCategory){
+      if(matchesSearch && matchesCategory && matchesPrice){
         card.style.display = 'block';
         visibleCount++;
       } else {
@@ -1431,13 +1486,60 @@
       }
     });
 
+    // 2. تطبيق الترتيب (Sorting)
+    if (sortOption !== 'default') {
+      productCards.sort((a, b) => {
+        const priceA = Number(a.dataset.price);
+        const priceB = Number(b.dataset.price);
+        if (sortOption === 'low-high') return priceA - priceB;
+        if (sortOption === 'high-low') return priceB - priceA;
+        return 0;
+      });
+    } else {
+      // إعادة الترتيب للوضع الافتراضي بناءً على رقم الاندكس المسجل
+      productCards.sort((a, b) => Number(a.dataset.index) - Number(b.dataset.index));
+    }
+
+    // إعادة إلحاق العناصر داخل الشبكة لترتيبها
+    productCards.forEach(card => productGrid.appendChild(card));
+
     noResultsMsg.style.display = (visibleCount === 0) ? 'block' : 'none';
   }
 
+  // أحداث الفلاتر
   searchInput.addEventListener('input', (e) => {
     currentSearchQuery = e.target.value.toLowerCase().trim();
     filterProducts();
     trackGAEvent('search', { search_term: currentSearchQuery });
+  });
+
+  minPriceInput.addEventListener('input', (e) => {
+    minPriceValue = e.target.value;
+    filterProducts();
+  });
+
+  maxPriceInput.addEventListener('input', (e) => {
+    maxPriceValue = e.target.value;
+    filterProducts();
+  });
+
+  priceSortSelect.addEventListener('change', (e) => {
+    sortOption = e.target.value;
+    filterProducts();
+  });
+
+  resetFiltersBtn.addEventListener('click', () => {
+    searchInput.value = '';
+    minPriceInput.value = '';
+    maxPriceInput.value = '';
+    priceSortSelect.value = 'default';
+    
+    currentSearchQuery = '';
+    minPriceValue = '';
+    maxPriceValue = '';
+    sortOption = 'default';
+    
+    window.setFilter('all');
   });
 
   filterButtons.forEach(btn => {
@@ -1460,7 +1562,7 @@
     trackGAEvent('category_filter', { category: cat });
   };
 
-  // ===== نافذة تفاصيل المنتج المطورة المحسنة =====
+  // ===== نافذة تفاصيل المنتج =====
   const modalOverlay = document.getElementById('productModal');
   const modalClose = document.getElementById('modalClose');
   const mImg = document.getElementById('mImg');
@@ -1484,7 +1586,6 @@
     mDesc.textContent = currentLang === 'ar' ? data.descAr : data.descEn;
     mQtyText.textContent = modalSelectedQty;
 
-    // معالجة الأسعار والخصومات والتوفر داخل المودال
     const cur = T[currentLang].currency;
     let priceHtml = `<span style="color:var(--clay); font-weight:800;">${data.price} ${cur}</span>`;
     if(data.oldPrice && Number(data.oldPrice) > Number(data.price)) {
@@ -1559,14 +1660,14 @@
     window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`, '_blank');
   });
 
-  // ===== الأسئلة الشائعة Accordion =====
+  // ===== الأسئلة الشائعة =====
   document.querySelectorAll('.faq-question').forEach(question => {
     question.addEventListener('click', () => {
       question.closest('.faq-item').classList.toggle('open');
     });
   });
 
-  // ===== القوائم والقوائم المنسدلة للكل =====
+  // ===== القوائم والقوائم المنسدلة =====
   const accountBtn = document.getElementById('accountBtn');
   const accountDropdown = document.getElementById('accountDropdown');
   const menuToggle = document.getElementById('menuToggle');
@@ -1599,7 +1700,7 @@
     }
   });
 
-  // ===== جلب وعرض البيانات من قوقل شيت بحماية XSS وتحديث فوري =====
+  // ===== جلب وعرض البيانات من قوقل شيت =====
   const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1kdO5E6o8FW3X2qHQefOa9tlH0Qdnoqzuwx7UvPyyqTU/gviz/tq?tqx=out:csv&sheet=Products';
 
   function parseCSV(text){
@@ -1629,8 +1730,7 @@
     if(!grid) return;
     grid.innerHTML = '';
 
-    products.forEach(p => {
-      // حماية وتنظيف النصوص XSS Clean
+    products.forEach((p, idx) => {
       const nameAr = escapeHTML(p.nameAr);
       const nameEn = escapeHTML(p.nameEn);
       const price = escapeHTML(p.price);
@@ -1649,7 +1749,9 @@
       const card = document.createElement('div');
       card.className = 'prod-card';
       
-      // التخزين بـ Dataset للوظائف البرمجية والأزرار
+      // إضافة index للاحتفاظ بالترتيب الافتراضي
+      card.dataset.index = idx;
+      
       card.dataset.nameAr = nameAr;
       card.dataset.nameEn = nameEn;
       card.dataset.price = price;
@@ -1663,7 +1765,6 @@
       card.dataset.descEn = descEn;
       card.dataset.available = available;
 
-      // شارات الخصومات والعناوين
       let badgeHtml = '';
       if(currentLang === 'ar' && badgeAr) badgeHtml = `<div class="prod-badge">${badgeAr}</div>`;
       else if(currentLang === 'en' && badgeEn) badgeHtml = `<div class="prod-badge">${badgeEn}</div>`;
@@ -1671,14 +1772,12 @@
         badgeHtml = `<div class="prod-badge">${discount}</div>`;
       }
 
-      // حالة عدم التوفر
       let stockOverlayHtml = '';
       if(available === 'no') {
         const textLabel = currentLang === 'ar' ? T.ar.outOfStock : T.en.outOfStock;
         stockOverlayHtml = `<div class="out-of-stock-badge"><span class="out-of-stock-text">${textLabel}</span></div>`;
       }
 
-      // حساب وعرض السعر والقديم إن وجد
       let priceDisplayHtml = `<span class="price">${price} ${T[currentLang].currency}</span>`;
       if(oldPrice && Number(oldPrice) > Number(price)) {
         priceDisplayHtml = `<span class="price">${price} ${T[currentLang].currency}</span><span class="price-old">${oldPrice} ${T[currentLang].currency}</span>`;
@@ -1709,7 +1808,6 @@
 
   async function loadProductsFromSheet(){
     try{
-      // منع تخزين الـ Cache لضمان استدعاء فوري لحظي للتحديثات الجديدة البسيطة
       const cacheBuster = `&_cb=${new Date().getTime()}`;
       const res = await fetch(SHEET_CSV_URL + cacheBuster);
       if(!res.ok) return;
@@ -1732,14 +1830,13 @@
     }
   }
 
-  // ===== الدالة المساعدة الآمنة لـ Google Analytics Events =====
   function trackGAEvent(eventName, params = {}) {
     if(typeof gtag === 'function') {
       gtag('event', eventName, params);
     }
   }
 
-  // ===== تثبيت الموقع كتطبيق (PWA) واكتشاف السيرفس وركر =====
+  // ===== PWA =====
   let deferredInstallPrompt = null;
   const installBtn = document.getElementById('installBtn');
 
@@ -1773,7 +1870,6 @@
     });
   }
 
-  // التشغيل الأولي الفوري عند فتح المتجر
   bindProductCardEvents();
   renderCart();
   loadProductsFromSheet();
