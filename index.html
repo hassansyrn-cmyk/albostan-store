@@ -110,36 +110,44 @@
   .account-dropdown a:hover{background:var(--sand);}
   .account-dropdown p{font-size:.78rem;opacity:.6;text-align:center;}
 
-  /* --- السلة --- */
-  .cart-overlay{
+  /* --- السلة والمفضلة --- */
+  .cart-overlay, .wishlist-overlay{
     position:fixed;inset:0;background:rgba(0,0,0,.4);opacity:0;visibility:hidden;
     transition:opacity .25s;z-index:90;
   }
-  .cart-overlay.open{opacity:1;visibility:visible;}
-  .cart-drawer{
+  .cart-overlay.open, .wishlist-overlay.open{opacity:1;visibility:visible;}
+  .cart-drawer, .wishlist-drawer{
     position:fixed;top:0;left:-380px;width:340px;max-width:88vw;height:100%;
     background:var(--white);z-index:95;box-shadow:8px 0 30px rgba(0,0,0,.2);
     transition:left .3s ease;display:flex;flex-direction:column;
   }
-  .cart-drawer.open{left:0;}
-  .cart-head{display:flex;align-items:center;justify-content:space-between;padding:20px;border-bottom:1px solid var(--sand);}
-  .cart-head h3{font-family:'El Messiri',serif;font-size:1.3rem;color:var(--clay);}
-  .cart-close{background:var(--sand);width:32px;height:32px;border-radius:50%;font-size:1.1rem;color:var(--clay);}
-  .cart-items{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:14px;}
-  .cart-empty{text-align:center;opacity:.6;padding:40px 10px;font-size:.95rem;}
-  .cart-line{display:flex;align-items:center;gap:10px;background:var(--cream);border-radius:14px;padding:12px;}
-  .cart-line .ci-emoji{font-size:1.6rem;}
-  .cart-line .ci-info{flex:1;}
-  .cart-line .ci-info h5{font-size:.92rem;font-weight:700;margin-bottom:4px;}
-  .cart-line .ci-info span{font-size:.85rem;color:var(--clay);font-weight:600;}
+  .cart-drawer.open, .wishlist-drawer.open{left:0;}
+  html[dir="rtl"] .cart-drawer, html[dir="rtl"] .wishlist-drawer{left:auto;right:-380px;transition:right .3s ease;box-shadow:-8px 0 30px rgba(0,0,0,.2);}
+  html[dir="rtl"] .cart-drawer.open, html[dir="rtl"] .wishlist-drawer.open{right:0;left:auto;}
+  
+  .cart-head, .wishlist-head{display:flex;align-items:center;justify-content:space-between;padding:20px;border-bottom:1px solid var(--sand);}
+  .cart-head h3, .wishlist-head h3{font-family:'El Messiri',serif;font-size:1.3rem;color:var(--clay);}
+  .cart-close, .wishlist-close{background:var(--sand);width:32px;height:32px;border-radius:50%;font-size:1.1rem;color:var(--clay);display:flex;align-items:center;justify-content:center;}
+  .cart-items, .wishlist-items{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:14px;}
+  .cart-empty, .wishlist-empty{text-align:center;opacity:.6;padding:40px 10px;font-size:.95rem;}
+  .cart-line, .wishlist-line{display:flex;align-items:center;gap:10px;background:var(--cream);border-radius:14px;padding:12px;}
+  .cart-line .ci-emoji, .wishlist-line .ci-emoji{font-size:1.6rem;}
+  .cart-line .ci-info, .wishlist-line .ci-info{flex:1;}
+  .cart-line .ci-info h5, .wishlist-line .ci-info h5{font-size:.92rem;font-weight:700;margin-bottom:4px;}
+  .cart-line .ci-info span, .wishlist-line .ci-info span{font-size:.85rem;color:var(--clay);font-weight:600;}
   .cart-qty-ctrl{display:flex;align-items:center;gap:6px;background:var(--sand);padding:4px 6px;border-radius:8px;}
   .cart-qty-ctrl button{background:var(--white);width:22px;height:22px;border-radius:4px;font-weight:bold;font-size:1rem;color:var(--soil);display:flex;align-items:center;justify-content:center;transition:background 0.2s;}
   .cart-qty-ctrl button:hover{background:#ccc;}
   .cart-qty-ctrl span{font-size:0.85rem;font-weight:bold;min-width:14px;text-align:center;}
-  .cart-line .ci-remove{background:none;color:#e63946;font-size:1.4rem;font-weight:700;margin-inline-start:4px;}
+  .cart-line .ci-remove, .wishlist-line .ci-remove{background:none;color:#e63946;font-size:1.4rem;font-weight:700;margin-inline-start:4px;}
   .cart-foot{padding:18px 20px;border-top:1px solid var(--sand);}
   .cart-total{display:flex;justify-content:space-between;font-weight:800;margin-bottom:14px;font-size:1.05rem;color:var(--clay);}
   .cart-foot .btn-primary{width:100%;text-align:center;display:block;}
+  
+  .wishlist-actions{display:flex;gap:6px;margin-top:8px;}
+  .wishlist-actions button, .wishlist-actions a{flex:1;padding:6px;font-size:0.78rem;border-radius:6px;text-align:center;font-weight:700;}
+  .wl-add-cart{background:var(--clay);color:#fff;}
+  .wl-wa-order{background:#25D366;color:#fff;}
 
   /* --- Toast --- */
   .toast{
@@ -269,9 +277,10 @@
     display:flex;
     flex-wrap:wrap;
     justify-content:center;
+    align-items:center;
     gap:12px;
     width:100%;
-    max-width:800px;
+    max-width:900px;
   }
   .advanced-filters input, .advanced-filters select {
     padding:10px 16px;
@@ -288,6 +297,28 @@
   .advanced-filters input:focus, .advanced-filters select:focus {
     border-color:var(--clay);
   }
+  
+  .available-filter-label {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:0.92rem;
+    font-weight:700;
+    cursor:pointer;
+    background:var(--white);
+    padding:10px 18px;
+    border-radius:50px;
+    border:2px solid var(--sand);
+    user-select:none;
+  }
+  .available-filter-label input {
+    min-width:auto;
+    flex:none;
+    cursor:pointer;
+    width:16px;
+    height:16px;
+  }
+
   .filter-reset-btn {
     padding:10px 20px;
     font-size:0.95rem;
@@ -353,7 +384,7 @@
   }
   .prod-body{padding:18px;}
   .prod-cat{color:var(--gold);font-size:.78rem;font-weight:700;letter-spacing:.5px;}
-  .prod-body h4{margin:6px 0 10px;font-size:1.02rem;font-weight:700;color:var(--soil);}
+  .prod-body h4{margin:6px 0 6px;font-size:1.02rem;font-weight:700;color:var(--soil);}
   .prod-foot{display:flex;align-items:center;justify-content:space-between;}
   .price{font-weight:800;color:var(--clay);font-size:1.1rem;}
   
@@ -407,6 +438,36 @@
     background:#ccc;
     cursor:not-allowed;
     transform:none !important;
+  }
+  
+  /* زر المفضلة على كرت المنتج */
+  .prod-wishlist-btn{
+    position:absolute;
+    top:12px;
+    left:12px;
+    z-index:4;
+    background:var(--white);
+    width:32px;
+    height:32px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:0.95rem;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+    transition:transform 0.2s;
+  }
+  html[dir="ltr"] .prod-wishlist-btn { left:auto; right:12px; }
+  .prod-wishlist-btn:hover{transform:scale(1.15);}
+  .prod-wishlist-btn.active{background:#ffebef;}
+  
+  /* النجوم والتقييمات */
+  .prod-rating{
+    color:#FFD700;
+    font-size:0.85rem;
+    margin-bottom:6px;
+    display:flex;
+    gap:2px;
   }
 
   /* --- Modal (نافذة التفاصيل) --- */
@@ -489,7 +550,7 @@
   .modal-title{
     font-family:'El Messiri',serif;
     font-size:1.6rem;
-    margin-bottom:8px;
+    margin-bottom:4px;
     color:var(--clay);
   }
   .modal-price{
@@ -538,6 +599,71 @@
   .modal-direct-wa:hover{
     background:#1ebe57;
   }
+  
+  .modal-share-btn {
+    background:var(--sand);
+    color:var(--soil);
+    box-shadow:none;
+  }
+  .modal-share-btn:hover {
+    background:#d3d9d5;
+  }
+  
+  /* قسم المنتجات المشابهة داخل المودال */
+  .related-products-section {
+    margin-top:24px;
+    padding-top:20px;
+    border-top:1px dashed var(--sand);
+    text-align:start;
+  }
+  .related-products-section h4 {
+    font-family:'El Messiri',serif;
+    color:var(--clay);
+    margin-bottom:12px;
+    font-size:1.1rem;
+  }
+  .related-grid {
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .related-item {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:var(--cream);
+    padding:8px 12px;
+    border-radius:12px;
+    cursor:pointer;
+    transition:background 0.2s;
+  }
+  .related-item:hover {
+    background:var(--sand);
+  }
+  .related-item-thumb {
+    width:40px;
+    height:40px;
+    border-radius:8px;
+    object-fit:cover;
+    background:var(--white);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.3rem;
+  }
+  .related-item-info {
+    flex:1;
+  }
+  .related-item-info h5 {
+    font-size:0.88rem;
+    font-weight:700;
+    color:var(--soil);
+  }
+  .related-item-info span {
+    font-size:0.8rem;
+    color:var(--clay);
+    font-weight:700;
+  }
 
   /* --- التنسيقات الخاصة بـ Checkout Form --- */
   .form-group {
@@ -585,6 +711,18 @@
     margin-top:8px;
     color:var(--clay);
   }
+  
+  .min-order-alert {
+    background:#ffebef;
+    color:#e63946;
+    padding:10px 14px;
+    border-radius:12px;
+    font-size:0.88rem;
+    font-weight:700;
+    margin-bottom:14px;
+    display:none;
+    text-align:center;
+  }
 
   .faq-list{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:14px;}
   .faq-item{
@@ -609,6 +747,87 @@
     transition:transform .25s;
   }
   .wa-float:hover{transform:scale(1.1);}
+  
+  /* زر العودة للأعلى */
+  .back-to-top {
+    position:fixed;
+    bottom:94px;
+    right:24px;
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    background:var(--clay);
+    color:var(--white);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.2rem;
+    box-shadow:0 6px 16px rgba(0,0,0,0.2);
+    z-index:80;
+    opacity:0;
+    visibility:hidden;
+    transition:all 0.3s ease;
+  }
+  .back-to-top.show {
+    opacity:1;
+    visibility:visible;
+  }
+  .back-to-top:hover {
+    background:#15452A;
+    transform:translateY(-3px);
+  }
+  html[dir="ltr"] .wa-float { right:auto; left:24px; }
+  html[dir="ltr"] .back-to-top { right:auto; left:24px; }
+
+  /* قسم تتبع الطلب المضاف حديثًا */
+  .track-order-section {
+    background:var(--white);
+    border-radius:32px;
+    max-width:1200px;
+    margin:0 auto 40px;
+    padding:40px 24px;
+    text-align:center;
+    box-shadow:0 6px 18px -10px rgba(31,94,59,.15);
+  }
+  .track-order-section h3 {
+    font-family:'El Messiri',serif;
+    font-size:1.8rem;
+    color:var(--clay);
+    margin-bottom:10px;
+  }
+  .track-order-section p {
+    color:#4A524D;
+    margin-bottom:20px;
+    font-size:0.95rem;
+  }
+  .track-form {
+    display:flex;
+    max-width:500px;
+    margin:0 auto;
+    gap:10px;
+  }
+  .track-form input {
+    flex:1;
+    padding:14px 18px;
+    border-radius:50px;
+    border:2px solid var(--sand);
+    font-family:inherit;
+    font-size:.95rem;
+    outline:none;
+  }
+  .track-form input:focus {
+    border-color:var(--clay);
+  }
+  .track-form button {
+    background:#25D366;
+    color:var(--white);
+    padding:14px 24px;
+    border-radius:50px;
+    font-weight:700;
+  }
+  .track-form button:hover {
+    background:#1ebe57;
+  }
 
   .newsletter{background:var(--sand);border-radius:32px;max-width:1200px;margin:0 auto 70px;padding:50px;text-align:center;}
   .newsletter h3{font-family:'El Messiri',serif;font-size:2rem;margin-bottom:10px;color:var(--clay);}
@@ -626,6 +845,47 @@
   .footer-logo-img{height:70px;width:auto;background:var(--white);padding:6px;border-radius:12px;}
   .foot-wrap p.about{opacity:.75;font-size:.9rem;line-height:1.8;max-width:280px;}
   .copyright{border-top:1px solid rgba(255,255,255,.08);padding:20px 24px;text-align:center;font-size:.85rem;opacity:.65;}
+
+  /* تأثير الهيكل العظمي للمنتجات (Skeleton Loading) */
+  .skeleton-card {
+    background:var(--white);
+    border-radius:var(--radius);
+    overflow:hidden;
+    padding:18px;
+    height:300px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .skeleton-thumb {
+    height:140px;
+    background:#eef1ef;
+    border-radius:14px;
+    position:relative;
+    overflow:hidden;
+  }
+  .skeleton-line {
+    height:14px;
+    background:#eef1ef;
+    border-radius:4px;
+    position:relative;
+    overflow:hidden;
+  }
+  .skeleton-line.w-50 { width: 50%; }
+  .skeleton-line.w-75 { width: 75%; }
+  .skeleton-line.w-30 { width: 30%; }
+  
+  .skeleton-thumb::after, .skeleton-line::after {
+    content:'';
+    position:absolute;
+    inset:0;
+    transform:translateX(-100%);
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+    animation:shimmer 1.5s infinite;
+  }
+  @keyframes shimmer {
+    100% { transform:translateX(100%); }
+  }
 
   @media (max-width:980px){
     .hero{grid-template-columns:1fr;}
@@ -681,9 +941,13 @@
     .prod-grid{grid-template-columns:1fr;}
     .why-grid{grid-template-columns:1fr;}
     .wa-float{width:52px;height:52px;font-size:1.5rem;bottom:18px;right:18px;}
+    .back-to-top{bottom:80px;right:18px;width:38px;height:38px;font-size:1rem;}
+    html[dir="ltr"] .wa-float { right:auto; left:18px; }
+    html[dir="ltr"] .back-to-top { right:auto; left:18px; }
     
     .advanced-filters { flex-direction: column; }
     .filter-reset-btn { width: 100%; }
+    .track-form { flex-direction: column; }
   }
 
   @media (min-width:681px){
@@ -730,6 +994,10 @@
         <p data-ar="هذا القسم يحتاج ربط بنظام حسابات لاحقًا" data-en="This section will need a real auth system later">هذا القسم يحتاج ربط بنظام حسابات لاحقًا</p>
       </div>
 
+      <button class="icon-btn" id="wishlistBtn" aria-label="المفضلة">
+        ❤️<span class="cart-count" id="wishlistCount">0</span>
+      </button>
+
       <button class="icon-btn" id="cartBtn" aria-label="سلة التسوق">
         🛒<span class="cart-count" id="cartCount">0</span>
       </button>
@@ -751,6 +1019,17 @@
   <div class="cart-foot">
     <div class="cart-total"><span data-ar="الإجمالي" data-en="Total">الإجمالي</span><span id="cartTotal">0 د.إ</span></div>
     <a href="#" class="btn-primary" id="checkoutBtn" data-ar="إتمام الشراء" data-en="Checkout">إتمام الشراء</a>
+  </div>
+</aside>
+
+<div class="wishlist-overlay" id="wishlistOverlay"></div>
+<aside class="wishlist-drawer" id="wishlistDrawer">
+  <div class="wishlist-head">
+    <h3 data-ar="المنتجات المفضلة" data-en="My Wishlist">المنتجات المفضلة</h3>
+    <button class="wishlist-close" id="wishlistClose">×</button>
+  </div>
+  <div class="wishlist-items" id="wishlistItemsList">
+    <p class="wishlist-empty">المفضلة فارغة حاليًا ❤️</p>
   </div>
 </aside>
 
@@ -820,7 +1099,7 @@
     <div class="why-card">
       <div class="why-icon">🚚</div>
       <h4 data-ar="توصيل سريع" data-en="Fast Delivery">توصيل سريع</h4>
-      <p data-ar="نوصل طلبك بسرعة وأمان إلى باب منزلك في جميع إمارات الدولة." data-en="We deliver your order quickly and safely to your doorstep across the UAE.">نوصل طلبك بسرعة وأمان إلى باب منزلك في جميع إمارات الدولة.</p>
+      <p data-ar="نوفر خدمة التوصيل لجميع إمارات الدولة، ويتم احتساب رسوم التوصيل تلقائيًا بناءً على إمارتك في صفحة الدفع." data-en="We deliver across all UAE emirates. Delivery fees are automatically calculated based on your emirate during checkout.">نوفر خدمة التوصيل لجميع إمارات الدولة، ويتم احتساب رسوم التوصيل تلقائيًا بناءً على إمارتك في صفحة الدفع.</p>
     </div>
     <div class="why-card">
       <div class="why-icon">✅</div>
@@ -879,7 +1158,17 @@
         <option value="default" data-ar="الترتيب الافتراضي" data-en="Default Sort">الترتيب الافتراضي</option>
         <option value="low-high" data-ar="السعر: من الأقل للأعلى" data-en="Price: Low to High">السعر: من الأقل للأعلى</option>
         <option value="high-low" data-ar="السعر: من الأعلى للأقل" data-en="Price: High to Low">السعر: من الأعلى للأقل</option>
+        <option value="name-az" data-ar="الاسم A-Z" data-en="Name A-Z">الاسم A-Z</option>
+        <option value="name-za" data-ar="الاسم Z-A" data-en="Name Z-A">الاسم Z-A</option>
+        <option value="available-first" data-ar="المتوفر أولاً" data-en="Available First">المتوفر أولاً</option>
+        <option value="newest" data-ar="الأحدث أولاً" data-en="Newest First">الأحدث أولاً</option>
       </select>
+      
+      <label class="available-filter-label" id="availableFilterLabel">
+        <input type="checkbox" id="availableOnlyCheck">
+        <span data-ar="المتوفر فقط" data-en="Available Only">المتوفر فقط</span>
+      </label>
+      
       <button id="resetFiltersBtn" class="btn-ghost filter-reset-btn" data-ar="إعادة ضبط" data-en="Reset Filters">إعادة ضبط</button>
     </div>
 
@@ -896,32 +1185,44 @@
   </div>
 
   <div class="prod-grid" id="productGrid">
-    <div class="prod-card" data-index="0" data-name-ar="عسل طبيعي 500غ" data-name-en="Natural Honey 500g" data-price="35" data-emoji="🍯" data-img="images/honey.jpg" data-category-en="Grocery" data-category-ar="بقالة" data-desc-ar="عسل طبيعي نقي 100%، مثالي لتحلية مشروباتك أو استخدامه في الوصفات الصحية." data-desc-en="100% pure natural honey, perfect for sweetening your drinks or using in healthy recipes." data-available="yes">
-      <div class="prod-thumb" style="background:var(--sand);">
-        <img src="images/honey.jpg" alt="عسل طبيعي 500غ" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-        <span class="prod-emoji-fallback">🍯</span>
-      </div>
-      <div class="prod-body">
-        <p class="prod-cat" data-ar="بقالة" data-en="Grocery">بقالة</p>
-        <h4 data-ar="عسل طبيعي 500غ" data-en="Natural Honey 500g">عسل طبيعي 500غ</h4>
-        <div class="prod-foot"><span class="price" data-ar="35 د.إ" data-en="35 AED">35 د.إ</span><button class="add-btn" aria-label="أضف للسلة">+</button></div>
-      </div>
+    <div class="skeleton-card">
+      <div class="skeleton-thumb"></div>
+      <div class="skeleton-line w-50"></div>
+      <div class="skeleton-line w-75"></div>
+      <div class="skeleton-line w-30"></div>
     </div>
-    
-    <div class="prod-card" data-index="1" data-name-ar="سماعات لاسلكية" data-name-en="Wireless Headphones" data-price="129" data-emoji="🎧" data-img="images/headphones.jpg" data-category-en="Electronics" data-category-ar="إلكترونيات" data-desc-ar="سماعات لاسلكية بصوت نقي وعزل للضوضاء، تدوم طويلاً ببطارية قوية." data-desc-en="Wireless headphones with pure sound and noise cancellation, long-lasting battery." data-available="yes">
-      <div class="prod-thumb" style="background:var(--sand);">
-        <img src="images/headphones.jpg" alt="سماعات لاسلكية" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-        <span class="prod-emoji-fallback">🎧</span>
-      </div>
-      <div class="prod-body">
-        <p class="prod-cat" data-ar="إلكترونيات" data-en="Electronics">إلكترونيات</p>
-        <h4 data-ar="سماعات لاسلكية" data-en="Wireless Headphones">سماعات لاسلكية</h4>
-        <div class="prod-foot"><span class="price" data-ar="129 د.إ" data-en="129 AED">129 د.إ</span><button class="add-btn" aria-label="أضف للسلة">+</button></div>
-      </div>
+    <div class="skeleton-card">
+      <div class="skeleton-thumb"></div>
+      <div class="skeleton-line w-50"></div>
+      <div class="skeleton-line w-75"></div>
+      <div class="skeleton-line w-30"></div>
+    </div>
+    <div class="skeleton-card">
+      <div class="skeleton-thumb"></div>
+      <div class="skeleton-line w-50"></div>
+      <div class="skeleton-line w-75"></div>
+      <div class="skeleton-line w-30"></div>
+    </div>
+    <div class="skeleton-card">
+      <div class="skeleton-thumb"></div>
+      <div class="skeleton-line w-50"></div>
+      <div class="skeleton-line w-75"></div>
+      <div class="skeleton-line w-30"></div>
     </div>
   </div>
 
   <div class="no-results" id="noResultsMsg" data-ar="لا توجد منتجات مطابقة" data-en="No matching products found">لا توجد منتجات مطابقة</div>
+</section>
+
+<section class="section" id="trackOrderSection">
+  <div class="track-order-section">
+    <h3 data-ar="تتبع الطلب" data-en="Track Order">تتبع الطلب</h3>
+    <p data-ar="أدخل رقم الهاتف أو رقم طلبك للاستفسار عن حالة شحنتك مباشرة" data-en="Enter your phone or order number to inquire about your shipment status directly">أدخل رقم الهاتف أو رقم طلبك للاستفسار عن حالة شحنتك مباشرة</p>
+    <form class="track-form" id="trackOrderForm" onsubmit="return false;">
+      <input type="text" id="trackInput" required data-ar-placeholder="رقم الهاتف أو رقم الطلب..." data-en-placeholder="Phone or Order number...">
+      <button type="submit" id="trackSubmitBtn" data-ar="تتبع عبر واتساب 💬" data-en="Track via WhatsApp 💬">تتبع عبر واتساب 💬</button>
+    </form>
+  </div>
 </section>
 
 <section class="section" id="shipping-info">
@@ -955,7 +1256,7 @@
 
 <section class="section" id="faq">
   <div class="section-head">
-    <p class="eyebrow" data-ar="هل لديك سؤال؟" data-en="Have a question?">هل لديك سؤال؟</p>
+    <p class="eyebrow" data-ar="هل لديك سؤال؟" data-en="Have a question?">هل لديك سؤال?</p>
     <h2 data-ar="الأسئلة الشائعة" data-en="Frequently Asked Questions">الأسئلة الشائعة</h2>
   </div>
   <div class="faq-list">
@@ -1005,6 +1306,7 @@
         <li><a href="#about" data-ar="من نحن" data-en="About Us">من نحن</a></li>
         <li><a href="#categories" data-ar="الأقسام" data-en="Categories">الأقسام</a></li>
         <li><a href="#products" data-ar="المنتجات" data-en="Products">المنتجات</a></li>
+        <li><a href="#trackOrderSection" data-ar="تتبع الطلب" data-en="Track Order">تتبع الطلب</a></li>
       </ul>
     </div>
     <div>
@@ -1029,6 +1331,7 @@
 </footer>
 
 <a href="#" class="wa-float" id="waFloatBtn" aria-label="تواصل عبر واتساب">💬</a>
+<button class="back-to-top" id="backToTopBtn" aria-label="الرجوع للأعلى" data-ar-aria-label="الرجوع للأعلى" data-en-aria-label="Back to top">↑</button>
 
 <div class="toast" id="toast">تمت الإضافة للسلة ✅</div>
 
@@ -1039,6 +1342,7 @@
     <div class="modal-emoji" id="mEmoji">🛒</div>
     <div class="modal-cat" id="mCat"></div>
     <h3 class="modal-title" id="mTitle"></h3>
+    <div id="mRating" style="display:flex; justify-content:center; margin-bottom:6px;"></div>
     <div class="modal-price" id="mPrice"></div>
     <p class="modal-desc" id="mDesc"></p>
     
@@ -1060,6 +1364,12 @@
         <span data-ar="اطلب هذا المنتج عبر واتساب" data-en="Order this item via WhatsApp">اطلب هذا المنتج عبر واتساب</span>
         <span>💬</span>
       </button>
+      <button class="btn-primary modal-action-btns modal-share-btn" id="mShareBtn" data-ar="مشاركة المنتج 🔗" data-en="Share Product 🔗">مشاركة المنتج 🔗</button>
+    </div>
+    
+    <div class="related-products-section" id="relatedProductsSection" style="display:none;">
+      <h4 data-ar="منتجات مشابهة" data-en="Related Products">منتجات مشابهة</h4>
+      <div class="related-grid" id="relatedProductsArea"></div>
     </div>
   </div>
 </div>
@@ -1068,6 +1378,8 @@
   <div class="modal-box" style="text-align:start;">
     <button class="modal-close" id="checkoutClose">×</button>
     <h3 class="modal-title" style="text-align:center; margin-bottom:20px;" data-ar="إتمام الطلب" data-en="Checkout">إتمام الطلب</h3>
+    
+    <div class="min-order-alert" id="minOrderAlert" data-ar="الحد الأدنى للطلب هو 30 د.إ" data-en="Minimum order amount is 30 AED">الحد الأدنى للطلب هو 30 د.إ</div>
     
     <form id="checkoutForm" onsubmit="return false;">
       <div class="form-group">
@@ -1096,7 +1408,21 @@
       
       <div class="form-group">
         <label data-ar="العنوان التفصيلي" data-en="Detailed Address">العنوان التفصيلي</label>
-        <input type="text" id="custAddress" required data-ar-placeholder="المنطقة، اسم الشارع، رقم المنزل" data-en-placeholder="Area, street name, villa/apartment number">
+        <input type="text" id="custAddress" required data-ar-placeholder="المنطقة، اسم الشارع, رقم المنزل" data-en-placeholder="Area, street name, villa/apartment number">
+      </div>
+      
+      <div class="form-group">
+        <label data-ar="كوبون الخصم" data-en="Coupon Code">كوبون الخصم</label>
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="couponCode" style="text-transform:uppercase;" data-ar-placeholder="أدخل الكوبون هنا..." data-en-placeholder="Enter coupon code...">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label data-ar="طريقة الدفع" data-en="Payment Method">طريقة الدفع</label>
+        <select id="paymentMethod" disabled style="background:var(--sand); color:var(--soil); cursor:not-allowed;">
+          <option value="COD" data-ar="نقدًا عند الاستلام" data-en="Cash on Delivery">نقدًا عند الاستلام</option>
+        </select>
       </div>
       
       <div class="form-group">
@@ -1108,6 +1434,10 @@
         <div class="summary-row">
           <span data-ar="قيمة المنتجات:" data-en="Items Total:">قيمة المنتجات:</span>
           <span id="summarySubtotal">0 AED</span>
+        </div>
+        <div class="summary-row" id="summaryDiscountRow" style="display:none; color:#e63946; font-weight:700;">
+          <span id="summaryDiscountLabel" data-ar="الخصم:" data-en="Discount:">الخصم:</span>
+          <span id="summaryDiscountValue">0 AED</span>
         </div>
         <div class="summary-row">
           <span data-ar="رسوم التوصيل:" data-en="Delivery Fee:">رسوم التوصيل:</span>
@@ -1149,7 +1479,15 @@
       noResults: 'لا توجد منتجات مطابقة',
       waInquiry: 'مرحبًا، أريد الاستفسار عن متجر البستان',
       outOfStock: 'غير متوفر',
-      directWaMsg: 'مرحبًا متجر البستان، أريد طلب هذا المنتج بشكل مباشر:\n'
+      directWaMsg: 'مرحبًا متجر البستان، أريد طلب هذا المنتج بشكل مباشر:\n',
+      wishlistEmpty: 'المفضلة فارغة حاليًا ❤️',
+      wishlistAdded: 'تمت الإضافة للمفضلة ❤️',
+      wishlistRemoved: 'تمت الإزالة من المفضلة 🤍',
+      couponInvalid: 'الكوبون المدخل غير صحيح ❌',
+      couponSuccess: 'تم تطبيق الكوبون بنجاح 🎉',
+      minOrderToast: 'الحد الأدنى للطلب هو 30 د.إ',
+      copied: 'تم نسخ الرابط ومعلومات المنتج بنجاح! 🔗',
+      trackMsg: 'مرحبًا، أريد تتبع طلبي. رقم الهاتف/الطلب: '
     },
     en: {
       emptyCart: 'Your cart is empty, please add products first 🛍️',
@@ -1160,9 +1498,20 @@
       noResults: 'No matching products found',
       waInquiry: 'Hello, I would like to ask about AlBostan Store',
       outOfStock: 'Out of Stock',
-      directWaMsg: 'Hello AlBostan Store, I would like to order this item directly:\n'
+      directWaMsg: 'Hello AlBostan Store, I would like to order this item directly:\n',
+      wishlistEmpty: 'Your wishlist is empty ❤️',
+      wishlistAdded: 'Added to wishlist ❤️',
+      wishlistRemoved: 'Removed from wishlist 🤍',
+      couponInvalid: 'The entered coupon is invalid ❌',
+      couponSuccess: 'Coupon applied successfully 🎉',
+      minOrderToast: 'Minimum order amount is 30 AED',
+      copied: 'Product link and info copied successfully! 🔗',
+      trackMsg: 'Hello, I would like to track my order. Phone/Order number: '
     }
   };
+
+  // مصفوفة المنتجات العالمية لتسهيل عمليات التصفية والبحث والمشابهة
+  let globalProductsList = [];
 
   function escapeHTML(str) {
     if (!str) return '';
@@ -1185,6 +1534,9 @@
     document.querySelectorAll('[data-ar-placeholder]').forEach(el => {
       el.placeholder = lang === 'ar' ? el.dataset.arPlaceholder : el.dataset.enPlaceholder;
     });
+    document.querySelectorAll('[data-ar-aria-label]').forEach(el => {
+      el.setAttribute('aria-label', lang === 'ar' ? el.dataset.arAriaLabel : el.dataset.enAriaLabel);
+    });
 
     document.getElementById('langToggle').textContent = lang === 'ar' ? 'EN' : 'AR';
     
@@ -1193,6 +1545,7 @@
     }
     
     renderCart();
+    renderWishlist();
     filterProducts();
     updateCheckoutSummary();
   }
@@ -1216,8 +1569,12 @@
     }, 1500);
   }
 
-  // ===== السلة =====
-  let cart = JSON.parse(localStorage.getItem('albostan_cart')) || [];
+  // ===== السلة وحالة مغادرة الصفحة =====
+  let cart = [];
+  try {
+    cart = JSON.parse(localStorage.getItem('albostan_cart')) || [];
+  } catch(e) { cart = []; }
+  
   cart = cart.map(item => {
     if(item.quantity === undefined) item.quantity = 1;
     return item;
@@ -1230,7 +1587,19 @@
   const cartOverlay = document.getElementById('cartOverlay');
 
   function saveCart(){
-    localStorage.setItem('albostan_cart', JSON.stringify(cart));
+    try {
+      localStorage.setItem('albostan_cart', JSON.stringify(cart));
+    } catch(e) {}
+    toggleBeforeUnloadWarning();
+  }
+
+  // ميزة 14: تنبيه عند مغادرة الصفحة والسلة تحتوي على منتجات
+  function toggleBeforeUnloadWarning() {
+    if (cart.length > 0) {
+      window.onbeforeunload = function() { return true; };
+    } else {
+      window.onbeforeunload = null;
+    }
   }
 
   function getCartSubtotal() {
@@ -1325,6 +1694,143 @@
     trackGAEvent('add_to_cart', { item_name: productData.nameEn, value: Number(productData.price) });
   }
 
+  function openCart(){ cartDrawer.classList.add('open'); cartOverlay.classList.add('open'); closeWishlist(); }
+  function closeCart(){ cartDrawer.classList.remove('open'); cartOverlay.classList.remove('open'); }
+
+  document.getElementById('cartBtn').addEventListener('click', openCart);
+  document.getElementById('cartClose').addEventListener('click', closeCart);
+  cartOverlay.addEventListener('click', closeCart);
+
+
+  // ===== الميزة 1: نظام المفضلة (Wishlist) =====
+  let wishlist = [];
+  try {
+    wishlist = JSON.parse(localStorage.getItem('albostan_wishlist')) || [];
+  } catch(e) { wishlist = []; }
+
+  const wishlistBtn = document.getElementById('wishlistBtn');
+  const wishlistCountEl = document.getElementById('wishlistCount');
+  const wishlistOverlay = document.getElementById('wishlistOverlay');
+  const wishlistDrawer = document.getElementById('wishlistDrawer');
+  const wishlistClose = document.getElementById('wishlistClose');
+  const wishlistItemsList = document.getElementById('wishlistItemsList');
+
+  function saveWishlist() {
+    try {
+      localStorage.setItem('albostan_wishlist', JSON.stringify(wishlist));
+    } catch(e) {}
+    wishlistCountEl.textContent = wishlist.length;
+  }
+
+  function toggleWishlist(productData) {
+    const index = wishlist.findIndex(item => item.nameAr === productData.nameAr);
+    if (index > -1) {
+      wishlist.splice(index, 1);
+      showToast(T[currentLang].wishlistRemoved);
+    } else {
+      wishlist.push({
+        nameAr: productData.nameAr,
+        nameEn: productData.nameEn,
+        price: productData.price,
+        emoji: productData.emoji || '🛒',
+        img: productData.img || '',
+        categoryAr: productData.categoryAr || '',
+        categoryEn: productData.categoryEn || '',
+        descAr: productData.descAr || '',
+        descEn: productData.descEn || '',
+        available: productData.available || 'yes'
+      });
+      showToast(T[currentLang].wishlistAdded);
+    }
+    saveWishlist();
+    renderWishlist();
+    syncWishlistHearts();
+  }
+
+  function syncWishlistHearts() {
+    document.querySelectorAll('.prod-card').forEach(card => {
+      const nameAr = card.dataset.nameAr;
+      const isFav = wishlist.some(item => item.nameAr === nameAr);
+      const heartBtn = card.querySelector('.prod-wishlist-btn');
+      if (heartBtn) {
+        heartBtn.textContent = isFav ? '❤️' : '🤍';
+        if (isFav) heartBtn.classList.add('active');
+        else heartBtn.classList.remove('active');
+      }
+    });
+  }
+
+  function renderWishlist() {
+    wishlistCountEl.textContent = wishlist.length;
+    const cur = T[currentLang].currency;
+
+    if (wishlist.length === 0) {
+      wishlistItemsList.innerHTML = `<p class="wishlist-empty">${T[currentLang].wishlistEmpty}</p>`;
+      return;
+    }
+
+    wishlistItemsList.innerHTML = wishlist.map((item, index) => {
+      const name = currentLang === 'ar' ? item.nameAr : item.nameEn;
+      const btnAddCartText = currentLang === 'ar' ? 'السلة' : '+ Cart';
+      const btnOrderText = currentLang === 'ar' ? 'طلب' : 'Order';
+      return `
+        <div class="wishlist-line" style="flex-direction: column; align-items: stretch;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span class="ci-emoji">${escapeHTML(item.emoji)}</span>
+            <div class="ci-info">
+              <h5>${escapeHTML(name)}</h5>
+              <span>${item.price} ${cur}</span>
+            </div>
+            <button class="ci-remove wl-remove-btn" data-index="${index}">×</button>
+          </div>
+          <div class="wishlist-actions">
+            <button class="wl-add-cart" data-index="${index}">${btnAddCartText} 🛒</button>
+            <button class="wl-wa-order" data-index="${index}">${btnOrderText} 💬</button>
+          </div>
+        </div>`;
+    }).join('');
+
+    wishlistItemsList.querySelectorAll('.wl-remove-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const idx = Number(btn.dataset.index);
+        wishlist.splice(idx, 1);
+        saveWishlist();
+        renderWishlist();
+        syncWishlistHearts();
+        showToast(T[currentLang].wishlistRemoved);
+      });
+    });
+
+    wishlistItemsList.querySelectorAll('.wl-add-cart').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const idx = Number(btn.dataset.index);
+        addToCart(wishlist[idx], 1);
+      });
+    });
+
+    wishlistItemsList.querySelectorAll('.wl-wa-order').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const idx = Number(btn.dataset.index);
+        const item = wishlist[idx];
+        const name = currentLang === 'ar' ? item.nameAr : item.nameEn;
+        let text = `${T[currentLang].directWaMsg}- ${name} [1]\n- السعر: ${item.price} ${T[currentLang].currency}`;
+        window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`, '_blank');
+      });
+    });
+  }
+
+  function openWishlist() { wishlistDrawer.classList.add('open'); wishlistOverlay.classList.add('open'); closeCart(); }
+  function closeWishlist() { wishlistDrawer.classList.remove('open'); wishlistOverlay.classList.remove('open'); }
+
+  wishlistBtn.addEventListener('click', openWishlist);
+  wishlistClose.addEventListener('click', closeWishlist);
+  wishlistOverlay.addEventListener('click', closeWishlist);
+
+
+  // ===== ربط أحداث البطاقات والـ الكروت البسيطة المحدثة =====
   function bindProductCardEvents(){
     document.querySelectorAll('.prod-card .add-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -1337,6 +1843,15 @@
       });
     });
 
+    // ميزة 1: تفعيل زر القلب الصغير في المفضلة داخل كروت المنتجات
+    document.querySelectorAll('.prod-card .prod-wishlist-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const card = btn.closest('.prod-card');
+        toggleWishlist(card.dataset);
+      });
+    });
+
     document.querySelectorAll('.prod-card').forEach(card => {
       card.addEventListener('click', () => {
         openModal(card.dataset);
@@ -1344,17 +1859,13 @@
     });
   }
 
-  function openCart(){ cartDrawer.classList.add('open'); cartOverlay.classList.add('open'); }
-  function closeCart(){ cartDrawer.classList.remove('open'); cartOverlay.classList.remove('open'); }
 
-  document.getElementById('cartBtn').addEventListener('click', openCart);
-  document.getElementById('cartClose').addEventListener('click', closeCart);
-  cartOverlay.addEventListener('click', closeCart);
-
-  // ===== Checkout Modal =====
+  // ===== Checkout Modal وحسابات الكوبون والحد الأدنى للطلب =====
   const checkoutModal = document.getElementById('checkoutModal');
   const checkoutClose = document.getElementById('checkoutClose');
   const custEmirateSelect = document.getElementById('custEmirate');
+  const couponCodeInput = document.getElementById('couponCode');
+  const minOrderAlert = document.getElementById('minOrderAlert');
 
   document.getElementById('checkoutBtn').addEventListener('click', (e) => {
     e.preventDefault();
@@ -1369,33 +1880,77 @@
   });
 
   checkoutClose.addEventListener('click', () => checkoutModal.classList.remove('open'));
-
   custEmirateSelect.addEventListener('change', updateCheckoutSummary);
+  
+  // ميزة 4: إعادة حساب الإجمالي تلقائيًا عند تحديث الكوبون أو تغييره
+  couponCodeInput.addEventListener('input', updateCheckoutSummary);
 
   function updateCheckoutSummary() {
     const subtotal = getCartSubtotal();
     const emirate = custEmirateSelect.value;
     const fee = deliveryFees[emirate] || 0;
-    const grandTotal = subtotal + fee;
+    
+    // حساب ميزة 4: كوبون الخصم BOSTAN10
+    const couponEntered = couponCodeInput.value.trim().toUpperCase();
+    let discount = 0;
+    const discountRow = document.getElementById('summaryDiscountRow');
+    
+    if (couponEntered === 'BOSTAN10') {
+      discount = subtotal * 0.10;
+      if (discount > 10) discount = 10; // الحد الأقصى للخصم هو 10 درهم
+      discountRow.style.display = 'flex';
+      document.getElementById('summaryDiscountValue').textContent = `${discount.toFixed(2)} AED`;
+    } else {
+      discountRow.style.display = 'none';
+    }
+
+    // الإجمالي النهائي = قيمة المنتجات - الخصم + رسوم التوصيل
+    const grandTotal = subtotal - discount + fee;
 
     const cur = T[currentLang].currency;
     document.getElementById('summarySubtotal').textContent = `${subtotal} ${cur}`;
     document.getElementById('summaryDelivery').textContent = emirate ? `${fee} ${cur}` : `0 ${cur}`;
-    document.getElementById('summaryGrandTotal').textContent = `${grandTotal} ${cur}`;
+    document.getElementById('summaryGrandTotal').textContent = `${grandTotal.toFixed(2)} ${cur}`;
+
+    // حساب ميزة 5: التحقق من الحد الأدنى للطلب (30 درهم قبل التوصيل)
+    if (subtotal < 30) {
+      minOrderAlert.style.display = 'block';
+    } else {
+      minOrderAlert.style.display = 'none';
+    }
   }
 
   document.getElementById('checkoutForm').addEventListener('submit', (e) => {
     e.preventDefault();
     
+    const subtotal = getCartSubtotal();
+    
+    // ميزة 5: منع إرسال الطلب عبر الواتساب إذا كانت القيمة أقل من 30 درهم
+    if (subtotal < 30) {
+      showToast(T[currentLang].minOrderToast);
+      return;
+    }
+
     const name = document.getElementById('custName').value.trim();
     const phone = document.getElementById('custPhone').value.trim();
     const emirate = custEmirateSelect.value;
     const address = document.getElementById('custAddress').value.trim();
     const notes = document.getElementById('custNotes').value.trim();
+    const couponEntered = couponCodeInput.value.trim().toUpperCase();
+    const paymentMethodText = currentLang === 'ar' ? 'نقدًا عند الاستلام (COD)' : 'Cash on Delivery (COD)';
     
-    const subtotal = getCartSubtotal();
     const fee = deliveryFees[emirate] || 0;
-    const grandTotal = subtotal + fee;
+    
+    let discount = 0;
+    if (couponEntered === 'BOSTAN10') {
+      discount = subtotal * 0.10;
+      if (discount > 10) discount = 10;
+    } else if (couponEntered !== '') {
+      // إظهار Toast إذا كان الكوبون غير صحيح ومتابعة الإرسال بدون الخصم
+      showToast(T[currentLang].couponInvalid);
+    }
+
+    const grandTotal = subtotal - discount + fee;
 
     let msg = '';
     if(currentLang === 'ar') {
@@ -1405,6 +1960,7 @@
       msg += `- الهاتف: ${phone}\n`;
       msg += `- الإمارة: ${emirate}\n`;
       msg += `- العنوان: ${address}\n`;
+      msg += `- طريقة الدفع: ${paymentMethodText}\n`; // ميزة 6: إدراج الدفع في الرسالة
       if(notes) msg += `- ملاحظات: ${notes}\n`;
       msg += `\n📦 المنتجات المطلوبة:\n`;
       cart.forEach((item, idx) => {
@@ -1412,8 +1968,9 @@
       });
       msg += `\n💵 تفاصيل الحساب:\n`;
       msg += `- قيمة المنتجات: ${subtotal} د.إ\n`;
+      if(discount > 0) msg += `- الكوبون المستخدم: ${couponEntered} (خصم: ${discount.toFixed(2)} د.إ)\n`;
       msg += `- رسوم التوصيل: ${fee} د.إ\n`;
-      msg += `- الإجمالي النهائي: ${grandTotal} د.إ\n`;
+      msg += `- الإجمالي النهائي: ${grandTotal.toFixed(2)} د.إ\n`;
     } else {
       msg += `New Order from AlBostan Store 🧾\n\n`;
       msg += `👤 Customer Details:\n`;
@@ -1421,6 +1978,7 @@
       msg += `- Phone: ${phone}\n`;
       msg += `- Emirate: ${emirate}\n`;
       msg += `- Address: ${address}\n`;
+      msg += `- Payment Method: ${paymentMethodText}\n`; // ميزة 6: إدراج الدفع في الرسالة
       if(notes) msg += `- Notes: ${notes}\n`;
       msg += `\n📦 Items Ordered:\n`;
       cart.forEach((item, idx) => {
@@ -1428,23 +1986,54 @@
       });
       msg += `\n💵 Summary:\n`;
       msg += `- Subtotal: ${subtotal} AED\n`;
+      if(discount > 0) msg += `- Coupon Used: ${couponEntered} (Discount: ${discount.toFixed(2)} AED)\n`;
       msg += `- Delivery Fee: ${fee} AED\n`;
-      msg += `- Grand Total: ${grandTotal} AED\n`;
+      msg += `- Grand Total: ${grandTotal.toFixed(2)} AED\n`;
     }
 
     trackGAEvent('whatsapp_checkout', { value: grandTotal });
     window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
     checkoutModal.classList.remove('open');
+    
+    // تصفير السلة بعد إرسال الطلب بنجاح
+    cart = [];
+    renderCart();
   });
 
-  // ===== زر واتساب العائم =====
+
+  // ===== ميزة 8: قسم تتبع الطلب التلقائي الفوري =====
+  document.getElementById('trackOrderForm').addEventListener('submit', () => {
+    const trackValue = document.getElementById('trackInput').value.trim();
+    if (!trackValue) return;
+    const finalTrackMsg = `${T[currentLang].trackMsg}${trackValue}`;
+    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(finalTrackMsg)}`, '_blank');
+  });
+
+
+  // ===== ميزة 10: زر الرجوع التلقائي للأعلى (Back to Top) =====
+  const backToTopBtn = document.getElementById('backToTopBtn');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 300) {
+      backToTopBtn.classList.add('show');
+    } else {
+      backToTopBtn.classList.remove('show');
+    }
+  });
+  backToTopBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+
+  // ===== زر واتساب العائم الأصلي =====
   document.getElementById('waFloatBtn').addEventListener('click', (e) => {
     e.preventDefault();
     window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(T[currentLang].waInquiry)}`, '_blank');
     trackGAEvent('contact_whatsapp', { method: 'floating_button' });
   });
 
-  // ===== البحث والتصفية المتقدمة =====
+
+  // ===== ميزة 3 + ميزة 13: البحث والتصفية المتقدمة الموسعة والترتيب المطور =====
   const searchInput = document.getElementById('searchInput');
   const minPriceInput = document.getElementById('minPrice');
   const maxPriceInput = document.getElementById('maxPrice');
@@ -1453,6 +2042,7 @@
   const filterButtons = document.querySelectorAll('.filter-btn');
   const noResultsMsg = document.getElementById('noResultsMsg');
   const productGrid = document.getElementById('productGrid');
+  const availableOnlyCheck = document.getElementById('availableOnlyCheck');
 
   let currentCategory = 'all';
   let currentSearchQuery = '';
@@ -1463,13 +2053,15 @@
   function filterProducts(){
     let productCards = Array.from(productGrid.querySelectorAll('.prod-card'));
     let visibleCount = 0;
+    const isAvailableOnly = availableOnlyCheck.checked;
     
-    // 1. تطبيق فلاتر (البحث، التصنيف، السعر)
+    // 1. تطبيق فلاتر (البحث، التصنيف، السعر، المتوفر فقط)
     productCards.forEach(card => {
-      const nameAr = card.dataset.nameAr.toLowerCase();
-      const nameEn = card.dataset.nameEn.toLowerCase();
+      const nameAr = card.dataset.nameAr ? card.dataset.nameAr.toLowerCase() : '';
+      const nameEn = card.dataset.nameEn ? card.dataset.nameEn.toLowerCase() : '';
       const catEn = card.dataset.categoryEn;
       const price = Number(card.dataset.price);
+      const available = card.dataset.available || 'yes';
 
       const matchesSearch = nameAr.includes(currentSearchQuery) || nameEn.includes(currentSearchQuery);
       const matchesCategory = currentCategory === 'all' || catEn === currentCategory;
@@ -1477,8 +2069,11 @@
       const minP = minPriceValue !== '' ? Number(minPriceValue) : 0;
       const maxP = maxPriceValue !== '' ? Number(maxPriceValue) : Infinity;
       const matchesPrice = price >= minP && price <= maxP;
+      
+      // ميزة 3: فلتر المتوفر فقط
+      const matchesAvailability = !isAvailableOnly || available === 'yes';
 
-      if(matchesSearch && matchesCategory && matchesPrice){
+      if(matchesSearch && matchesCategory && matchesPrice && matchesAvailability){
         card.style.display = 'block';
         visibleCount++;
       } else {
@@ -1486,53 +2081,65 @@
       }
     });
 
-    // 2. تطبيق الترتيب (Sorting)
+    // 2. ميزة 13: تطبيق خيارات الترتيب الإضافية المطورة داخل الـ select الحالي
     if (sortOption !== 'default') {
       productCards.sort((a, b) => {
-        const priceA = Number(a.dataset.price);
-        const priceB = Number(b.dataset.price);
+        const priceA = Number(a.dataset.price || 0);
+        const priceB = Number(b.dataset.price || 0);
+        const nameA = currentLang === 'ar' ? (a.dataset.nameAr || '') : (a.dataset.nameEn || '');
+        const nameB = currentLang === 'ar' ? (b.dataset.nameAr || '') : (b.dataset.nameEn || '');
+        const avA = a.dataset.available || 'yes';
+        const avB = b.dataset.available || 'yes';
+        const indexA = Number(a.dataset.index || 0);
+        const indexB = Number(b.dataset.index || 0);
+
         if (sortOption === 'low-high') return priceA - priceB;
         if (sortOption === 'high-low') return priceB - priceA;
+        
+        // الاسم من الألف للياء والعكس
+        if (sortOption === 'name-az') return nameA.localeCompare(nameB);
+        if (sortOption === 'name-za') return nameB.localeCompare(nameA);
+        
+        // المتوفر أولا
+        if (sortOption === 'available-first') {
+          if (avA === 'yes' && avB === 'no') return -1;
+          if (avA === 'no' && avB === 'yes') return 1;
+          return indexA - indexB;
+        }
+        
+        // الأحدث أولا حسب ترتيب Google Sheet أو الترتيب الأصلي
+        if (sortOption === 'newest') return indexB - indexA;
+        
         return 0;
       });
     } else {
-      // إعادة الترتيب للوضع الافتراضي بناءً على رقم الاندكس المسجل
-      productCards.sort((a, b) => Number(a.dataset.index) - Number(b.dataset.index));
+      // إعادة الترتيب للوضع الافتراضي الأصلي
+      productCards.sort((a, b) => Number(a.dataset.index || 0) - Number(b.dataset.index || 0));
     }
 
-    // إعادة إلحاق العناصر داخل الشبكة لترتيبها
+    // إعادة تنظيم العناصر داخل شبكة المنتجات
     productCards.forEach(card => productGrid.appendChild(card));
 
     noResultsMsg.style.display = (visibleCount === 0) ? 'block' : 'none';
   }
 
-  // أحداث الفلاتر
+  // ربط أحداث الفلاتر والمدخلات
   searchInput.addEventListener('input', (e) => {
     currentSearchQuery = e.target.value.toLowerCase().trim();
     filterProducts();
     trackGAEvent('search', { search_term: currentSearchQuery });
   });
-
-  minPriceInput.addEventListener('input', (e) => {
-    minPriceValue = e.target.value;
-    filterProducts();
-  });
-
-  maxPriceInput.addEventListener('input', (e) => {
-    maxPriceValue = e.target.value;
-    filterProducts();
-  });
-
-  priceSortSelect.addEventListener('change', (e) => {
-    sortOption = e.target.value;
-    filterProducts();
-  });
+  minPriceInput.addEventListener('input', (e) => { minPriceValue = e.target.value; filterProducts(); });
+  maxPriceInput.addEventListener('input', (e) => { maxPriceValue = e.target.value; filterProducts(); });
+  priceSortSelect.addEventListener('change', (e) => { sortOption = e.target.value; filterProducts(); });
+  availableOnlyCheck.addEventListener('change', filterProducts); // ميزة 3: فلتر المتوفر فقط عند التغيير
 
   resetFiltersBtn.addEventListener('click', () => {
     searchInput.value = '';
     minPriceInput.value = '';
     maxPriceInput.value = '';
     priceSortSelect.value = 'default';
+    availableOnlyCheck.checked = false;
     
     currentSearchQuery = '';
     minPriceValue = '';
@@ -1562,7 +2169,8 @@
     trackGAEvent('category_filter', { category: cat });
   };
 
-  // ===== نافذة تفاصيل المنتج =====
+
+  // ===== نافذة تفاصيل المنتج والمزايا الإضافية الملحقة =====
   const modalOverlay = document.getElementById('productModal');
   const modalClose = document.getElementById('modalClose');
   const mImg = document.getElementById('mImg');
@@ -1574,6 +2182,10 @@
   const mAddBtn = document.getElementById('mAddBtn');
   const mDirectWaBtn = document.getElementById('mDirectWaBtn');
   const mQtyText = document.getElementById('mQtyText');
+  const mRating = document.getElementById('mRating');
+  const mShareBtn = document.getElementById('mShareBtn');
+  const relatedProductsSection = document.getElementById('relatedProductsSection');
+  const relatedProductsArea = document.getElementById('relatedProductsArea');
   
   let currentModalProduct = null;
   let modalSelectedQty = 1;
@@ -1585,6 +2197,17 @@
     mTitle.textContent = currentLang === 'ar' ? data.nameAr : data.nameEn;
     mDesc.textContent = currentLang === 'ar' ? data.descAr : data.descEn;
     mQtyText.textContent = modalSelectedQty;
+
+    // ميزة 2: عرض النجوم داخل نافذة تفاصيل المنتج
+    mRating.innerHTML = '';
+    if (data.rating) {
+      const rateVal = Math.round(Number(data.rating));
+      if (rateVal >= 1 && rateVal <= 5) {
+        mRating.innerHTML = '★'.repeat(rateVal) + '☆'.repeat(5 - rateVal);
+        mRating.style.color = '#FFD700';
+        mRating.style.fontSize = '1.2rem';
+      }
+    }
 
     const cur = T[currentLang].currency;
     let priceHtml = `<span style="color:var(--clay); font-weight:800;">${data.price} ${cur}</span>`;
@@ -1619,6 +2242,67 @@
       mEmoji.style.display = 'inline-block';
       mEmoji.textContent = data.emoji || '🛒';
     }
+    
+    // ميزة 7: توليد وعرض المنتجات المشابهة المستوحاة من نفس التصنيف
+    renderRelatedProducts(data);
+  }
+
+  // ميزة 7: دالة استخراج وعرض المنتجات المشابهة
+  function renderRelatedProducts(currentProd) {
+    if (!globalProductsList || globalProductsList.length === 0) {
+      relatedProductsSection.style.display = 'none';
+      return;
+    }
+    
+    // الفلترة بناءً على نفس التصنيف واستبعاد المنتج الحالي
+    const filtered = globalProductsList.filter(p => 
+      p.categoryEn === currentProd.categoryEn && p.nameAr !== currentProd.nameAr
+    ).slice(0, 3);
+    
+    if (filtered.length === 0) {
+      relatedProductsSection.style.display = 'none';
+      return;
+    }
+    
+    relatedProductsSection.style.display = 'block';
+    relatedProductsArea.innerHTML = filtered.map((p, idx) => {
+      const pName = currentLang === 'ar' ? p.nameAr : p.nameEn;
+      const mediaHtml = p.img ? `<img src="${p.img}" class="related-item-thumb" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">` : '';
+      return `
+        <div class="related-item" data-idx="${idx}">
+          ${mediaHtml}
+          <div class="related-item-thumb" style="${p.img ? 'display:none;' : 'display:flex;'}">${escapeHTML(p.emoji || '🛒')}</div>
+          <div class="related-item-info">
+            <h5>${escapeHTML(pName)}</h5>
+            <span>${escapeHTML(p.price)} ${T[currentLang].currency}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+    
+    // ربط الأحداث عند الضغط على منتج مشابه لتحديث المودال الأصلي
+    relatedProductsArea.querySelectorAll('.related-item').forEach((item, index) => {
+      item.addEventListener('click', () => {
+        const targetProduct = filtered[index];
+        // إعادة تحويل الحقول لتطابق dataset المعتمد في المودال
+        const datasetMapped = {
+          nameAr: targetProduct.nameAr,
+          nameEn: targetProduct.nameEn,
+          price: targetProduct.price,
+          oldPrice: targetProduct.oldPrice,
+          discount: targetProduct.discount,
+          emoji: targetProduct.emoji,
+          img: targetProduct.img,
+          categoryAr: targetProduct.categoryAr,
+          categoryEn: targetProduct.categoryEn,
+          descAr: targetProduct.descAr,
+          descEn: targetProduct.descEn,
+          available: targetProduct.available,
+          rating: targetProduct.rating
+        };
+        openModal(datasetMapped);
+      });
+    });
   }
 
   function openModal(productData){
@@ -1660,6 +2344,35 @@
     window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`, '_blank');
   });
 
+  // ميزة 9: زر مشاركة المنتج الذكي (Web Share API / Clipboard)
+  mShareBtn.addEventListener('click', async () => {
+    if(!currentModalProduct) return;
+    const data = currentModalProduct;
+    const pName = currentLang === 'ar' ? data.nameAr : data.nameEn;
+    const shareText = `${pName} - ${data.price} ${T[currentLang].currency}`;
+    const shareUrl = window.location.href;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: pName,
+          text: shareText,
+          url: shareUrl
+        });
+      } catch (err) { console.warn(err); }
+    } else {
+      // الترجيع والنسخ الاحتياطي اليدوي إلى Clipboard
+      const copyDummy = document.createElement('textarea');
+      copyDummy.value = `${shareText} \n ${shareUrl}`;
+      document.body.appendChild(copyDummy);
+      copyDummy.select();
+      document.execCommand('copy');
+      document.body.removeChild(copyDummy);
+      showToast(T[currentLang].copied);
+    }
+  });
+
+
   // ===== الأسئلة الشائعة =====
   document.querySelectorAll('.faq-question').forEach(question => {
     question.addEventListener('click', () => {
@@ -1697,10 +2410,11 @@
       checkoutModal.classList.remove('open');
       modalOverlay.classList.remove('open');
       closeCart();
+      closeWishlist();
     }
   });
 
-  // ===== جلب وعرض البيانات من قوقل شيت =====
+  // ===== جلب وعرض البيانات من قوقل شيت وتضمين الميزات الجديدة البنيوية =====
   const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1kdO5E6o8FW3X2qHQefOa9tlH0Qdnoqzuwx7UvPyyqTU/gviz/tq?tqx=out:csv&sheet=Products';
 
   function parseCSV(text){
@@ -1730,6 +2444,9 @@
     if(!grid) return;
     grid.innerHTML = '';
 
+    // تخزين القائمة في متغير عالمي لاستخدامه لاحقًا في الفلترة والمنتجات المشابهة
+    globalProductsList = products;
+
     products.forEach((p, idx) => {
       const nameAr = escapeHTML(p.nameAr);
       const nameEn = escapeHTML(p.nameEn);
@@ -1745,13 +2462,14 @@
       const available = escapeHTML(p.available || 'yes').toLowerCase();
       const badgeAr = escapeHTML(p.badgeAr);
       const badgeEn = escapeHTML(p.badgeEn);
+      
+      // ميزة 2: معالجة عمود rating الجديد والتحقق من قيمته
+      const ratingVal = p.rating ? Math.round(Number(p.rating)) : 0;
 
       const card = document.createElement('div');
       card.className = 'prod-card';
       
-      // إضافة index للاحتفاظ بالترتيب الافتراضي
       card.dataset.index = idx;
-      
       card.dataset.nameAr = nameAr;
       card.dataset.nameEn = nameEn;
       card.dataset.price = price;
@@ -1764,6 +2482,7 @@
       card.dataset.descAr = descAr;
       card.dataset.descEn = descEn;
       card.dataset.available = available;
+      card.dataset.rating = ratingVal > 0 ? ratingVal : '';
 
       let badgeHtml = '';
       if(currentLang === 'ar' && badgeAr) badgeHtml = `<div class="prod-badge">${badgeAr}</div>`;
@@ -1783,16 +2502,25 @@
         priceDisplayHtml = `<span class="price">${price} ${T[currentLang].currency}</span><span class="price-old">${oldPrice} ${T[currentLang].currency}</span>`;
       }
 
+      // ميزة 2: بناء كتل النجوم التقييمية للكرت
+      let ratingStarsHtml = '';
+      if (ratingVal >= 1 && ratingVal <= 5) {
+        ratingStarsHtml = `<div class="prod-rating">${'★'.repeat(ratingVal)}${'☆'.repeat(5 - ratingVal)}</div>`;
+      }
+
+      // ميزة 12: إضافة تفضيل Lazy Loading الكسول للصور المحددة تلقائيًا لكرت المنتج
       card.innerHTML = `
         ${badgeHtml}
         ${stockOverlayHtml}
+        <button class="prod-wishlist-btn" aria-label="أضف للمفضلة">🤍</button>
         <div class="prod-thumb" style="background:var(--sand);">
-          <img src="${img}" alt="" class="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <img src="${img}" alt="" class="prod-img" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
           <span class="prod-emoji-fallback">${emoji}</span>
         </div>
         <div class="prod-body">
           <p class="prod-cat" data-ar="${categoryAr}" data-en="${categoryEn}">${currentLang === 'ar' ? categoryAr : categoryEn}</p>
           <h4 data-ar="${nameAr}" data-en="${nameEn}">${currentLang === 'ar' ? nameAr : nameEn}</h4>
+          ${ratingStarsHtml}
           <div class="prod-foot">
             ${priceDisplayHtml}
             <button class="add-btn" aria-label="أضف للسلة" ${available === 'no' ? 'disabled' : ''}>+</button>
@@ -1803,6 +2531,7 @@
     });
 
     bindProductCardEvents();
+    syncWishlistHearts();
     filterProducts();
   }
 
@@ -1810,10 +2539,10 @@
     try{
       const cacheBuster = `&_cb=${new Date().getTime()}`;
       const res = await fetch(SHEET_CSV_URL + cacheBuster);
-      if(!res.ok) return;
+      if(!res.ok) { removeSkeletons(); return; }
       const text = await res.text();
       const rows = parseCSV(text).filter(r => r.length > 1 && r.some(c => c.trim() !== ''));
-      if(rows.length < 2) return;
+      if(rows.length < 2) { removeSkeletons(); return; }
 
       const headers = rows[0].map(h => h.trim());
       const products = rows.slice(1).map(r => {
@@ -1824,10 +2553,25 @@
 
       if(products.length > 0){
         renderProductsFromSheet(products);
+      } else {
+        removeSkeletons();
       }
     } catch(err){
       console.warn('قوقل شيت غير متاح حاليًا، سيتم استخدام المنتجات الاحتياطية بالمشروع', err);
+      removeSkeletons();
     }
+  }
+
+  // دالة إزالة هياكل التحميل التلقائي في حال الفشل الآمن أو الفراغ لعدم بقاء الصفحة بيضاء
+  function removeSkeletons() {
+    const grid = document.getElementById('productGrid');
+    if(grid) {
+      const skeletons = grid.querySelectorAll('.skeleton-card');
+      skeletons.forEach(s => s.remove());
+    }
+    bindProductCardEvents();
+    syncWishlistHearts();
+    filterProducts();
   }
 
   function trackGAEvent(eventName, params = {}) {
@@ -1870,8 +2614,10 @@
     });
   }
 
+  // تهيئة واستدعاء أولي للمكونات
   bindProductCardEvents();
   renderCart();
+  renderWishlist();
   loadProductsFromSheet();
 </script>
 
