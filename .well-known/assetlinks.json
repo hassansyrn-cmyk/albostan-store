@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.albostanstore.app",
+    "sha256_cert_fingerprints": ["A4:DA:00:11:BF:90:A4:82:9A:E5:0F:0B:3D:0C:4E:FF:93:F0:0D:1E:32:CA:0E:84:59:B6:FA:54:BE:05:D6:18"]
+  }
+}]
