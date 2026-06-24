@@ -1085,6 +1085,73 @@
     }
   }
 
+  /* --- قسم تحميل التطبيق --- */
+  .download-app-section{
+    max-width:1200px;
+    margin:0 auto;
+    padding:50px 24px;
+  }
+  .download-app-box{
+    background:linear-gradient(135deg, #1a4d2e, #1F5E3B 60%, #2a7a4a);
+    border-radius:32px;
+    padding:44px 36px;
+    text-align:center;
+    color:var(--cream);
+    box-shadow:0 12px 30px -10px rgba(31,94,59,.35);
+  }
+  .download-app-box h2{
+    font-family:'El Messiri',serif;
+    font-size:2.2rem;
+    margin-bottom:12px;
+    color:var(--gold);
+  }
+  .download-app-box .download-desc{
+    font-size:1.05rem;
+    opacity:.9;
+    max-width:560px;
+    margin:0 auto 28px;
+    line-height:1.8;
+  }
+  .download-app-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    background:var(--gold);
+    color:#fff;
+    padding:16px 36px;
+    border-radius:50px;
+    font-weight:700;
+    font-size:1.1rem;
+    transition:background .2s, transform .2s;
+    box-shadow:0 8px 20px -6px rgba(201,162,39,.4);
+  }
+  .download-app-btn:hover{
+    background:#B38F1F;
+    transform:translateY(-2px);
+  }
+  .download-app-note{
+    margin-top:18px;
+    font-size:.85rem;
+    opacity:.75;
+    max-width:500px;
+    margin-left:auto;
+    margin-right:auto;
+    line-height:1.7;
+  }
+
+  @media (max-width:680px){
+    .download-app-box{
+      padding:32px 20px;
+    }
+    .download-app-box h2{
+      font-size:1.7rem;
+    }
+    .download-app-btn{
+      font-size:1rem;
+      padding:14px 28px;
+    }
+  }
+
   @media (prefers-reduced-motion:reduce){
     .hero-logo-img{animation:none;}
     .icon-btn, .cat-circle, .prod-thumb, .add-btn, .cat-item, .prod-card, .why-card, .wa-float{transition:none;}
@@ -1110,6 +1177,7 @@
       <a href="#shipping-info" data-ar="الشحن والإرجاع" data-en="Shipping & Returns">الشحن والإرجاع</a>
       <a href="#about" data-ar="من نحن" data-en="About Us">من نحن</a>
       <a href="#contact" data-ar="تواصل معنا" data-en="Contact Us">تواصل معنا</a>
+      <a href="#download-app" class="hide-in-app" data-ar="حمّل التطبيق" data-en="Download App">حمّل التطبيق</a>
     </nav>
     <div class="nav-icons">
       <button class="icon-btn lang-btn" id="langToggle">EN</button>
@@ -1179,6 +1247,16 @@
 <svg class="wave-divider" viewBox="0 0 1440 60" preserveAspectRatio="none">
   <path d="M0,30 C360,80 1080,-20 1440,30 L1440,60 L0,60 Z"></path>
 </svg>
+
+<!-- قسم تحميل التطبيق -->
+<section class="download-app-section hide-in-app" id="download-app">
+  <div class="download-app-box">
+    <h2 class="display" data-ar="حمّل تطبيق متجر البستان" data-en="Download AlBostan Store App">حمّل تطبيق متجر البستان</h2>
+    <p class="download-desc" data-ar="ثبّت تطبيق متجر البستان على هاتفك لتجربة أسرع وأسهل في التسوق والطلب عبر واتساب." data-en="Install AlBostan Store app on your phone for a faster and easier shopping experience.">ثبّت تطبيق متجر البستان على هاتفك لتجربة أسرع وأسهل في التسوق والطلب عبر واتساب.</p>
+    <a href="downloads/AlBostanStore-v1.0.apk" download class="download-app-btn" data-ar="🤖 تحميل تطبيق الأندرويد APK" data-en="🤖 Download Android APK">🤖 تحميل تطبيق الأندرويد APK</a>
+    <p class="download-app-note" data-ar="ملاحظة: قد يطلب الهاتف السماح بتثبيت التطبيقات من المتصفح لأن التطبيق غير منشور على Google Play بعد." data-en="Note: Your phone may ask to allow installing apps from the browser because the app is not published on Google Play yet.">ملاحظة: قد يطلب الهاتف السماح بتثبيت التطبيقات من المتصفح لأن التطبيق غير منشور على Google Play بعد.</p>
+  </div>
+</section>
 
 <!-- الأقسام -->
 <section class="section categories" id="categories">
@@ -1444,6 +1522,7 @@
         <li><a href="#categories" data-ar="الأقسام" data-en="Categories">الأقسام</a></li>
         <li><a href="#products" data-ar="المنتجات" data-en="Products">المنتجات</a></li>
         <li><a href="#trackOrderSection" data-ar="تتبع الطلب" data-en="Track Order">تتبع الطلب</a></li>
+        <li class="hide-in-app"><a href="#download-app" data-ar="حمّل التطبيق" data-en="Download App">حمّل التطبيق</a></li>
       </ul>
     </div>
     <div>
@@ -2566,6 +2645,31 @@
   if(installBtn){ installBtn.addEventListener('click', async () => { if(!deferredInstallPrompt) return; deferredInstallPrompt.prompt(); const choice = await deferredInstallPrompt.userChoice; trackGAEvent('pwa_install_prompt', { outcome: choice.outcome }); deferredInstallPrompt = null; installBtn.style.display = 'none'; }); }
   window.addEventListener('appinstalled', () => { if(installBtn) installBtn.style.display = 'none'; trackGAEvent('pwa_installed'); });
   if('serviceWorker' in navigator){ window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(err => console.warn('SW registration skipped', err)); }); }
+
+  // ===== إخفاء قسم تحميل التطبيق داخل تطبيق الأندرويد =====
+  (function hideDownloadAppInAndroid(){
+    var isInsideApp = false;
+    // التحقق 1: معلمات URL
+    var urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.get('source') === 'android_app' || urlParams.get('app') === '1'){
+      isInsideApp = true;
+    }
+    // التحقق 2: وضع standalone (PWA)
+    if(window.matchMedia('(display-mode: standalone)').matches){
+      isInsideApp = true;
+    }
+    // التحقق 3: navigator.standalone (لأجهزة iOS)
+    if(window.navigator.standalone === true){
+      isInsideApp = true;
+    }
+    // إخفاء جميع العناصر التي تحمل كلاس hide-in-app
+    if(isInsideApp){
+      var elements = document.querySelectorAll('.hide-in-app');
+      for(var i = 0; i < elements.length; i++){
+        elements[i].style.display = 'none';
+      }
+    }
+  })();
 
   // ===== تهيئة أولية =====
   bindProductCardEvents();
