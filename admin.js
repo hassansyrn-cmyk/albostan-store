@@ -4,7 +4,7 @@ let categoriesData = [];
 let productsData = [];
 
 // ===============================
-// AUTH
+// AUTH STATE
 // ===============================
 supabase.auth.onAuthStateChange((event, session) => {
     if (session) {
@@ -25,26 +25,36 @@ async function login() {
 
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
-    const errorMsg = document.getElementById('loginError');
 
     if (!email || !password) {
-        alert('أدخل البيانات');
+        alert('أدخل البريد وكلمة المرور');
         return;
     }
 
-    if (typeof supabase === 'undefined') {
+    if (!window.supabase) {
         alert('Supabase غير محمل');
         return;
     }
 
-    const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-    });
+    try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password
+        });
 
-    if (error) {
-        errorMsg.textContent = error.message;
-        errorMsg.style.display = 'block';
+        console.log('LOGIN DATA:', data);
+        console.log('LOGIN ERROR:', error);
+
+        if (error) {
+            alert('خطأ: ' + error.message);
+            return;
+        }
+
+        alert('تم تسجيل الدخول بنجاح');
+
+    } catch (err) {
+        alert('خطأ غير متوقع: ' + err.message);
+        console.log(err);
     }
 }
 
@@ -108,10 +118,12 @@ async function loadDashboardData() {
 // CATEGORIES
 // ===============================
 async function fetchCategories() {
-    const { data } = await supabase
-        .from('categories')
-        .select('*')
-        .order('created_at', { ascending: true });
+    const { data, error } = await supabase.from('categories').select('*');
+
+    if (error) {
+        alert('خطأ في جلب الأقسام');
+        return;
+    }
 
     categoriesData = data || [];
 
@@ -127,9 +139,7 @@ async function fetchCategories() {
                 <td>${cat.emoji || '📁'}</td>
                 <td>${cat.name_ar}</td>
                 <td>${cat.name_en}</td>
-                <td>
-                    <button class="btn-danger" onclick="deleteCategory('${cat.id}')">حذف</button>
-                </td>
+                <td><button class="btn-danger" onclick="deleteCategory('${cat.id}')">حذف</button></td>
             </tr>
         `;
 
@@ -159,9 +169,10 @@ async function saveCategory() {
 }
 
 async function deleteCategory(id) {
-    if (!confirm('حذف؟')) return;
+    if (!confirm('حذف القسم؟')) return;
 
     await supabase.from('categories').delete().eq('id', id);
+
     fetchCategories();
 }
 
@@ -169,10 +180,12 @@ async function deleteCategory(id) {
 // PRODUCTS
 // ===============================
 async function fetchProducts() {
-    const { data } = await supabase
-        .from('products')
-        .select('*')
-        .order('created_at', { ascending: false });
+    const { data, error } = await supabase.from('products').select('*');
+
+    if (error) {
+        alert('خطأ في جلب المنتجات');
+        return;
+    }
 
     productsData = data || [];
 
@@ -217,21 +230,16 @@ async function saveProduct() {
     if (file) {
         const fileName = Date.now() + '_' + file.name;
 
-        await supabase.storage
-            .from('product-images')
-            .upload(fileName, file);
+        await supabase.storage.from('product-images').upload(fileName, file);
 
-        const { data } = supabase
-            .storage
-            .from('product-images')
-            .getPublicUrl(fileName);
+        const { data } = supabase.storage.from('product-images').getPublicUrl(fileName);
 
         imageUrl = data.publicUrl;
     }
 
     await supabase.from('products').insert([{
-        name_ar: nameAr,
-        name_en: nameEn,
+        name_ar,
+        name_en,
         price,
         category_id: cat.value,
         category_ar: option.getAttribute('data-ar'),
@@ -247,9 +255,10 @@ async function saveProduct() {
 }
 
 async function deleteProduct(id) {
-    if (!confirm('حذف؟')) return;
+    if (!confirm('حذف المنتج؟')) return;
 
     await supabase.from('products').delete().eq('id', id);
+
     fetchProducts();
     loadDashboardData();
 }
