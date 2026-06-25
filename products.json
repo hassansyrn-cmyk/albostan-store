@@ -13,5 +13,20 @@
     "rating": "4.7",
     "emoji": "🛒",
     "img": "images/1782387063608-108951.jpg"
+  },
+  {
+    "nameAr": "لوحة مفاتيح",
+    "nameEn": "Keyboard",
+    "price": "50",
+    "oldPrice": "75",
+    "discount": "",
+    "categoryAr": "بقالة",
+    "categoryEn": "Grocery",
+    "descAr": "لوحة مفاتيح عربي-انجليزي",
+    "descEn": "Arabic-English keyboard",
+    "available": "no",
+    "rating": "4.6",
+    "emoji": "⌨️",
+    "img": "images/1782387190941-108810.jpg"
   }
 ]
