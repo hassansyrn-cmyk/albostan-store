@@ -43,5 +43,27 @@
     "rating": "",
     "emoji": "🎧",
     "img": "images/1782401642481-103652.jpg"
+  },
+  {
+    "nameAr": "كاميرا كانون 250D مستعملة مع 3 عدسات وحقيبة وكرت ذاكرة",
+    "nameEn": "Used Canon 250D Camera with 3 lenses, bag, and memory card",
+    "price": "1800",
+    "quantity": 1,
+    "cost": "0",
+    "oldPrice": "2100",
+    "discount": "14.29%",
+    "categoryAr": "بقالة",
+    "categoryEn": "Grocery",
+    "descAr": "كاميرا كانون مستعملة مع عدة كاملة، استخدام خفيف",
+    "descEn": "Lightly Used Canon Camera with full kit",
+    "available": "yes",
+    "rating": "",
+    "emoji": "📸",
+    "img": "images/1782409077565-jgfvgkp5j-94698.jpg",
+    "images": [
+      "images/1782409077565-jgfvgkp5j-94698.jpg",
+      "images/1782409082995-vhlt3230v-94699.jpg",
+      "images/1782409087967-euek4zi13-94700.jpg"
+    ]
   }
 ]
