@@ -28,5 +28,20 @@
     "rating": "4.6",
     "emoji": "⌨️",
     "img": "images/1782387190941-108810.jpg"
+  },
+  {
+    "nameAr": "سماعات جي بي ال",
+    "nameEn": "JBL Headphones",
+    "price": "75",
+    "oldPrice": "100",
+    "discount": "25%",
+    "categoryAr": "إلكترونيات",
+    "categoryEn": "Electronics",
+    "descAr": "سماعات جي بي ال ذات جودة صوت ممتازة",
+    "descEn": "JBL Headphones with high-quality sound",
+    "available": "yes",
+    "rating": "",
+    "emoji": "🎧",
+    "img": "images/1782401642481-103652.jpg"
   }
 ]
