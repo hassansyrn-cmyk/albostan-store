@@ -3,600 +3,688 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة تحكم AlBostan Store</title>
+<title>لوحة تحكم AlBostan Store - النسخة المحسّنة</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=El+Messiri:wght@600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
   :root{
-    --clay:#1F5E3B; --cream:#F5F7F5; --sand:#E8ECE9; --soil:#181A19; --white:#FFFFFF; 
-    --danger:#e63946; --success:#2ecc71; --warning:#f39c12; --info:#3498db;
+    --clay:#1F5E3B; --cream:#F5F7F5; --sand:#E8ECE9; --soil:#181A19; --white:#FFFFFF; --danger:#e63946; --success:#2ecc71; --warning:#f39c12;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
-  body{font-family:'Tajawal',sans-serif;background:var(--cream);color:var(--soil);line-height:1.6;}
-  .container{max-width:1400px;margin:0 auto;padding:20px;}
-  header{background:var(--clay);color:#fff;padding:20px;border-radius:14px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;}
-  header h1{font-family:'El Messiri',serif;font-size:1.8rem;margin:0;}
-  .logout-btn{background:#fff;color:var(--clay);padding:8px 16px;border:none;border-radius:8px;font-weight:700;cursor:pointer;}
-  .logout-btn:hover{background:var(--sand);}
-  
-  .tabs{display:flex;gap:8px;margin-bottom:20px;border-bottom:2px solid var(--sand);flex-wrap:wrap;}
-  .tab-btn{background:none;border:none;padding:12px 20px;font-weight:700;color:var(--soil);cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s;font-size:0.95rem;}
+  body{font-family:'Tajawal',sans-serif;background:var(--cream);color:var(--soil);padding:20px;line-height:1.6;}
+  h1{font-family:'El Messiri',serif;color:var(--clay);font-size:1.7rem;margin-bottom:18px;}
+  h2{font-family:'El Messiri',serif;color:var(--clay);font-size:1.2rem;margin:24px 0 12px;}
+  h3{font-family:'El Messiri',serif;color:var(--clay);font-size:1rem;margin:12px 0 8px;}
+  .box{background:var(--white);border-radius:18px;padding:18px;margin-bottom:18px;box-shadow:0 4px 14px -8px rgba(31,94,59,.15);}
+  .tabs{display:flex;gap:8px;margin-bottom:18px;border-bottom:2px solid var(--sand);flex-wrap:wrap;}
+  .tab-btn{background:none;border:none;padding:10px 16px;font-weight:700;color:var(--soil);cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s;}
   .tab-btn.active{color:var(--clay);border-bottom-color:var(--clay);}
   .tab-content{display:none;}
   .tab-content.active{display:block;}
-  
-  .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px;}
-  .stat-card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 4px 12px rgba(0,0,0,0.08);border-right:4px solid var(--clay);}
-  .stat-value{font-size:2.2rem;font-weight:800;color:var(--clay);}
-  .stat-label{font-size:0.9rem;color:#666;margin-top:8px;}
-  
-  .box{background:#fff;border-radius:14px;padding:20px;margin-bottom:20px;box-shadow:0 4px 12px rgba(0,0,0,0.08);}
-  label{display:block;font-weight:700;font-size:.9rem;margin-bottom:6px;color:var(--soil);}
+  label{display:block;font-weight:700;font-size:.85rem;margin-bottom:5px;color:var(--soil);}
   input, select, textarea{
-    width:100%;padding:12px;border-radius:10px;border:2px solid var(--sand);
-    font-family:inherit;font-size:.95rem;background:#fff;outline:none;margin-bottom:14px;
+    width:100%;padding:10px 12px;border-radius:10px;border:2px solid var(--sand);
+    font-family:inherit;font-size:.92rem;background:#fff;outline:none;margin-bottom:12px;
   }
   input:focus, select:focus, textarea:focus{border-color:var(--clay);}
-  textarea{resize:vertical;min-height:80px;}
-  
-  button{cursor:pointer;border:none;border-radius:10px;padding:12px 20px;font-weight:700;font-family:inherit;font-size:.95rem;background:var(--clay);color:#fff;transition:background .2s;}
+  textarea{resize:vertical;min-height:60px;}
+  button{
+    cursor:pointer;border:none;border-radius:10px;padding:10px 18px;font-weight:700;
+    font-family:inherit;font-size:.9rem;background:var(--clay);color:#fff;transition:background .2s;
+  }
   button:hover{background:#15452A;}
-  button.secondary{background:var(--sand);color:var(--soil);}
-  button.secondary:hover{background:#d3d9d5;}
   button.danger{background:var(--danger);}
   button.danger:hover{background:#c52f3a;}
+  button.secondary{background:var(--sand);color:var(--soil);}
+  button.secondary:hover{background:#d3d9d5;}
   button.success{background:var(--success);}
   button.success:hover{background:#27ae60;}
-  
+  .hint{font-size:.8rem;opacity:.65;margin-top:6px;}
   .form-row{display:flex;gap:12px;flex-wrap:wrap;}
   .form-row > div{flex:1;min-width:140px;}
-  
-  .product-item{background:var(--cream);border-radius:12px;padding:14px;margin-bottom:12px;display:flex;align-items:center;gap:12px;}
-  .product-item img{width:60px;height:60px;border-radius:8px;object-fit:cover;}
-  .product-info{flex:1;}
-  .product-name{font-weight:700;margin-bottom:4px;}
-  .product-price{font-size:0.9rem;color:var(--clay);}
-  .product-qty{font-size:0.85rem;color:#666;}
-  .product-actions{display:flex;gap:6px;}
-  .product-actions button{padding:8px 12px;font-size:0.85rem;}
-  
-  .order-item{background:var(--cream);border-radius:12px;padding:14px;margin-bottom:12px;border-right:4px solid var(--clay);}
-  .order-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-  .order-id{font-weight:700;color:var(--clay);}
-  .order-status{font-size:0.85rem;padding:4px 10px;border-radius:20px;background:var(--success);color:#fff;}
-  .order-details{font-size:0.9rem;color:#666;line-height:1.6;}
-  
-  .chart-container{position:relative;height:300px;margin-bottom:20px;}
-  
-  .image-preview{width:100%;max-width:200px;border-radius:10px;margin-top:10px;object-fit:cover;}
-  .image-gallery{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
-  .gallery-img{width:80px;height:80px;border-radius:8px;object-fit:cover;cursor:pointer;border:2px solid transparent;}
-  .gallery-img:hover{border-color:var(--clay);}
-  
-  .success-msg{background:#EAF7EF;color:var(--clay);padding:12px;border-radius:8px;margin-bottom:14px;font-weight:700;}
-  .error-msg{background:#ffebef;color:var(--danger);padding:12px;border-radius:8px;margin-bottom:14px;font-weight:700;}
-  
-  @media (max-width:768px){
+  #statusMsg{padding:10px 14px;border-radius:10px;font-weight:700;font-size:.88rem;margin-bottom:14px;display:none;}
+  #statusMsg.ok{display:block;background:#EAF7EF;color:var(--clay);}
+  #statusMsg.err{display:block;background:#ffebef;color:var(--danger);}
+  .product-row{display:flex;align-items:center;gap:12px;background:var(--cream);border-radius:14px;padding:10px 12px;margin-bottom:10px;}
+  .prow-img{width:54px;height:54px;border-radius:10px;object-fit:cover;background:var(--sand);flex-shrink:0;}
+  .prow-info{flex:1;font-size:.88rem;}
+  .prow-actions{display:flex;gap:6px;flex-shrink:0;}
+  .prow-actions button{padding:7px 12px;font-size:.82rem;}
+  #f_imagePreview{display:none;max-width:80px;border-radius:10px;margin-top:6px;}
+  .image-gallery{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+  .gallery-item{position:relative;width:80px;height:80px;border-radius:10px;overflow:hidden;background:var(--sand);}
+  .gallery-item img{width:100%;height:100%;object-fit:cover;}
+  .gallery-item .remove-img{position:absolute;top:2px;right:2px;background:var(--danger);color:#fff;border:none;width:20px;height:20px;border-radius:50%;font-size:0.8rem;padding:0;display:none;}
+  .gallery-item:hover .remove-img{display:block;}
+  .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px;}
+  .stat-card{background:var(--white);border-radius:14px;padding:16px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+  .stat-value{font-size:1.8rem;font-weight:800;color:var(--clay);}
+  .stat-label{font-size:0.85rem;color:var(--soil);margin-top:4px;}
+  .sales-item{background:var(--cream);border-radius:14px;padding:12px;margin-bottom:10px;border-left:4px solid var(--clay);}
+  .sales-item.pending{border-left-color:var(--warning);}
+  .sales-item.confirmed{border-left-color:var(--success);}
+  @media (max-width:680px){
     .form-row > div{min-width:100%;}
-    .stats-grid{grid-template-columns:1fr;}
-    header{flex-direction:column;gap:12px;}
+    .product-row{flex-wrap:wrap;}
     .tabs{flex-direction:column;}
   }
 </style>
 </head>
 <body>
 
-<div class="container">
-  <!-- رأس الصفحة -->
-  <header>
-    <h1>🌿 لوحة تحكم متجر البستان</h1>
-    <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
-  </header>
+<h1>🛠️ لوحة تحكم متجر البستان - النسخة المحسّنة</h1>
 
-  <!-- التبويبات -->
+<div class="box">
+  <label>GitHub Token (Personal Access Token)</label>
+  <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxx">
+  <div class="form-row">
+    <div><button id="saveTokenBtn">حفظ التوكن بهذا المتصفح</button></div>
+    <div><button id="loadProductsBtn" class="secondary">تحميل المنتجات</button></div>
+  </div>
+  <p class="hint">⚠️ التوكن يُحفظ فقط داخل متصفحك (localStorage) ولا يُرسل لأي مكان غير GitHub. لا تشارك رابط هذه الصفحة مع أي شخص.</p>
+</div>
+
+<div id="statusMsg"></div>
+
+<!-- التبويبات الرئيسية -->
+<div class="box">
   <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('dashboard')">📊 لوحة المعلومات</button>
-    <button class="tab-btn" onclick="switchTab('products')">📦 المنتجات</button>
-    <button class="tab-btn" onclick="switchTab('orders')">📋 الطلبات</button>
-    <button class="tab-btn" onclick="switchTab('sales')">💰 المبيعات</button>
-    <button class="tab-btn" onclick="switchTab('inventory')">🏪 المخزون</button>
+    <button class="tab-btn active" onclick="switchTab('products')">📦 المنتجات</button>
+    <button class="tab-btn" onclick="switchTab('sales')">📊 المبيعات والأرباح</button>
+    <button class="tab-btn" onclick="switchTab('stats')">📈 الإحصائيات</button>
   </div>
 
-  <!-- لوحة المعلومات -->
-  <div id="dashboard" class="tab-content active">
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-value" id="totalSales">0</div>
-        <div class="stat-label">إجمالي المبيعات</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="totalProfit">0</div>
-        <div class="stat-label">صافي الأرباح</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="totalOrders">0</div>
-        <div class="stat-label">عدد الطلبات</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="totalProducts">0</div>
-        <div class="stat-label">عدد المنتجات</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="lowStockCount">0</div>
-        <div class="stat-label">منتجات قليلة المخزون</div>
-      </div>
+  <!-- تبويب المنتجات -->
+  <div id="products" class="tab-content active">
+    <h2 id="formTitle">➕ إضافة منتج جديد</h2>
+    <input type="hidden" id="editIndex" value="-1">
+
+    <div class="form-row">
+      <div><label>الاسم (عربي) *</label><input id="f_nameAr"></div>
+      <div><label>الاسم (إنجليزي) *</label><input id="f_nameEn"></div>
     </div>
 
-    <div class="box">
-      <h2>📈 رسم بياني المبيعات</h2>
-      <div class="chart-container">
-        <canvas id="salesChart"></canvas>
-      </div>
+    <div class="form-row">
+      <div><label>السعر *</label><input type="number" id="f_price"></div>
+      <div><label>السعر القديم (اختياري)</label><input type="number" id="f_oldPrice"></div>
+      <div><label>نص الخصم (مثل -20%)</label><input id="f_discount"></div>
     </div>
 
-    <div class="box">
-      <h2>🔝 أكثر المنتجات مبيعاً</h2>
-      <div id="topProducts"></div>
+    <div class="form-row">
+      <div><label>الكمية المتوفرة *</label><input type="number" id="f_quantity" min="0" value="0"></div>
+      <div><label>السعر الأساسي (التكلفة)</label><input type="number" id="f_cost" min="0"></div>
     </div>
-  </div>
 
-  <!-- المنتجات -->
-  <div id="products" class="tab-content">
-    <div class="box">
-      <h2>➕ إضافة منتج جديد</h2>
-      <div id="addProductMsg"></div>
-      <div class="form-row">
-        <div>
-          <label>الاسم (عربي) *</label>
-          <input type="text" id="productNameAr" placeholder="اسم المنتج بالعربية">
-        </div>
-        <div>
-          <label>الاسم (إنجليزي) *</label>
-          <input type="text" id="productNameEn" placeholder="Product Name">
-        </div>
-      </div>
-      <div class="form-row">
-        <div>
-          <label>السعر الحالي *</label>
-          <input type="number" id="productPrice" placeholder="0.00" step="0.01">
-        </div>
-        <div>
-          <label>السعر القديم (للخصم)</label>
-          <input type="number" id="productOldPrice" placeholder="0.00" step="0.01">
-        </div>
-        <div>
-          <label>تكلفة المنتج *</label>
-          <input type="number" id="productCost" placeholder="0.00" step="0.01">
-        </div>
-        <div>
-          <label>الكمية المتوفرة *</label>
-          <input type="number" id="productQuantity" placeholder="0" min="0">
-        </div>
+    <div class="form-row">
+      <div>
+        <label>القسم</label>
+        <select id="f_category">
+          <option value="Grocery" data-ar="بقالة">بقالة</option>
+          <option value="Electronics" data-ar="إلكترونيات">إلكترونيات</option>
+          <option value="Fashion" data-ar="أزياء">أزياء</option>
+          <option value="Home & Garden" data-ar="المنزل والحديقة">المنزل والحديقة</option>
+          <option value="Kids" data-ar="أطفال">أطفال</option>
+          <option value="Sports" data-ar="رياضة">رياضة</option>
+          <option value="Personal Care" data-ar="العناية الشخصية">العناية الشخصية</option>
+        </select>
       </div>
       <div>
-        <label>الوصف</label>
-        <textarea id="productDescription" placeholder="وصف المنتج..."></textarea>
+        <label>متوفر؟</label>
+        <select id="f_available">
+          <option value="yes">متوفر</option>
+          <option value="no">غير متوفر</option>
+        </select>
       </div>
+      <div><label>التقييم (1-5، اختياري)</label><input type="number" id="f_rating" min="1" max="5"></div>
+    </div>
+
+    <div class="form-row">
+      <div><label>الوصف (عربي)</label><textarea id="f_descAr"></textarea></div>
+      <div><label>الوصف (إنجليزي)</label><textarea id="f_descEn"></textarea></div>
+    </div>
+
+    <div class="form-row">
       <div>
-        <label>الصور (يمكن رفع عدة صور)</label>
-        <input type="file" id="productImages" multiple accept="image/*">
-        <div id="imagePreview"></div>
+        <label>صور المنتج (رفع مباشر - يمكن أكثر من صورة)</label>
+        <input type="file" id="f_imageFiles" accept="image/*" multiple>
+        <div id="f_imageGallery" class="image-gallery"></div>
       </div>
-      <button onclick="addProduct()">✅ إضافة المنتج</button>
+      <div><label>إيموجي بديل (لو بدون صورة)</label><input id="f_emoji" placeholder="🛒"></div>
     </div>
 
-    <div class="box">
-      <h2>📦 المنتجات الموجودة</h2>
-      <div id="productsList"></div>
+    <div class="form-row">
+      <div><button id="saveProductBtn">💾 حفظ المنتج على GitHub</button></div>
+      <div><button id="cancelEditBtn" class="secondary" style="display:none;">إلغاء التعديل</button></div>
     </div>
+
+    <h2>📦 المنتجات الحالية (<span id="productCountLabel">0</span>)</h2>
+    <div id="productsListArea" class="box"><p>اضغط "تحميل المنتجات" أعلاه للبدء.</p></div>
   </div>
 
-  <!-- الطلبات -->
-  <div id="orders" class="tab-content">
-    <div class="box">
-      <h2>📋 الطلبات الجديدة من الموقع</h2>
-      <div id="ordersList"></div>
-    </div>
-  </div>
-
-  <!-- المبيعات -->
+  <!-- تبويب المبيعات -->
   <div id="sales" class="tab-content">
-    <div class="box">
-      <h2>💰 تسجيل بيعة جديدة</h2>
-      <div id="addSaleMsg"></div>
+    <h2>📊 تسجيل بيعة جديدة</h2>
+    <div class="box" style="background:var(--sand);">
       <div class="form-row">
         <div>
-          <label>المنتج *</label>
-          <select id="saleProductId">
-            <option value="">اختر منتج...</option>
+          <label>اختر المنتج</label>
+          <select id="s_productSelect">
+            <option value="">-- اختر المنتج الذي تم بيعه --</option>
           </select>
         </div>
         <div>
-          <label>الكمية *</label>
-          <input type="number" id="saleQuantity" placeholder="0" min="1">
+          <label>الكمية المباعة</label>
+          <input type="number" id="s_quantity" value="1" min="1">
         </div>
         <div>
-          <label>سعر البيع</label>
-          <input type="number" id="salePriceOverride" placeholder="0.00" step="0.01">
+          <label>سعر البيع الفعلي</label>
+          <input type="number" id="s_price" placeholder="السعر المسجل تلقائياً">
         </div>
       </div>
-      <button onclick="recordSale()">✅ تسجيل البيعة</button>
+      <button id="recordSaleBtn" class="success" style="width:100%;">✅ تسجيل العملية وخصم من المخزن</button>
     </div>
 
-    <div class="box">
-      <h2>📊 سجل المبيعات</h2>
-      <div id="salesHistory"></div>
-    </div>
+    <h2>📜 سجل العمليات الأخيرة</h2>
+    <div id="salesListArea" class="box"><p>لا توجد مبيعات مسجلة حتى الآن.</p></div>
   </div>
 
-  <!-- المخزون -->
-  <div id="inventory" class="tab-content">
-    <div class="box">
-      <h2>🏪 حالة المخزون</h2>
-      <div id="inventoryStatus"></div>
+  <!-- تبويب الإحصائيات -->
+  <div id="stats" class="tab-content">
+    <h2>📈 الإحصائيات والأرباح</h2>
+    <div id="statsArea" class="box">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="totalSalesValue">0</div>
+          <div class="stat-label">إجمالي المبيعات</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalProfitValue">0</div>
+          <div class="stat-label">صافي الأرباح</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalOrdersValue">0</div>
+          <div class="stat-label">عدد الطلبات</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="lowStockValue">0</div>
+          <div class="stat-label">منتجات قليلة المخزون</div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-  const GITHUB_REPO = 'albostan-store';
-  const GITHUB_USER = 'hassansyrn-cmyk';
-  const GITHUB_BRANCH = 'main';
-  const GITHUB_TOKEN = localStorage.getItem('github_token');
+  const OWNER = 'hassansyrn-cmyk';
+  const REPO = 'albostan-store';
+  const BRANCH = 'main';
+  const PRODUCTS_PATH = 'products.json';
+  const SALES_PATH = 'sales_data.json';
+  const IMAGES_FOLDER = 'images';
+  const TOKEN_STORAGE_KEY = 'albostan_admin_token';
 
   let products = [];
-  let orders = [];
-  let sales = [];
-  let salesChart = null;
+  let salesData = [];
+  let productsFileSha = null;
+  let salesFileSha = null;
+  let selectedImages = [];
 
-  // تحميل البيانات عند فتح الصفحة
-  window.addEventListener('load', () => {
-    loadAllData();
-    updateDashboard();
-  });
+  const tokenInput = document.getElementById('ghToken');
+  const statusEl = document.getElementById('statusMsg');
 
-  async function loadAllData() {
-    try {
-      // تحميل المنتجات
-      const productsResponse = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/products.json`);
-      if (productsResponse.ok) {
-        products = await productsResponse.json();
-      }
+  function getToken(){ return localStorage.getItem(TOKEN_STORAGE_KEY) || ''; }
 
-      // تحميل الطلبات
-      const ordersResponse = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/orders.json`);
-      if (ordersResponse.ok) {
-        orders = await ordersResponse.json();
-      }
-
-      // تحميل المبيعات
-      const salesResponse = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/sales.json`);
-      if (salesResponse.ok) {
-        sales = await salesResponse.json();
-      }
-
-      renderProducts();
-      renderOrders();
-      renderSales();
-      updateProductSelect();
-    } catch (error) {
-      console.error('خطأ في تحميل البيانات:', error);
-    }
+  function ghHeaders(){
+    return {
+      'Authorization': 'Bearer ' + getToken(),
+      'Accept': 'application/vnd.github+json'
+    };
   }
 
-  function switchTab(tabName) {
-    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  function setStatus(msg, isError){
+    statusEl.textContent = msg;
+    statusEl.className = isError ? 'err' : 'ok';
+  }
+
+  function escapeHtml(s){
+    return (s == null ? '' : s.toString())
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function b64DecodeUnicode(str){
+    const binary = atob(str.replace(/\n/g,''));
+    const bytes = new Uint8Array(binary.length);
+    for(let i=0;i<binary.length;i++){ bytes[i] = binary.charCodeAt(i); }
+    return new TextDecoder('utf-8').decode(bytes);
+  }
+
+  function b64EncodeUnicode(str){
+    const bytes = new TextEncoder().encode(str);
+    let binary = '';
+    bytes.forEach(b => binary += String.fromCharCode(b));
+    return btoa(binary);
+  }
+
+  function switchTab(tabName){
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById(tabName).classList.add('active');
     event.target.classList.add('active');
+    if(tabName === 'stats') updateStats();
   }
 
-  function updateDashboard() {
-    // حساب الإحصائيات
-    const totalSales = sales.reduce((sum, sale) => sum + (sale.total || 0), 0);
-    const totalProfit = sales.reduce((sum, sale) => sum + (sale.profit || 0), 0);
-    const lowStock = products.filter(p => (p.quantity || 0) < 5).length;
-
-    document.getElementById('totalSales').textContent = totalSales.toFixed(2);
-    document.getElementById('totalProfit').textContent = totalProfit.toFixed(2);
-    document.getElementById('totalOrders').textContent = orders.length;
-    document.getElementById('totalProducts').textContent = products.length;
-    document.getElementById('lowStockCount').textContent = lowStock;
-
-    // رسم البياني
-    drawSalesChart();
-    renderTopProducts();
-  }
-
-  function drawSalesChart() {
-    const ctx = document.getElementById('salesChart');
-    if (!ctx) return;
-
-    const last7Days = [];
-    const salesData = [];
-    for (let i = 6; i >= 0; i--) {
-      const date = new Date();
-      date.setDate(date.getDate() - i);
-      const dateStr = date.toLocaleDateString('ar-AE');
-      last7Days.push(dateStr);
-      
-      const daySales = sales.filter(s => {
-        const saleDate = new Date(s.date).toLocaleDateString('ar-AE');
-        return saleDate === dateStr;
-      }).reduce((sum, s) => sum + (s.total || 0), 0);
-      salesData.push(daySales);
+  async function loadProducts(){
+    if(!getToken()){
+      setStatus('أدخل التوكن أولًا واحفظه قبل التحميل.', true);
+      return;
     }
-
-    if (salesChart) salesChart.destroy();
-    
-    salesChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: last7Days,
-        datasets: [{
-          label: 'المبيعات اليومية',
-          data: salesData,
-          borderColor: '#1F5E3B',
-          backgroundColor: 'rgba(31, 94, 59, 0.1)',
-          tension: 0.4,
-          fill: true
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: true }
-        }
+    setStatus('جاري التحميل...');
+    try{
+      const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${PRODUCTS_PATH}?ref=${BRANCH}`, { headers: ghHeaders() });
+      if(res.status === 404){
+        products = [];
+        productsFileSha = null;
+        renderProductsList();
+        setStatus('لا يوجد ملف منتجات بعد بالريبو — أول منتج تحفظه راح يُنشئ الملف تلقائيًا.');
+        return;
       }
+      if(!res.ok){
+        setStatus('فشل التحميل (كود ' + res.status + ') — تحقق من صلاحية التوكن.', true);
+        return;
+      }
+      const data = await res.json();
+      productsFileSha = data.sha;
+      products = JSON.parse(b64DecodeUnicode(data.content));
+      renderProductsList();
+      setStatus('تم تحميل ' + products.length + ' منتج بنجاح ✅');
+      loadSalesData();
+    }catch(e){
+      setStatus('حدث خطأ غير متوقع: ' + e.message, true);
+    }
+  }
+
+  async function loadSalesData(){
+    try{
+      const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${SALES_PATH}?ref=${BRANCH}`, { headers: ghHeaders() });
+      if(res.status === 404){
+        salesData = [];
+        salesFileSha = null;
+        return;
+      }
+      if(res.ok){
+        const data = await res.json();
+        salesFileSha = data.sha;
+        salesData = JSON.parse(b64DecodeUnicode(data.content));
+      }
+    }catch(e){
+      console.warn('Sales data not found, starting fresh');
+      salesData = [];
+    }
+  }
+
+  async function saveProductsFile(commitMessage){
+    const content = b64EncodeUnicode(JSON.stringify(products, null, 2));
+    const body = { message: commitMessage || 'Update products.json via admin panel', content: content, branch: BRANCH };
+    if(productsFileSha) body.sha = productsFileSha;
+    const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${PRODUCTS_PATH}`, {
+      method: 'PUT',
+      headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if(!res.ok){
+      const t = await res.text();
+      throw new Error('فشل حفظ ملف المنتجات (كود ' + res.status + '): ' + t);
+    }
+    const data = await res.json();
+    productsFileSha = data.content.sha;
+  }
+
+  async function saveSalesFile(commitMessage){
+    const content = b64EncodeUnicode(JSON.stringify(salesData, null, 2));
+    const body = { message: commitMessage || 'Update sales_data.json via admin panel', content: content, branch: BRANCH };
+    if(salesFileSha) body.sha = salesFileSha;
+    const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${SALES_PATH}`, {
+      method: 'PUT',
+      headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if(!res.ok) throw new Error('فشل حفظ ملف المبيعات');
+    const data = await res.json();
+    salesFileSha = data.content.sha;
+  }
+
+  function uploadImage(file){
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        try{
+          const base64 = reader.result.split(',')[1];
+          const safeName = Date.now() + '-' + Math.random().toString(36).substr(2,9) + '-' + file.name.replace(/[^a-zA-Z0-9.\-_]/g, '');
+          const path = IMAGES_FOLDER + '/' + safeName;
+          const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}`, {
+            method: 'PUT',
+            headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: 'Upload product image: ' + safeName, content: base64, branch: BRANCH })
+          });
+          if(!res.ok){
+            const t = await res.text();
+            reject(new Error('فشل رفع الصورة (كود ' + res.status + '): ' + t));
+            return;
+          }
+          resolve(path);
+        }catch(e){ reject(e); }
+      };
+      reader.onerror = () => reject(new Error('فشل قراءة ملف الصورة'));
+      reader.readAsDataURL(file);
     });
   }
 
-  function renderTopProducts() {
-    const topProducts = sales
-      .reduce((acc, sale) => {
-        const existing = acc.find(p => p.id === sale.productId);
-        if (existing) {
-          existing.qty += sale.quantity;
-          existing.total += sale.total;
-        } else {
-          acc.push({ id: sale.productId, qty: sale.quantity, total: sale.total });
-        }
-        return acc;
-      }, [])
-      .sort((a, b) => b.qty - a.qty)
-      .slice(0, 5);
+  async function handleSaveProduct(){
+    if(!getToken()){ setStatus('أدخل التوكن أولًا واحفظه.', true); return; }
 
-    const html = topProducts.map(item => {
-      const product = products.find(p => p.id === item.id);
-      return `
-        <div class="product-item">
-          <div class="product-info">
-            <div class="product-name">${product?.nameAr || 'منتج محذوف'}</div>
-            <div class="product-qty">عدد البيعات: ${item.qty} | الإجمالي: ${item.total.toFixed(2)} د.إ</div>
-          </div>
-        </div>
-      `;
-    }).join('');
+    const idx = Number(document.getElementById('editIndex').value);
+    const categorySelect = document.getElementById('f_category');
+    const categoryAr = categorySelect.selectedOptions[0].dataset.ar;
 
-    document.getElementById('topProducts').innerHTML = html || '<p>لا توجد مبيعات حتى الآن</p>';
-  }
+    const nameAr = document.getElementById('f_nameAr').value.trim();
+    const nameEn = document.getElementById('f_nameEn').value.trim();
+    const price = document.getElementById('f_price').value.trim();
+    const quantity = parseInt(document.getElementById('f_quantity').value) || 0;
 
-  async function addProduct() {
-    const nameAr = document.getElementById('productNameAr').value;
-    const nameEn = document.getElementById('productNameEn').value;
-    const price = parseFloat(document.getElementById('productPrice').value);
-    const oldPrice = parseFloat(document.getElementById('productOldPrice').value) || 0;
-    const cost = parseFloat(document.getElementById('productCost').value);
-    const quantity = parseInt(document.getElementById('productQuantity').value);
-
-    if (!nameAr || !nameEn || !price || !cost || !quantity) {
-      showMessage('addProductMsg', 'يرجى ملء جميع الحقول المطلوبة', 'error');
+    if(!nameAr || !nameEn || !price){
+      setStatus('الاسم بالعربي والإنجليزي والسعر حقول مطلوبة.', true);
       return;
+    }
+
+    const oldPrice = document.getElementById('f_oldPrice').value.trim();
+    let discount = document.getElementById('f_discount').value.trim();
+    
+    // حساب الخصم تلقائياً إذا وجد سعر قديم ولم يتم إدخال خصم يدوياً
+    if(oldPrice && parseFloat(oldPrice) > parseFloat(price) && !discount){
+      const diff = parseFloat(oldPrice) - parseFloat(price);
+      const percent = Math.round((diff / parseFloat(oldPrice)) * 100);
+      discount = `-${percent}%`;
     }
 
     const product = {
-      id: Date.now().toString(),
-      nameAr,
-      nameEn,
-      price,
-      oldPrice,
-      cost,
-      quantity,
-      discount: oldPrice > 0 ? Math.round(((oldPrice - price) / oldPrice) * 100) + '%' : '',
-      description: document.getElementById('productDescription').value,
-      images: [],
-      createdAt: new Date().toISOString()
+      nameAr, nameEn, price,
+      quantity: quantity,
+      cost: document.getElementById('f_cost').value.trim() || '0',
+      oldPrice: oldPrice,
+      discount: discount,
+      categoryAr: categoryAr,
+      categoryEn: categorySelect.value,
+      descAr: document.getElementById('f_descAr').value.trim(),
+      descEn: document.getElementById('f_descEn').value.trim(),
+      available: document.getElementById('f_available').value,
+      rating: document.getElementById('f_rating').value.trim(),
+      emoji: document.getElementById('f_emoji').value.trim() || '🛒',
+      img: idx > -1 ? (products[idx].img || '') : '',
+      images: selectedImages.length > 0 ? selectedImages : (idx > -1 && products[idx].images ? products[idx].images : [])
     };
 
-    products.push(product);
-    await saveProducts();
-    
-    document.getElementById('productNameAr').value = '';
-    document.getElementById('productNameEn').value = '';
-    document.getElementById('productPrice').value = '';
-    document.getElementById('productOldPrice').value = '';
-    document.getElementById('productCost').value = '';
-    document.getElementById('productQuantity').value = '';
-    document.getElementById('productDescription').value = '';
-
-    showMessage('addProductMsg', '✅ تم إضافة المنتج بنجاح', 'success');
-    renderProducts();
-    updateProductSelect();
+    setStatus('جاري الحفظ...');
+    try{
+      const fileInput = document.getElementById('f_imageFiles');
+      if(fileInput.files && fileInput.files.length > 0){
+        setStatus('جاري رفع الصور...');
+        const uploadedImages = [];
+        for(let file of fileInput.files){
+          const imgPath = await uploadImage(file);
+          uploadedImages.push(imgPath);
+        }
+        product.images = uploadedImages;
+        if(uploadedImages.length > 0) product.img = uploadedImages[0];
+      }
+      if(idx > -1){ products[idx] = product; } else { products.push(product); }
+      setStatus('جاري حفظ بيانات المنتج...');
+      await saveProductsFile(idx > -1 ? 'Update product: ' + nameEn : 'Add product: ' + nameEn);
+      setStatus('تم الحفظ بنجاح ✅ — التغيير سيظهر بالموقع بعد دقيقة تقريبًا.');
+      resetForm();
+      renderProductsList();
+    }catch(e){
+      setStatus(e.message, true);
+    }
   }
 
-  function renderProducts() {
-    const html = products.map(p => `
-      <div class="product-item">
-        <div class="product-info">
-          <div class="product-name">${p.nameAr}</div>
-          <div class="product-price">السعر: ${p.price} د.إ | التكلفة: ${p.cost} د.إ</div>
-          <div class="product-qty">المخزون: ${p.quantity} قطعة</div>
+  function renderProductsList(){
+    document.getElementById('productCountLabel').textContent = products.length;
+    
+    // تحديث قائمة اختيار المنتجات في تبويب المبيعات
+    const sSelect = document.getElementById('s_productSelect');
+    const currentVal = sSelect.value;
+    sSelect.innerHTML = '<option value="">-- اختر المنتج الذي تم بيعه --</option>' + 
+      products.map((p, i) => `<option value="${i}">${p.nameAr} (المتوفر: ${p.quantity || 0})</option>`).join('');
+    sSelect.value = currentVal;
+
+    const area = document.getElementById('productsListArea');
+    if(products.length === 0){
+      area.innerHTML = '<p>لا توجد منتجات حتى الآن.</p>';
+      return;
+    }
+    area.innerHTML = products.map((p, i) => {
+      const images = Array.isArray(p.images) ? p.images : (p.img ? [p.img] : []);
+      const imgCount = images.length > 0 ? `📷 ${images.length}` : 'بدون صور';
+      return `
+      <div class="product-row">
+        <img class="prow-img" src="${escapeHtml(p.img || '')}" onerror="this.style.visibility='hidden'">
+        <div class="prow-info">
+          <strong>${escapeHtml(p.nameAr)}</strong> / ${escapeHtml(p.nameEn)}<br>
+          <span>${escapeHtml(p.price)} د.إ — ${escapeHtml(p.categoryAr)} — ${p.available === 'no' ? 'غير متوفر' : 'متوفر'} — الكمية: ${p.quantity || 0} — ${imgCount}</span>
         </div>
-        <div class="product-actions">
-          <button onclick="deleteProduct('${p.id}')" class="danger">حذف</button>
+        <div class="prow-actions">
+          <button onclick="editProduct(${i})">تعديل</button>
+          <button class="danger" onclick="deleteProduct(${i})">حذف</button>
         </div>
       </div>
-    `).join('');
-
-    document.getElementById('productsList').innerHTML = html || '<p>لا توجد منتجات</p>';
+    `}).join('');
   }
 
-  async function recordSale() {
-    const productId = document.getElementById('saleProductId').value;
-    const quantity = parseInt(document.getElementById('saleQuantity').value);
-    const priceOverride = parseFloat(document.getElementById('salePriceOverride').value) || 0;
+  window.editProduct = function(i){
+    const p = products[i];
+    document.getElementById('editIndex').value = i;
+    document.getElementById('f_nameAr').value = p.nameAr || '';
+    document.getElementById('f_nameEn').value = p.nameEn || '';
+    document.getElementById('f_price').value = p.price || '';
+    document.getElementById('f_quantity').value = p.quantity || 0;
+    document.getElementById('f_cost').value = p.cost || '';
+    document.getElementById('f_oldPrice').value = p.oldPrice || '';
+    document.getElementById('f_discount').value = p.discount || '';
+    document.getElementById('f_category').value = p.categoryEn || 'Grocery';
+    document.getElementById('f_available').value = p.available || 'yes';
+    document.getElementById('f_rating').value = p.rating || '';
+    document.getElementById('f_descAr').value = p.descAr || '';
+    document.getElementById('f_descEn').value = p.descEn || '';
+    document.getElementById('f_emoji').value = p.emoji || '';
+    document.getElementById('f_imageFiles').value = '';
+    selectedImages = Array.isArray(p.images) ? [...p.images] : [];
+    renderImageGallery();
 
-    if (!productId || !quantity) {
-      showMessage('addSaleMsg', 'يرجى اختيار منتج وكمية', 'error');
+    document.getElementById('formTitle').textContent = '✏️ تعديل منتج: ' + p.nameAr;
+    document.getElementById('cancelEditBtn').style.display = 'inline-block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  window.deleteProduct = async function(i){
+    if(!confirm('متأكد تحذف هذا المنتج؟ لا يمكن التراجع.')) return;
+    const removed = products[i];
+    products.splice(i, 1);
+    setStatus('جاري الحذف...');
+    try{
+      await saveProductsFile('Delete product: ' + (removed ? removed.nameEn : ''));
+      setStatus('تم الحذف بنجاح ✅');
+      renderProductsList();
+    }catch(e){
+      products.splice(i, 0, removed);
+      setStatus(e.message, true);
+    }
+  };
+
+  function renderImageGallery(){
+    const gallery = document.getElementById('f_imageGallery');
+    if(selectedImages.length === 0){
+      gallery.innerHTML = '<p style="font-size:0.85rem; color:#999;">لا توجد صور محددة حتى الآن</p>';
       return;
     }
+    gallery.innerHTML = selectedImages.map((img, idx) => `
+      <div class="gallery-item">
+        <img src="${escapeHtml(img)}" alt="">
+        <button class="remove-img" onclick="removeImage(${idx})">×</button>
+      </div>
+    `).join('');
+  }
 
-    const product = products.find(p => p.id === productId);
-    if (!product) return;
+  window.removeImage = function(idx){
+    selectedImages.splice(idx, 1);
+    renderImageGallery();
+  };
 
-    if (product.quantity < quantity) {
-      showMessage('addSaleMsg', 'الكمية المطلوبة أكثر من المخزون', 'error');
+  function resetForm(){
+    document.getElementById('editIndex').value = -1;
+    ['f_nameAr','f_nameEn','f_price','f_quantity','f_cost','f_oldPrice','f_discount','f_descAr','f_descEn','f_emoji','f_rating'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('f_imageFiles').value = '';
+    selectedImages = [];
+    renderImageGallery();
+    document.getElementById('f_available').value = 'yes';
+    document.getElementById('f_category').value = 'Grocery';
+    document.getElementById('formTitle').textContent = '➕ إضافة منتج جديد';
+    document.getElementById('cancelEditBtn').style.display = 'none';
+  }
+
+  function updateStats(){
+    let totalSales = 0, totalProfit = 0, totalOrders = 0, lowStock = 0;
+    
+    salesData.forEach(sale => {
+      totalSales += parseFloat(sale.total) || 0;
+      totalProfit += parseFloat(sale.profit) || 0;
+      totalOrders++;
+    });
+
+    products.forEach(p => {
+      if((p.quantity || 0) <= 5) lowStock++;
+    });
+
+    document.getElementById('totalSalesValue').textContent = totalSales.toFixed(2) + ' د.إ';
+    document.getElementById('totalProfitValue').textContent = totalProfit.toFixed(2) + ' د.إ';
+    document.getElementById('totalOrdersValue').textContent = totalOrders;
+    document.getElementById('lowStockValue').textContent = lowStock;
+    renderSalesList();
+  }
+
+  function renderSalesList(){
+    const area = document.getElementById('salesListArea');
+    if(salesData.length === 0){
+      area.innerHTML = '<p>لا توجد مبيعات مسجلة.</p>';
       return;
     }
+    area.innerHTML = salesData.slice().reverse().map((s, i) => `
+      <div class="sales-item confirmed">
+        <strong>${escapeHtml(s.productName)}</strong><br>
+        <span>الكمية: ${s.qty} — الإجمالي: ${s.total} د.إ — الربح: ${s.profit} د.إ</span><br>
+        <small style="opacity:0.6;">التاريخ: ${new Date(s.date).toLocaleString('ar-EG')}</small>
+      </div>
+    `).join('');
+  }
 
-    const salePrice = priceOverride || product.price;
-    const profit = (salePrice - product.cost) * quantity;
+  async function handleRecordSale(){
+    const pIdx = document.getElementById('s_productSelect').value;
+    const qty = parseInt(document.getElementById('s_quantity').value) || 0;
+    const customPrice = document.getElementById('s_price').value.trim();
 
-    const sale = {
-      id: Date.now().toString(),
-      productId,
-      quantity,
-      price: salePrice,
-      total: salePrice * quantity,
-      profit,
+    if(pIdx === ""){ setStatus('يرجى اختيار منتج أولاً', true); return; }
+    if(qty <= 0){ setStatus('الكمية يجب أن تكون 1 أو أكثر', true); return; }
+
+    const product = products[pIdx];
+    if((product.quantity || 0) < qty){
+      if(!confirm('الكمية المطلوبة أكبر من المتوفر بالمخزن. هل تريد الاستمرار؟')) return;
+    }
+
+    const pricePerUnit = customPrice !== "" ? parseFloat(customPrice) : parseFloat(product.price);
+    const costPerUnit = parseFloat(product.cost) || 0;
+    const total = pricePerUnit * qty;
+    const profit = (pricePerUnit - costPerUnit) * qty;
+
+    const newSale = {
+      id: Date.now(),
+      productName: product.nameAr,
+      qty: qty,
+      total: total.toFixed(2),
+      profit: profit.toFixed(2),
       date: new Date().toISOString()
     };
 
-    sales.push(sale);
-    product.quantity -= quantity;
+    setStatus('جاري تسجيل البيعة وتحديث المخزن...');
+    try {
+      // 1. تحديث الكمية في مصفوفة المنتجات
+      product.quantity = (parseInt(product.quantity) || 0) - qty;
+      if(product.quantity < 0) product.quantity = 0;
+      
+      // 2. إضافة البيعة لسجل المبيعات
+      salesData.push(newSale);
 
-    await saveProducts();
-    await saveSales();
+      // 3. حفظ الملفين على GitHub
+      await saveProductsFile('Sale recorded: ' + product.nameEn + ' x' + qty);
+      await saveSalesFile('New sale entry');
 
-    document.getElementById('saleProductId').value = '';
-    document.getElementById('saleQuantity').value = '';
-    document.getElementById('salePriceOverride').value = '';
-
-    showMessage('addSaleMsg', '✅ تم تسجيل البيعة بنجاح', 'success');
-    renderSales();
-    updateDashboard();
-  }
-
-  function renderSales() {
-    const html = sales.slice().reverse().map(s => {
-      const product = products.find(p => p.id === s.productId);
-      return `
-        <div class="order-item">
-          <div class="order-header">
-            <div class="order-id">${product?.nameAr || 'منتج محذوف'}</div>
-            <div class="order-status">${new Date(s.date).toLocaleDateString('ar-AE')}</div>
-          </div>
-          <div class="order-details">
-            الكمية: ${s.quantity} | السعر: ${s.price} د.إ | الإجمالي: ${s.total.toFixed(2)} د.إ | الربح: ${s.profit.toFixed(2)} د.إ
-          </div>
-        </div>
-      `;
-    }).join('');
-
-    document.getElementById('salesHistory').innerHTML = html || '<p>لا توجد مبيعات</p>';
-  }
-
-  function renderOrders() {
-    const html = orders.slice().reverse().map(o => `
-      <div class="order-item">
-        <div class="order-header">
-          <div class="order-id">طلب #${o.id}</div>
-          <div class="order-status">${o.status === 'pending' ? '⏳ قيد الانتظار' : '✅ مكتمل'}</div>
-        </div>
-        <div class="order-details">
-          👤 ${o.customerName} | 📞 ${o.customerPhone}<br>
-          📍 ${o.customerEmirate} - ${o.customerAddress}<br>
-          💰 الإجمالي: ${o.total.toFixed(2)} د.إ<br>
-          📅 ${new Date(o.date).toLocaleDateString('ar-AE')}
-        </div>
-      </div>
-    `).join('');
-
-    document.getElementById('ordersList').innerHTML = html || '<p>لا توجد طلبات</p>';
-  }
-
-  function renderInventoryStatus() {
-    const lowStock = products.filter(p => p.quantity < 5);
-    const outOfStock = products.filter(p => p.quantity === 0);
-
-    let html = '<h3>⚠️ منتجات قليلة المخزون (أقل من 5 قطع)</h3>';
-    html += lowStock.map(p => `
-      <div class="product-item">
-        <div class="product-info">
-          <div class="product-name">${p.nameAr}</div>
-          <div class="product-qty">المخزون: ${p.quantity} قطعة</div>
-        </div>
-      </div>
-    `).join('');
-
-    html += '<h3 style="margin-top:20px;">❌ منتجات نفدت من المخزون</h3>';
-    html += outOfStock.map(p => `
-      <div class="product-item" style="opacity:0.6;">
-        <div class="product-info">
-          <div class="product-name">${p.nameAr}</div>
-          <div class="product-qty">المخزون: 0 قطعة</div>
-        </div>
-      </div>
-    `).join('');
-
-    document.getElementById('inventoryStatus').innerHTML = html || '<p>المخزون بحالة جيدة</p>';
-  }
-
-  function updateProductSelect() {
-    const select = document.getElementById('saleProductId');
-    select.innerHTML = '<option value="">اختر منتج...</option>' + products.map(p => 
-      `<option value="${p.id}">${p.nameAr} (${p.quantity} متوفر)</option>`
-    ).join('');
-  }
-
-  async function deleteProduct(id) {
-    if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
-      products = products.filter(p => p.id !== id);
-      await saveProducts();
-      renderProducts();
-      updateProductSelect();
+      setStatus('تم تسجيل البيعة وخصم الكمية بنجاح ✅');
+      document.getElementById('s_quantity').value = 1;
+      document.getElementById('s_price').value = "";
+      renderProductsList();
+      updateStats();
+    } catch(e) {
+      setStatus('خطأ أثناء التسجيل: ' + e.message, true);
     }
   }
 
-  async function saveProducts() {
-    localStorage.setItem('products', JSON.stringify(products));
-  }
-
-  async function saveSales() {
-    localStorage.setItem('sales', JSON.stringify(sales));
-  }
-
-  function showMessage(elementId, message, type) {
-    const element = document.getElementById(elementId);
-    element.textContent = message;
-    element.className = type === 'error' ? 'error-msg' : 'success-msg';
-    setTimeout(() => element.textContent = '', 3000);
-  }
-
-  function logout() {
-    localStorage.removeItem('github_token');
-    location.reload();
-  }
-
-  // تحديث المخزون عند التبديل للتبويب
-  document.addEventListener('click', (e) => {
-    if (e.target.textContent.includes('المخزون')) {
-      renderInventoryStatus();
+  document.getElementById('f_imageFiles').addEventListener('change', (e) => {
+    const files = e.target.files;
+    selectedImages = [];
+    for(let file of files){
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        selectedImages.push(ev.target.result);
+        renderImageGallery();
+      };
+      reader.readAsDataURL(file);
     }
   });
+
+  document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
+  document.getElementById('saveProductBtn').addEventListener('click', handleSaveProduct);
+  document.getElementById('loadProductsBtn').addEventListener('click', loadProducts);
+  document.getElementById('saveTokenBtn').addEventListener('click', () => {
+    localStorage.setItem(TOKEN_STORAGE_KEY, tokenInput.value.trim());
+    setStatus('تم حفظ التوكن بهذا المتصفح فقط ✅');
+  });
+  document.getElementById('recordSaleBtn').addEventListener('click', handleRecordSale);
+  document.getElementById('s_productSelect').addEventListener('change', (e) => {
+    if(e.target.value !== ""){
+      document.getElementById('s_price').placeholder = products[e.target.value].price;
+    }
+  });
+
+  // حساب الخصم تلقائياً عند تغيير الأسعار
+  const autoCalcDiscount = () => {
+    const price = parseFloat(document.getElementById('f_price').value);
+    const oldPrice = parseFloat(document.getElementById('f_oldPrice').value);
+    const discountInput = document.getElementById('f_discount');
+    
+    if(price && oldPrice && oldPrice > price){
+      const percent = Math.round(((oldPrice - price) / oldPrice) * 100);
+      discountInput.placeholder = `سيتم حسابها تلقائياً: -${percent}%`;
+    } else {
+      discountInput.placeholder = "مثلاً -20%";
+    }
+  };
+
+  document.getElementById('f_price').addEventListener('input', autoCalcDiscount);
+  document.getElementById('f_oldPrice').addEventListener('input', autoCalcDiscount);
+
+  tokenInput.value = getToken();
+  if(getToken()){ loadProducts(); }
 </script>
 
 </body>
