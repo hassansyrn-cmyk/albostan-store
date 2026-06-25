@@ -1,182 +1,395 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم | AlBostan Store</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=El+Messiri:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="admin.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة تحكم AlBostan Store</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=El+Messiri:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --clay:#1F5E3B; --cream:#F5F7F5; --sand:#E8ECE9; --soil:#181A19; --white:#FFFFFF; --danger:#e63946;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Tajawal',sans-serif;background:var(--cream);color:var(--soil);padding:20px;line-height:1.6;}
+  h1{font-family:'El Messiri',serif;color:var(--clay);font-size:1.7rem;margin-bottom:18px;}
+  h2{font-family:'El Messiri',serif;color:var(--clay);font-size:1.2rem;margin:24px 0 12px;}
+  .box{background:var(--white);border-radius:18px;padding:18px;margin-bottom:18px;box-shadow:0 4px 14px -8px rgba(31,94,59,.15);}
+  label{display:block;font-weight:700;font-size:.85rem;margin-bottom:5px;color:var(--soil);}
+  input, select, textarea{
+    width:100%;padding:10px 12px;border-radius:10px;border:2px solid var(--sand);
+    font-family:inherit;font-size:.92rem;background:#fff;outline:none;margin-bottom:12px;
+  }
+  input:focus, select:focus, textarea:focus{border-color:var(--clay);}
+  textarea{resize:vertical;min-height:60px;}
+  button{
+    cursor:pointer;border:none;border-radius:10px;padding:10px 18px;font-weight:700;
+    font-family:inherit;font-size:.9rem;background:var(--clay);color:#fff;transition:background .2s;
+  }
+  button:hover{background:#15452A;}
+  button.danger{background:var(--danger);}
+  button.danger:hover{background:#c52f3a;}
+  button.secondary{background:var(--sand);color:var(--soil);}
+  button.secondary:hover{background:#d3d9d5;}
+  .hint{font-size:.8rem;opacity:.65;margin-top:6px;}
+  .form-row{display:flex;gap:12px;flex-wrap:wrap;}
+  .form-row > div{flex:1;min-width:140px;}
+  #statusMsg{padding:10px 14px;border-radius:10px;font-weight:700;font-size:.88rem;margin-bottom:14px;display:none;}
+  #statusMsg.ok{display:block;background:#EAF7EF;color:var(--clay);}
+  #statusMsg.err{display:block;background:#ffebef;color:var(--danger);}
+  .product-row{display:flex;align-items:center;gap:12px;background:var(--cream);border-radius:14px;padding:10px 12px;margin-bottom:10px;}
+  .prow-img{width:54px;height:54px;border-radius:10px;object-fit:cover;background:var(--sand);flex-shrink:0;}
+  .prow-info{flex:1;font-size:.88rem;}
+  .prow-actions{display:flex;gap:6px;flex-shrink:0;}
+  .prow-actions button{padding:7px 12px;font-size:.82rem;}
+  #f_imagePreview{display:none;max-width:80px;border-radius:10px;margin-top:6px;}
+  @media (max-width:680px){
+    .form-row > div{min-width:100%;}
+    .product-row{flex-wrap:wrap;}
+  }
+</style>
 </head>
 <body>
 
-    <div id="loginScreen" class="login-screen">
-        <div class="login-box">
-            <h2 style="font-family: 'El Messiri', serif; color: var(--clay); margin-bottom: 20px;">تسجيل دخول الأدمن</h2>
-            <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" required>
-            <input type="password" id="loginPassword" placeholder="كلمة المرور" required>
-            <button id="loginBtn" class="btn-primary" style="width: 100%;">دخول</button>
-            <p id="loginError" style="color: red; margin-top: 10px; display: none;"></p>
-            <p style="font-size: 0.85rem; color: #666; margin-top: 15px;">
-                💡 للاختبار: admin@albostan.com / password123
-            </p>
+<h1>🛠️ لوحة تحكم متجر البستان</h1>
+
+<div class="box">
+  <label>GitHub Token (Personal Access Token)</label>
+  <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxx">
+  <div class="form-row">
+    <div><button id="saveTokenBtn">حفظ التوكن بهذا المتصفح</button></div>
+    <div><button id="loadProductsBtn" class="secondary">تحميل المنتجات</button></div>
+  </div>
+  <p class="hint">⚠️ التوكن يُحفظ فقط داخل متصفحك (localStorage) ولا يُرسل لأي مكان غير GitHub. لا تشارك رابط هذه الصفحة مع أي شخص، ولا ترفعها مرتبطة من الموقع العام.</p>
+</div>
+
+<div id="statusMsg"></div>
+
+<div class="box">
+  <h2 id="formTitle">➕ إضافة منتج جديد</h2>
+  <input type="hidden" id="editIndex" value="-1">
+
+  <div class="form-row">
+    <div><label>الاسم (عربي) *</label><input id="f_nameAr"></div>
+    <div><label>الاسم (إنجليزي) *</label><input id="f_nameEn"></div>
+  </div>
+
+  <div class="form-row">
+    <div><label>السعر *</label><input type="number" id="f_price"></div>
+    <div><label>السعر القديم (اختياري)</label><input type="number" id="f_oldPrice"></div>
+    <div><label>نص الخصم (مثل -20%)</label><input id="f_discount"></div>
+  </div>
+
+  <div class="form-row">
+    <div>
+      <label>القسم</label>
+      <select id="f_category">
+        <option value="Grocery" data-ar="بقالة">بقالة</option>
+        <option value="Electronics" data-ar="إلكترونيات">إلكترونيات</option>
+        <option value="Fashion" data-ar="أزياء">أزياء</option>
+        <option value="Home & Garden" data-ar="المنزل والحديقة">المنزل والحديقة</option>
+        <option value="Kids" data-ar="أطفال">أطفال</option>
+        <option value="Sports" data-ar="رياضة">رياضة</option>
+        <option value="Personal Care" data-ar="العناية الشخصية">العناية الشخصية</option>
+      </select>
+    </div>
+    <div>
+      <label>متوفر؟</label>
+      <select id="f_available">
+        <option value="yes">متوفر</option>
+        <option value="no">غير متوفر</option>
+      </select>
+    </div>
+    <div><label>التقييم (1-5، اختياري)</label><input type="number" id="f_rating" min="1" max="5"></div>
+  </div>
+
+  <div class="form-row">
+    <div><label>الوصف (عربي)</label><textarea id="f_descAr"></textarea></div>
+    <div><label>الوصف (إنجليزي)</label><textarea id="f_descEn"></textarea></div>
+  </div>
+
+  <div class="form-row">
+    <div>
+      <label>صورة المنتج (رفع مباشر)</label>
+      <input type="file" id="f_imageFile" accept="image/*">
+      <img id="f_imagePreview">
+    </div>
+    <div><label>إيموجي بديل (لو بدون صورة)</label><input id="f_emoji" placeholder="🛒"></div>
+  </div>
+
+  <div class="form-row">
+    <div><button id="saveProductBtn">💾 حفظ المنتج على GitHub</button></div>
+    <div><button id="cancelEditBtn" class="secondary" style="display:none;">إلغاء التعديل</button></div>
+  </div>
+</div>
+
+<h2>📦 المنتجات الحالية (<span id="productCountLabel">0</span>)</h2>
+<div id="productsListArea" class="box"><p>اضغط "تحميل المنتجات" أعلاه للبدء.</p></div>
+
+<script>
+  const OWNER = 'hassansyrn-cmyk';
+  const REPO = 'albostan-store';
+  const BRANCH = 'main';
+  const PRODUCTS_PATH = 'products.json';
+  const IMAGES_FOLDER = 'images';
+  const TOKEN_STORAGE_KEY = 'albostan_admin_token';
+
+  let products = [];
+  let productsFileSha = null;
+
+  const tokenInput = document.getElementById('ghToken');
+  const statusEl = document.getElementById('statusMsg');
+
+  function getToken(){ return localStorage.getItem(TOKEN_STORAGE_KEY) || ''; }
+
+  function ghHeaders(){
+    return {
+      'Authorization': 'Bearer ' + getToken(),
+      'Accept': 'application/vnd.github+json'
+    };
+  }
+
+  function setStatus(msg, isError){
+    statusEl.textContent = msg;
+    statusEl.className = isError ? 'err' : 'ok';
+  }
+
+  function escapeHtml(s){
+    return (s == null ? '' : s.toString())
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function b64DecodeUnicode(str){
+    const binary = atob(str.replace(/\n/g,''));
+    const bytes = new Uint8Array(binary.length);
+    for(let i=0;i<binary.length;i++){ bytes[i] = binary.charCodeAt(i); }
+    return new TextDecoder('utf-8').decode(bytes);
+  }
+
+  function b64EncodeUnicode(str){
+    const bytes = new TextEncoder().encode(str);
+    let binary = '';
+    bytes.forEach(b => binary += String.fromCharCode(b));
+    return btoa(binary);
+  }
+
+  async function loadProducts(){
+    if(!getToken()){
+      setStatus('أدخل التوكن أولًا واحفظه قبل التحميل.', true);
+      return;
+    }
+    setStatus('جاري التحميل...');
+    try{
+      const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${PRODUCTS_PATH}?ref=${BRANCH}`, { headers: ghHeaders() });
+      if(res.status === 404){
+        products = [];
+        productsFileSha = null;
+        renderProductsList();
+        setStatus('لا يوجد ملف منتجات بعد بالريبو — أول منتج تحفظه راح يُنشئ الملف تلقائيًا.');
+        return;
+      }
+      if(!res.ok){
+        setStatus('فشل التحميل (كود ' + res.status + ') — تحقق من صلاحية التوكن (يحتاج صلاحية Contents: Read and write).', true);
+        return;
+      }
+      const data = await res.json();
+      productsFileSha = data.sha;
+      products = JSON.parse(b64DecodeUnicode(data.content));
+      renderProductsList();
+      setStatus('تم تحميل ' + products.length + ' منتج بنجاح ✅');
+    }catch(e){
+      setStatus('حدث خطأ غير متوقع: ' + e.message, true);
+    }
+  }
+
+  async function saveProductsFile(commitMessage){
+    const content = b64EncodeUnicode(JSON.stringify(products, null, 2));
+    const body = { message: commitMessage || 'Update products.json via admin panel', content: content, branch: BRANCH };
+    if(productsFileSha) body.sha = productsFileSha;
+    const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${PRODUCTS_PATH}`, {
+      method: 'PUT',
+      headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if(!res.ok){
+      const t = await res.text();
+      throw new Error('فشل حفظ ملف المنتجات (كود ' + res.status + '): ' + t);
+    }
+    const data = await res.json();
+    productsFileSha = data.content.sha;
+  }
+
+  function uploadImage(file){
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        try{
+          const base64 = reader.result.split(',')[1];
+          const safeName = Date.now() + '-' + file.name.replace(/[^a-zA-Z0-9.\-_]/g, '');
+          const path = IMAGES_FOLDER + '/' + safeName;
+          const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}`, {
+            method: 'PUT',
+            headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: 'Upload product image: ' + safeName, content: base64, branch: BRANCH })
+          });
+          if(!res.ok){
+            const t = await res.text();
+            reject(new Error('فشل رفع الصورة (كود ' + res.status + '): ' + t));
+            return;
+          }
+          resolve(path);
+        }catch(e){ reject(e); }
+      };
+      reader.onerror = () => reject(new Error('فشل قراءة ملف الصورة'));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function handleSaveProduct(){
+    if(!getToken()){ setStatus('أدخل التوكن أولًا واحفظه.', true); return; }
+
+    const idx = Number(document.getElementById('editIndex').value);
+    const categorySelect = document.getElementById('f_category');
+    const categoryAr = categorySelect.selectedOptions[0].dataset.ar;
+
+    const nameAr = document.getElementById('f_nameAr').value.trim();
+    const nameEn = document.getElementById('f_nameEn').value.trim();
+    const price = document.getElementById('f_price').value.trim();
+
+    if(!nameAr || !nameEn || !price){
+      setStatus('الاسم بالعربي والإنجليزي والسعر حقول مطلوبة.', true);
+      return;
+    }
+
+    const product = {
+      nameAr, nameEn, price,
+      oldPrice: document.getElementById('f_oldPrice').value.trim(),
+      discount: document.getElementById('f_discount').value.trim(),
+      categoryAr: categoryAr,
+      categoryEn: categorySelect.value,
+      descAr: document.getElementById('f_descAr').value.trim(),
+      descEn: document.getElementById('f_descEn').value.trim(),
+      available: document.getElementById('f_available').value,
+      rating: document.getElementById('f_rating').value.trim(),
+      emoji: document.getElementById('f_emoji').value.trim() || '🛒',
+      img: idx > -1 ? (products[idx].img || '') : ''
+    };
+
+    setStatus('جاري الحفظ...');
+    try{
+      const fileInput = document.getElementById('f_imageFile');
+      if(fileInput.files && fileInput.files[0]){
+        setStatus('جاري رفع الصورة...');
+        const imgPath = await uploadImage(fileInput.files[0]);
+        product.img = imgPath;
+      }
+      if(idx > -1){ products[idx] = product; } else { products.push(product); }
+      setStatus('جاري حفظ بيانات المنتج...');
+      await saveProductsFile(idx > -1 ? 'Update product: ' + nameEn : 'Add product: ' + nameEn);
+      setStatus('تم الحفظ بنجاح ✅ — التغيير سيظهر بالموقع بعد دقيقة تقريبًا (وقت بناء Vercel).');
+      resetForm();
+      renderProductsList();
+    }catch(e){
+      setStatus(e.message, true);
+    }
+  }
+
+  function renderProductsList(){
+    document.getElementById('productCountLabel').textContent = products.length;
+    const area = document.getElementById('productsListArea');
+    if(products.length === 0){
+      area.innerHTML = '<p>لا توجد منتجات حتى الآن.</p>';
+      return;
+    }
+    area.innerHTML = products.map((p, i) => `
+      <div class="product-row">
+        <img class="prow-img" src="${escapeHtml(p.img)}" onerror="this.style.visibility='hidden'">
+        <div class="prow-info">
+          <strong>${escapeHtml(p.nameAr)}</strong> / ${escapeHtml(p.nameEn)}<br>
+          <span>${escapeHtml(p.price)} د.إ — ${escapeHtml(p.categoryAr)} — ${p.available === 'no' ? 'غير متوفر' : 'متوفر'}</span>
         </div>
-    </div>
-
-    <div id="adminPanel" class="admin-layout" style="display: none;">
-        <aside class="sidebar">
-            <div class="sidebar-logo">AlBostan Admin</div>
-            <nav class="sidebar-nav">
-                <button onclick="showSection('dashboard')" class="nav-btn active">📊 الرئيسية</button>
-                <button onclick="showSection('categories')" class="nav-btn">📁 الأقسام</button>
-                <button onclick="showSection('products')" class="nav-btn">📦 المنتجات</button>
-                <button onclick="showSection('coupons')" class="nav-btn">🎟️ الكوبونات</button>
-                <button onclick="showSection('orders')" class="nav-btn">🛒 الطلبات</button>
-            </nav>
-            <button onclick="logout()" class="nav-btn logout-btn">🚪 تسجيل خروج</button>
-        </aside>
-
-        <main class="main-content">
-            
-            <section id="dashboardSection" class="content-section active">
-                <h2>الإحصائيات السريعة</h2>
-                <div class="stats-grid">
-                    <div class="stat-card"><h3>المنتجات</h3><p id="statTotalProducts">0</p></div>
-                    <div class="stat-card"><h3>متوفرة</h3><p id="statAvailableProducts">0</p></div>
-                    <div class="stat-card"><h3>الأقسام</h3><p id="statTotalCategories">0</p></div>
-                    <div class="stat-card"><h3>الكوبونات</h3><p id="statTotalCoupons">0</p></div>
-                </div>
-            </section>
-
-            <section id="categoriesSection" class="content-section">
-                <div class="section-header">
-                    <h2>إدارة الأقسام</h2>
-                    <button onclick="openModal('categoryModal')" class="btn-primary">+ إضافة قسم جديد</button>
-                </div>
-                <table class="data-table">
-                    <thead><tr><th>الأيقونة</th><th>الاسم (عربي)</th><th>الاسم (إنجليزي)</th><th>إجراءات</th></tr></thead>
-                    <tbody id="categoriesTableBody"></tbody>
-                </table>
-            </section>
-
-            <section id="productsSection" class="content-section">
-                <div class="section-header">
-                    <h2>إدارة المنتجات</h2>
-                    <button onclick="openModal('productModal')" class="btn-primary">+ إضافة منتج جديد</button>
-                </div>
-                <table class="data-table">
-                    <thead><tr><th>صورة/أيقونة</th><th>الاسم</th><th>القسم</th><th>السعر</th><th>الحالة</th><th>إجراءات</th></tr></thead>
-                    <tbody id="productsTableBody"></tbody>
-                </table>
-            </section>
-
-            <section id="couponsSection" class="content-section">
-                <div class="section-header">
-                    <h2>إدارة الكوبونات</h2>
-                    <button onclick="openModal('couponModal')" class="btn-primary">+ إضافة كوبون</button>
-                </div>
-                <table class="data-table">
-                    <thead><tr><th>الكود</th><th>النوع</th><th>القيمة</th><th>الحالة</th><th>إجراءات</th></tr></thead>
-                    <tbody id="couponsTableBody"></tbody>
-                </table>
-            </section>
-
-            <section id="ordersSection" class="content-section">
-                <h2>الطلبات</h2>
-                <p style="color: #666;">هذا القسم سيتم تفعيله لاحقاً لعرض الطلبات من الواتساب</p>
-                <table class="data-table">
-                    <thead><tr><th>رقم الطلب</th><th>العميل</th><th>الإجمالي</th><th>تاريخ الطلب</th><th>الحالة</th></tr></thead>
-                    <tbody id="ordersTableBody"><tr><td colspan="5" style="text-align: center; color: #999;">لا توجد طلبات حتى الآن</td></tr></tbody>
-                </table>
-            </section>
-
-        </main>
-    </div>
-
-    <!-- Modal: إضافة/تعديل قسم -->
-    <div id="categoryModal" class="modal-overlay">
-        <div class="modal-box">
-            <h3>إضافة / تعديل قسم</h3>
-            <input type="hidden" id="catId">
-            <input type="text" id="catNameAr" placeholder="الاسم بالعربي" required>
-            <input type="text" id="catNameEn" placeholder="الاسم بالإنجليزي" required>
-            <input type="text" id="catEmoji" placeholder="أيقونة (Emoji) مثل 🥕">
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <button onclick="saveCategory()" class="btn-primary" style="flex:1;">حفظ</button>
-                <button onclick="closeModal('categoryModal')" class="btn-ghost" style="flex:1;">إلغاء</button>
-            </div>
+        <div class="prow-actions">
+          <button onclick="editProduct(${i})">تعديل</button>
+          <button class="danger" onclick="deleteProduct(${i})">حذف</button>
         </div>
-    </div>
+      </div>
+    `).join('');
+  }
 
-    <!-- Modal: إضافة/تعديل منتج -->
-    <div id="productModal" class="modal-overlay">
-        <div class="modal-box" style="max-width: 600px; max-height: 90vh; overflow-y: auto;">
-            <h3>إضافة / تعديل منتج</h3>
-            <input type="hidden" id="prodId">
-            
-            <label>الاسم بالعربي والإنجليزي</label>
-            <div style="display:flex; gap:10px;">
-                <input type="text" id="prodNameAr" placeholder="اسم المنتج عربي" required>
-                <input type="text" id="prodNameEn" placeholder="اسم المنتج إنجليزي" required>
-            </div>
+  window.editProduct = function(i){
+    const p = products[i];
+    document.getElementById('editIndex').value = i;
+    document.getElementById('f_nameAr').value = p.nameAr || '';
+    document.getElementById('f_nameEn').value = p.nameEn || '';
+    document.getElementById('f_price').value = p.price || '';
+    document.getElementById('f_oldPrice').value = p.oldPrice || '';
+    document.getElementById('f_discount').value = p.discount || '';
+    document.getElementById('f_category').value = p.categoryEn || 'Grocery';
+    document.getElementById('f_available').value = p.available || 'yes';
+    document.getElementById('f_rating').value = p.rating || '';
+    document.getElementById('f_descAr').value = p.descAr || '';
+    document.getElementById('f_descEn').value = p.descEn || '';
+    document.getElementById('f_emoji').value = p.emoji || '';
+    document.getElementById('f_imageFile').value = '';
 
-            <label>الأسعار</label>
-            <div style="display:flex; gap:10px;">
-                <input type="number" id="prodPrice" placeholder="السعر الحالي" required>
-                <input type="number" id="prodOldPrice" placeholder="السعر القديم (اختياري)">
-            </div>
+    const preview = document.getElementById('f_imagePreview');
+    if(p.img){ preview.src = p.img; preview.style.display = 'inline-block'; }
+    else { preview.style.display = 'none'; }
 
-            <label>القسم وحالة التوفر</label>
-            <div style="display:flex; gap:10px;">
-                <select id="prodCategory" required></select>
-                <select id="prodAvailable">
-                    <option value="yes">متوفر</option>
-                    <option value="no">غير متوفر</option>
-                </select>
-            </div>
+    document.getElementById('formTitle').textContent = '✏️ تعديل منتج: ' + p.nameAr;
+    document.getElementById('cancelEditBtn').style.display = 'inline-block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
-            <label>صورة المنتج والأيقونة</label>
-            <input type="file" id="prodImageFile" accept="image/*" style="margin-bottom: 5px;">
-            <input type="text" id="prodEmoji" placeholder="أيقونة بديلة (Emoji) مثل 📱">
-            
-            <label>تفاصيل إضافية (اختياري)</label>
-            <input type="text" id="prodBadge" placeholder="شارة (مثال: خصم 20%)">
-            <input type="number" id="prodRating" placeholder="التقييم من 1 إلى 5" min="1" max="5">
-            <textarea id="prodDescAr" placeholder="الوصف بالعربي" rows="2"></textarea>
-            <textarea id="prodDescEn" placeholder="الوصف بالإنجليزي" rows="2"></textarea>
+  window.deleteProduct = async function(i){
+    if(!confirm('متأكد تحذف هذا المنتج؟ لا يمكن التراجع.')) return;
+    const removed = products[i];
+    products.splice(i, 1);
+    setStatus('جاري الحذف...');
+    try{
+      await saveProductsFile('Delete product: ' + (removed ? removed.nameEn : ''));
+      setStatus('تم الحذف بنجاح ✅');
+      renderProductsList();
+    }catch(e){
+      products.splice(i, 0, removed);
+      setStatus(e.message, true);
+    }
+  };
 
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <button onclick="saveProduct()" class="btn-primary" id="saveProdBtn" style="flex:1;">حفظ المنتج</button>
-                <button onclick="closeModal('productModal')" class="btn-ghost" style="flex:1;">إلغاء</button>
-            </div>
-        </div>
-    </div>
+  function resetForm(){
+    document.getElementById('editIndex').value = -1;
+    ['f_nameAr','f_nameEn','f_price','f_oldPrice','f_discount','f_descAr','f_descEn','f_emoji','f_rating'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('f_imageFile').value = '';
+    document.getElementById('f_imagePreview').style.display = 'none';
+    document.getElementById('f_available').value = 'yes';
+    document.getElementById('f_category').value = 'Grocery';
+    document.getElementById('formTitle').textContent = '➕ إضافة منتج جديد';
+    document.getElementById('cancelEditBtn').style.display = 'none';
+  }
 
-    <!-- Modal: إضافة/تعديل كوبون -->
-    <div id="couponModal" class="modal-overlay">
-        <div class="modal-box">
-            <h3>إضافة / تعديل كوبون</h3>
-            <input type="hidden" id="couponId">
-            <input type="text" id="couponCode" placeholder="كود الكوبون (مثال: BOSTAN10)" required>
-            <select id="couponType">
-                <option value="percentage">نسبة مئوية (%)</option>
-                <option value="fixed">مبلغ ثابت (د.إ)</option>
-            </select>
-            <input type="number" id="couponValue" placeholder="القيمة" required>
-            <input type="number" id="couponMaxDiscount" placeholder="الحد الأقصى للخصم (اختياري)">
-            <select id="couponStatus">
-                <option value="active">نشط</option>
-                <option value="inactive">غير نشط</option>
-            </select>
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <button onclick="saveCoupon()" class="btn-primary" style="flex:1;">حفظ</button>
-                <button onclick="closeModal('couponModal')" class="btn-ghost" style="flex:1;">إلغاء</button>
-            </div>
-        </div>
-    </div>
+  document.getElementById('f_imageFile').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    const preview = document.getElementById('f_imagePreview');
+    if(!file){ preview.style.display = 'none'; return; }
+    const reader = new FileReader();
+    reader.onload = (ev) => { preview.src = ev.target.result; preview.style.display = 'inline-block'; };
+    reader.readAsDataURL(file);
+  });
 
-    <!-- تحميل ملفات الجافا سكريبت بالترتيب الصحيح -->
-    <script src="supabase-config.js"></script>
-    <script src="admin.js"></script>
+  document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
+  document.getElementById('saveProductBtn').addEventListener('click', handleSaveProduct);
+  document.getElementById('loadProductsBtn').addEventListener('click', loadProducts);
+  document.getElementById('saveTokenBtn').addEventListener('click', () => {
+    localStorage.setItem(TOKEN_STORAGE_KEY, tokenInput.value.trim());
+    setStatus('تم حفظ التوكن بهذا المتصفح فقط ✅');
+  });
+
+  tokenInput.value = getToken();
+  if(getToken()){ loadProducts(); }
+</script>
+
 </body>
 </html>
