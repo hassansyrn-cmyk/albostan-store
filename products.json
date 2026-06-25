@@ -1,0 +1,17 @@
+[
+  {
+    "nameAr": "عسل",
+    "nameEn": "Honey",
+    "price": "25",
+    "oldPrice": "50",
+    "discount": "50%",
+    "categoryAr": "بقالة",
+    "categoryEn": "Grocery",
+    "descAr": "عسل طبيعي",
+    "descEn": "Natural Honey",
+    "available": "yes",
+    "rating": "4.7",
+    "emoji": "🛒",
+    "img": "images/1782387063608-108951.jpg"
+  }
+]
