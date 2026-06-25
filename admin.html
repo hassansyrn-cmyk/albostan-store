@@ -164,8 +164,28 @@
 
   <!-- تبويب المبيعات -->
   <div id="sales" class="tab-content">
-    <h2>📊 إدارة المبيعات</h2>
-    <p class="hint">تأكيد الطلبات وتسجيل البيعات لتحديث المخزون والأرباح تلقائياً.</p>
+    <h2>📊 تسجيل بيعة جديدة</h2>
+    <div class="box" style="background:var(--sand);">
+      <div class="form-row">
+        <div>
+          <label>اختر المنتج</label>
+          <select id="s_productSelect">
+            <option value="">-- اختر المنتج الذي تم بيعه --</option>
+          </select>
+        </div>
+        <div>
+          <label>الكمية المباعة</label>
+          <input type="number" id="s_quantity" value="1" min="1">
+        </div>
+        <div>
+          <label>سعر البيع الفعلي</label>
+          <input type="number" id="s_price" placeholder="السعر المسجل تلقائياً">
+        </div>
+      </div>
+      <button id="recordSaleBtn" class="success" style="width:100%;">✅ تسجيل العملية وخصم من المخزن</button>
+    </div>
+
+    <h2>📜 سجل العمليات الأخيرة</h2>
     <div id="salesListArea" class="box"><p>لا توجد مبيعات مسجلة حتى الآن.</p></div>
   </div>
 
@@ -377,12 +397,22 @@
       return;
     }
 
+    const oldPrice = document.getElementById('f_oldPrice').value.trim();
+    let discount = document.getElementById('f_discount').value.trim();
+    
+    // حساب الخصم تلقائياً إذا وجد سعر قديم ولم يتم إدخال خصم يدوياً
+    if(oldPrice && parseFloat(oldPrice) > parseFloat(price) && !discount){
+      const diff = parseFloat(oldPrice) - parseFloat(price);
+      const percent = Math.round((diff / parseFloat(oldPrice)) * 100);
+      discount = `-${percent}%`;
+    }
+
     const product = {
       nameAr, nameEn, price,
       quantity: quantity,
       cost: document.getElementById('f_cost').value.trim() || '0',
-      oldPrice: document.getElementById('f_oldPrice').value.trim(),
-      discount: document.getElementById('f_discount').value.trim(),
+      oldPrice: oldPrice,
+      discount: discount,
       categoryAr: categoryAr,
       categoryEn: categorySelect.value,
       descAr: document.getElementById('f_descAr').value.trim(),
@@ -420,6 +450,14 @@
 
   function renderProductsList(){
     document.getElementById('productCountLabel').textContent = products.length;
+    
+    // تحديث قائمة اختيار المنتجات في تبويب المبيعات
+    const sSelect = document.getElementById('s_productSelect');
+    const currentVal = sSelect.value;
+    sSelect.innerHTML = '<option value="">-- اختر المنتج الذي تم بيعه --</option>' + 
+      products.map((p, i) => `<option value="${i}">${p.nameAr} (المتوفر: ${p.quantity || 0})</option>`).join('');
+    sSelect.value = currentVal;
+
     const area = document.getElementById('productsListArea');
     if(products.length === 0){
       area.innerHTML = '<p>لا توجد منتجات حتى الآن.</p>';
@@ -520,21 +558,85 @@
     let totalSales = 0, totalProfit = 0, totalOrders = 0, lowStock = 0;
     
     salesData.forEach(sale => {
-      if(sale.status === 'confirmed'){
-        totalSales += parseFloat(sale.total) || 0;
-        totalProfit += parseFloat(sale.profit) || 0;
-        totalOrders++;
-      }
+      totalSales += parseFloat(sale.total) || 0;
+      totalProfit += parseFloat(sale.profit) || 0;
+      totalOrders++;
     });
 
     products.forEach(p => {
-      if((p.quantity || 0) <= 5 && (p.quantity || 0) > 0) lowStock++;
+      if((p.quantity || 0) <= 5) lowStock++;
     });
 
     document.getElementById('totalSalesValue').textContent = totalSales.toFixed(2) + ' د.إ';
     document.getElementById('totalProfitValue').textContent = totalProfit.toFixed(2) + ' د.إ';
     document.getElementById('totalOrdersValue').textContent = totalOrders;
     document.getElementById('lowStockValue').textContent = lowStock;
+    renderSalesList();
+  }
+
+  function renderSalesList(){
+    const area = document.getElementById('salesListArea');
+    if(salesData.length === 0){
+      area.innerHTML = '<p>لا توجد مبيعات مسجلة.</p>';
+      return;
+    }
+    area.innerHTML = salesData.slice().reverse().map((s, i) => `
+      <div class="sales-item confirmed">
+        <strong>${escapeHtml(s.productName)}</strong><br>
+        <span>الكمية: ${s.qty} — الإجمالي: ${s.total} د.إ — الربح: ${s.profit} د.إ</span><br>
+        <small style="opacity:0.6;">التاريخ: ${new Date(s.date).toLocaleString('ar-EG')}</small>
+      </div>
+    `).join('');
+  }
+
+  async function handleRecordSale(){
+    const pIdx = document.getElementById('s_productSelect').value;
+    const qty = parseInt(document.getElementById('s_quantity').value) || 0;
+    const customPrice = document.getElementById('s_price').value.trim();
+
+    if(pIdx === ""){ setStatus('يرجى اختيار منتج أولاً', true); return; }
+    if(qty <= 0){ setStatus('الكمية يجب أن تكون 1 أو أكثر', true); return; }
+
+    const product = products[pIdx];
+    if((product.quantity || 0) < qty){
+      if(!confirm('الكمية المطلوبة أكبر من المتوفر بالمخزن. هل تريد الاستمرار؟')) return;
+    }
+
+    const pricePerUnit = customPrice !== "" ? parseFloat(customPrice) : parseFloat(product.price);
+    const costPerUnit = parseFloat(product.cost) || 0;
+    const total = pricePerUnit * qty;
+    const profit = (pricePerUnit - costPerUnit) * qty;
+
+    const newSale = {
+      id: Date.now(),
+      productName: product.nameAr,
+      qty: qty,
+      total: total.toFixed(2),
+      profit: profit.toFixed(2),
+      date: new Date().toISOString()
+    };
+
+    setStatus('جاري تسجيل البيعة وتحديث المخزن...');
+    try {
+      // 1. تحديث الكمية في مصفوفة المنتجات
+      product.quantity = (parseInt(product.quantity) || 0) - qty;
+      if(product.quantity < 0) product.quantity = 0;
+      
+      // 2. إضافة البيعة لسجل المبيعات
+      salesData.push(newSale);
+
+      // 3. حفظ الملفين على GitHub
+      await saveProductsFile('Sale recorded: ' + product.nameEn + ' x' + qty);
+      await saveSalesFile('New sale entry');
+
+      setStatus('تم تسجيل البيعة وخصم الكمية بنجاح ✅');
+      document.getElementById('s_quantity').value = 1;
+      document.getElementById('s_price').value = "";
+      renderProductsList();
+      updateStats();
+    } catch(e) {
+      setStatus('خطأ أثناء التسجيل: ' + e.message, true);
+    }
   }
 
   document.getElementById('f_imageFiles').addEventListener('change', (e) => {
@@ -557,6 +659,29 @@
     localStorage.setItem(TOKEN_STORAGE_KEY, tokenInput.value.trim());
     setStatus('تم حفظ التوكن بهذا المتصفح فقط ✅');
   });
+  document.getElementById('recordSaleBtn').addEventListener('click', handleRecordSale);
+  document.getElementById('s_productSelect').addEventListener('change', (e) => {
+    if(e.target.value !== ""){
+      document.getElementById('s_price').placeholder = products[e.target.value].price;
+    }
+  });
+
+  // حساب الخصم تلقائياً عند تغيير الأسعار
+  const autoCalcDiscount = () => {
+    const price = parseFloat(document.getElementById('f_price').value);
+    const oldPrice = parseFloat(document.getElementById('f_oldPrice').value);
+    const discountInput = document.getElementById('f_discount');
+    
+    if(price && oldPrice && oldPrice > price){
+      const percent = Math.round(((oldPrice - price) / oldPrice) * 100);
+      discountInput.placeholder = `سيتم حسابها تلقائياً: -${percent}%`;
+    } else {
+      discountInput.placeholder = "مثلاً -20%";
+    }
+  };
+
+  document.getElementById('f_price').addEventListener('input', autoCalcDiscount);
+  document.getElementById('f_oldPrice').addEventListener('input', autoCalcDiscount);
 
   tokenInput.value = getToken();
   if(getToken()){ loadProducts(); }
