@@ -65,5 +65,25 @@
       "images/1782409082995-vhlt3230v-94699.jpg",
       "images/1782409087967-euek4zi13-94700.jpg"
     ]
+  },
+  {
+    "nameAr": "لوغو",
+    "nameEn": "Logo",
+    "price": "150",
+    "quantity": 1,
+    "cost": "100",
+    "oldPrice": "200",
+    "discount": "",
+    "categoryAr": "بقالة",
+    "categoryEn": "Grocery",
+    "descAr": "",
+    "descEn": "",
+    "available": "yes",
+    "rating": "",
+    "emoji": "🛒",
+    "img": "images/1782410409563-iy8xd78f0-108980.png",
+    "images": [
+      "images/1782410409563-iy8xd78f0-108980.png"
+    ]
   }
 ]
