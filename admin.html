@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم | AlBostan Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=El+Messiri:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <div id="loginScreen" class="login-screen">
+        <div class="login-box">
+            <h2 style="font-family: 'El Messiri', serif; color: var(--clay); margin-bottom: 20px;">تسجيل دخول الأدمن</h2>
+            <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" required>
+            <input type="password" id="loginPassword" placeholder="كلمة المرور" required>
+            <button id="loginBtn" class="btn-primary" style="width: 100%;">دخول</button>
+            <p id="loginError" style="color: red; margin-top: 10px; display: none;"></p>
+            <p style="font-size: 0.85rem; color: #666; margin-top: 15px;">
+                💡 للاختبار: admin@albostan.com / password123
+            </p>
+        </div>
+    </div>
+
+    <div id="adminPanel" class="admin-layout" style="display: none;">
+        <aside class="sidebar">
+            <div class="sidebar-logo">AlBostan Admin</div>
+            <nav class="sidebar-nav">
+                <button onclick="showSection('dashboard')" class="nav-btn active">📊 الرئيسية</button>
+                <button onclick="showSection('categories')" class="nav-btn">📁 الأقسام</button>
+                <button onclick="showSection('products')" class="nav-btn">📦 المنتجات</button>
+                <button onclick="showSection('coupons')" class="nav-btn">🎟️ الكوبونات</button>
+                <button onclick="showSection('orders')" class="nav-btn">🛒 الطلبات</button>
+            </nav>
+            <button onclick="logout()" class="nav-btn logout-btn">🚪 تسجيل خروج</button>
+        </aside>
+
+        <main class="main-content">
+            
+            <section id="dashboardSection" class="content-section active">
+                <h2>الإحصائيات السريعة</h2>
+                <div class="stats-grid">
+                    <div class="stat-card"><h3>المنتجات</h3><p id="statTotalProducts">0</p></div>
+                    <div class="stat-card"><h3>متوفرة</h3><p id="statAvailableProducts">0</p></div>
+                    <div class="stat-card"><h3>الأقسام</h3><p id="statTotalCategories">0</p></div>
+                    <div class="stat-card"><h3>الكوبونات</h3><p id="statTotalCoupons">0</p></div>
+                </div>
+            </section>
+
+            <section id="categoriesSection" class="content-section">
+                <div class="section-header">
+                    <h2>إدارة الأقسام</h2>
+                    <button onclick="openModal('categoryModal')" class="btn-primary">+ إضافة قسم جديد</button>
+                </div>
+                <table class="data-table">
+                    <thead><tr><th>الأيقونة</th><th>الاسم (عربي)</th><th>الاسم (إنجليزي)</th><th>إجراءات</th></tr></thead>
+                    <tbody id="categoriesTableBody"></tbody>
+                </table>
+            </section>
+
+            <section id="productsSection" class="content-section">
+                <div class="section-header">
+                    <h2>إدارة المنتجات</h2>
+                    <button onclick="openModal('productModal')" class="btn-primary">+ إضافة منتج جديد</button>
+                </div>
+                <table class="data-table">
+                    <thead><tr><th>صورة/أيقونة</th><th>الاسم</th><th>القسم</th><th>السعر</th><th>الحالة</th><th>إجراءات</th></tr></thead>
+                    <tbody id="productsTableBody"></tbody>
+                </table>
+            </section>
+
+            <section id="couponsSection" class="content-section">
+                <div class="section-header">
+                    <h2>إدارة الكوبونات</h2>
+                    <button onclick="openModal('couponModal')" class="btn-primary">+ إضافة كوبون</button>
+                </div>
+                <table class="data-table">
+                    <thead><tr><th>الكود</th><th>النوع</th><th>القيمة</th><th>الحالة</th><th>إجراءات</th></tr></thead>
+                    <tbody id="couponsTableBody"></tbody>
+                </table>
+            </section>
+
+            <section id="ordersSection" class="content-section">
+                <h2>الطلبات</h2>
+                <p style="color: #666;">هذا القسم سيتم تفعيله لاحقاً لعرض الطلبات من الواتساب</p>
+                <table class="data-table">
+                    <thead><tr><th>رقم الطلب</th><th>العميل</th><th>الإجمالي</th><th>تاريخ الطلب</th><th>الحالة</th></tr></thead>
+                    <tbody id="ordersTableBody"><tr><td colspan="5" style="text-align: center; color: #999;">لا توجد طلبات حتى الآن</td></tr></tbody>
+                </table>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Modal: إضافة/تعديل قسم -->
+    <div id="categoryModal" class="modal-overlay">
+        <div class="modal-box">
+            <h3>إضافة / تعديل قسم</h3>
+            <input type="hidden" id="catId">
+            <input type="text" id="catNameAr" placeholder="الاسم بالعربي" required>
+            <input type="text" id="catNameEn" placeholder="الاسم بالإنجليزي" required>
+            <input type="text" id="catEmoji" placeholder="أيقونة (Emoji) مثل 🥕">
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button onclick="saveCategory()" class="btn-primary" style="flex:1;">حفظ</button>
+                <button onclick="closeModal('categoryModal')" class="btn-ghost" style="flex:1;">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: إضافة/تعديل منتج -->
+    <div id="productModal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 600px; max-height: 90vh; overflow-y: auto;">
+            <h3>إضافة / تعديل منتج</h3>
+            <input type="hidden" id="prodId">
+            
+            <label>الاسم بالعربي والإنجليزي</label>
+            <div style="display:flex; gap:10px;">
+                <input type="text" id="prodNameAr" placeholder="اسم المنتج عربي" required>
+                <input type="text" id="prodNameEn" placeholder="اسم المنتج إنجليزي" required>
+            </div>
+
+            <label>الأسعار</label>
+            <div style="display:flex; gap:10px;">
+                <input type="number" id="prodPrice" placeholder="السعر الحالي" required>
+                <input type="number" id="prodOldPrice" placeholder="السعر القديم (اختياري)">
+            </div>
+
+            <label>القسم وحالة التوفر</label>
+            <div style="display:flex; gap:10px;">
+                <select id="prodCategory" required></select>
+                <select id="prodAvailable">
+                    <option value="yes">متوفر</option>
+                    <option value="no">غير متوفر</option>
+                </select>
+            </div>
+
+            <label>صورة المنتج والأيقونة</label>
+            <input type="file" id="prodImageFile" accept="image/*" style="margin-bottom: 5px;">
+            <input type="text" id="prodEmoji" placeholder="أيقونة بديلة (Emoji) مثل 📱">
+            
+            <label>تفاصيل إضافية (اختياري)</label>
+            <input type="text" id="prodBadge" placeholder="شارة (مثال: خصم 20%)">
+            <input type="number" id="prodRating" placeholder="التقييم من 1 إلى 5" min="1" max="5">
+            <textarea id="prodDescAr" placeholder="الوصف بالعربي" rows="2"></textarea>
+            <textarea id="prodDescEn" placeholder="الوصف بالإنجليزي" rows="2"></textarea>
+
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button onclick="saveProduct()" class="btn-primary" id="saveProdBtn" style="flex:1;">حفظ المنتج</button>
+                <button onclick="closeModal('productModal')" class="btn-ghost" style="flex:1;">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: إضافة/تعديل كوبون -->
+    <div id="couponModal" class="modal-overlay">
+        <div class="modal-box">
+            <h3>إضافة / تعديل كوبون</h3>
+            <input type="hidden" id="couponId">
+            <input type="text" id="couponCode" placeholder="كود الكوبون (مثال: BOSTAN10)" required>
+            <select id="couponType">
+                <option value="percentage">نسبة مئوية (%)</option>
+                <option value="fixed">مبلغ ثابت (د.إ)</option>
+            </select>
+            <input type="number" id="couponValue" placeholder="القيمة" required>
+            <input type="number" id="couponMaxDiscount" placeholder="الحد الأقصى للخصم (اختياري)">
+            <select id="couponStatus">
+                <option value="active">نشط</option>
+                <option value="inactive">غير نشط</option>
+            </select>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button onclick="saveCoupon()" class="btn-primary" style="flex:1;">حفظ</button>
+                <button onclick="closeModal('couponModal')" class="btn-ghost" style="flex:1;">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- تحميل ملفات الجافا سكريبت بالترتيب الصحيح -->
+    <script src="supabase-config.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
