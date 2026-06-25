@@ -1,1131 +1,603 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>إدارة متجر البستان - النسخة الاحترافية</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=El+Messiri:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    :root {
-      --primary: #1F5E3B;
-      --secondary: #25D366;
-      --accent: #C9A227;
-      --danger: #e63946;
-      --light: #F5F7F5;
-      --dark: #181A19;
-      --text: #4A524D;
-      --border: #E8ECE9;
-    }
-    
-    body {
-      font-family: 'Tajawal', sans-serif;
-      background: var(--light);
-      color: var(--text);
-      line-height: 1.6;
-    }
-    
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    
-    header {
-      background: var(--primary);
-      color: white;
-      padding: 20px 0;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
-    }
-    
-    header .container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    h1 {
-      font-family: 'El Messiri', serif;
-      font-size: 1.8rem;
-    }
-    
-    .logout-btn {
-      background: var(--secondary);
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 50px;
-      cursor: pointer;
-      font-weight: 700;
-      transition: all 0.3s;
-    }
-    
-    .logout-btn:hover {
-      background: #1da851;
-      transform: translateY(-2px);
-    }
-    
-    .tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 30px;
-      border-bottom: 2px solid var(--border);
-      flex-wrap: wrap;
-    }
-    
-    .tab-btn {
-      background: transparent;
-      border: none;
-      padding: 15px 25px;
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text);
-      cursor: pointer;
-      border-bottom: 3px solid transparent;
-      transition: all 0.3s;
-      position: relative;
-      bottom: -2px;
-    }
-    
-    .tab-btn.active {
-      color: var(--primary);
-      border-bottom-color: var(--primary);
-    }
-    
-    .tab-btn:hover {
-      color: var(--primary);
-    }
-    
-    .tab-content {
-      display: none;
-    }
-    
-    .tab-content.active {
-      display: block;
-      animation: fadeIn 0.3s;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      margin-bottom: 30px;
-    }
-    
-    .stat-card {
-      background: white;
-      padding: 25px;
-      border-radius: 15px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-      border-left: 4px solid var(--primary);
-    }
-    
-    .stat-card h3 {
-      font-size: 0.9rem;
-      color: var(--text);
-      margin-bottom: 10px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    
-    .stat-value {
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--primary);
-      font-family: 'El Messiri', serif;
-    }
-    
-    .stat-change {
-      font-size: 0.85rem;
-      margin-top: 8px;
-      color: #666;
-    }
-    
-    .stat-change.positive {
-      color: #27ae60;
-    }
-    
-    .stat-change.negative {
-      color: var(--danger);
-    }
-    
-    .chart-container {
-      background: white;
-      padding: 25px;
-      border-radius: 15px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-      margin-bottom: 30px;
-      max-height: 400px;
-      position: relative;
-    }
-    
-    .form-section {
-      background: white;
-      padding: 25px;
-      border-radius: 15px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-      margin-bottom: 30px;
-    }
-    
-    .form-section h3 {
-      font-family: 'El Messiri', serif;
-      font-size: 1.3rem;
-      margin-bottom: 20px;
-      color: var(--primary);
-      border-bottom: 2px solid var(--border);
-      padding-bottom: 15px;
-    }
-    
-    .form-group {
-      margin-bottom: 20px;
-    }
-    
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 700;
-      color: var(--dark);
-    }
-    
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      width: 100%;
-      padding: 12px 15px;
-      border: 2px solid var(--border);
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 1rem;
-      transition: border-color 0.3s;
-    }
-    
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(31, 94, 59, 0.1);
-    }
-    
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-    
-    .btn {
-      padding: 12px 24px;
-      border: none;
-      border-radius: 8px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s;
-      font-size: 1rem;
-    }
-    
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-    }
-    
-    .btn-primary:hover {
-      background: #15452A;
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(31, 94, 59, 0.3);
-    }
-    
-    .btn-secondary {
-      background: var(--secondary);
-      color: white;
-    }
-    
-    .btn-secondary:hover {
-      background: #1da851;
-    }
-    
-    .btn-danger {
-      background: var(--danger);
-      color: white;
-    }
-    
-    .btn-danger:hover {
-      background: #d62828;
-    }
-    
-    .btn-small {
-      padding: 8px 16px;
-      font-size: 0.9rem;
-    }
-    
-    .orders-table {
-      width: 100%;
-      border-collapse: collapse;
-      background: white;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    }
-    
-    .orders-table thead {
-      background: var(--primary);
-      color: white;
-    }
-    
-    .orders-table th,
-    .orders-table td {
-      padding: 15px;
-      text-align: right;
-      border-bottom: 1px solid var(--border);
-    }
-    
-    .orders-table tbody tr:hover {
-      background: var(--light);
-    }
-    
-    .status-badge {
-      display: inline-block;
-      padding: 6px 12px;
-      border-radius: 50px;
-      font-size: 0.85rem;
-      font-weight: 700;
-    }
-    
-    .status-pending {
-      background: #fff3cd;
-      color: #856404;
-    }
-    
-    .status-confirmed {
-      background: #d1ecf1;
-      color: #0c5460;
-    }
-    
-    .status-delivered {
-      background: #d4edda;
-      color: #155724;
-    }
-    
-    .status-cancelled {
-      background: #f8d7da;
-      color: #721c24;
-    }
-    
-    .product-item {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      border-left: 4px solid var(--accent);
-    }
-    
-    .product-info {
-      flex: 1;
-    }
-    
-    .product-info h4 {
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: var(--dark);
-    }
-    
-    .product-info p {
-      font-size: 0.9rem;
-      color: var(--text);
-      margin: 4px 0;
-    }
-    
-    .product-actions {
-      display: flex;
-      gap: 10px;
-    }
-    
-    .alert {
-      padding: 15px 20px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      display: none;
-    }
-    
-    .alert.show {
-      display: block;
-    }
-    
-    .alert-success {
-      background: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
-    }
-    
-    .alert-error {
-      background: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
-    }
-    
-    .alert-info {
-      background: #d1ecf1;
-      color: #0c5460;
-      border: 1px solid #bee5eb;
-    }
-    
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .modal.show {
-      display: flex;
-    }
-    
-    .modal-content {
-      background: white;
-      padding: 30px;
-      border-radius: 15px;
-      max-width: 500px;
-      width: 90%;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      border-bottom: 2px solid var(--border);
-      padding-bottom: 15px;
-    }
-    
-    .modal-header h2 {
-      font-family: 'El Messiri', serif;
-      color: var(--primary);
-    }
-    
-    .modal-close {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: var(--text);
-    }
-    
-    .loading {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid var(--border);
-      border-top-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    
-    .empty-state {
-      text-align: center;
-      padding: 40px 20px;
-      color: var(--text);
-    }
-    
-    .empty-state-icon {
-      font-size: 3rem;
-      margin-bottom: 15px;
-    }
-    
-    .empty-state h3 {
-      margin-bottom: 10px;
-      color: var(--dark);
-    }
-    
-    @media (max-width: 768px) {
-      .form-row {
-        grid-template-columns: 1fr;
-      }
-      
-      .dashboard-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .tabs {
-        gap: 5px;
-      }
-      
-      .tab-btn {
-        padding: 12px 15px;
-        font-size: 0.9rem;
-      }
-      
-      .product-item {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      
-      .product-actions {
-        width: 100%;
-        margin-top: 15px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة تحكم AlBostan Store</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=El+Messiri:wght@600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root{
+    --clay:#1F5E3B; --cream:#F5F7F5; --sand:#E8ECE9; --soil:#181A19; --white:#FFFFFF; 
+    --danger:#e63946; --success:#2ecc71; --warning:#f39c12; --info:#3498db;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Tajawal',sans-serif;background:var(--cream);color:var(--soil);line-height:1.6;}
+  .container{max-width:1400px;margin:0 auto;padding:20px;}
+  header{background:var(--clay);color:#fff;padding:20px;border-radius:14px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;}
+  header h1{font-family:'El Messiri',serif;font-size:1.8rem;margin:0;}
+  .logout-btn{background:#fff;color:var(--clay);padding:8px 16px;border:none;border-radius:8px;font-weight:700;cursor:pointer;}
+  .logout-btn:hover{background:var(--sand);}
+  
+  .tabs{display:flex;gap:8px;margin-bottom:20px;border-bottom:2px solid var(--sand);flex-wrap:wrap;}
+  .tab-btn{background:none;border:none;padding:12px 20px;font-weight:700;color:var(--soil);cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s;font-size:0.95rem;}
+  .tab-btn.active{color:var(--clay);border-bottom-color:var(--clay);}
+  .tab-content{display:none;}
+  .tab-content.active{display:block;}
+  
+  .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px;}
+  .stat-card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 4px 12px rgba(0,0,0,0.08);border-right:4px solid var(--clay);}
+  .stat-value{font-size:2.2rem;font-weight:800;color:var(--clay);}
+  .stat-label{font-size:0.9rem;color:#666;margin-top:8px;}
+  
+  .box{background:#fff;border-radius:14px;padding:20px;margin-bottom:20px;box-shadow:0 4px 12px rgba(0,0,0,0.08);}
+  label{display:block;font-weight:700;font-size:.9rem;margin-bottom:6px;color:var(--soil);}
+  input, select, textarea{
+    width:100%;padding:12px;border-radius:10px;border:2px solid var(--sand);
+    font-family:inherit;font-size:.95rem;background:#fff;outline:none;margin-bottom:14px;
+  }
+  input:focus, select:focus, textarea:focus{border-color:var(--clay);}
+  textarea{resize:vertical;min-height:80px;}
+  
+  button{cursor:pointer;border:none;border-radius:10px;padding:12px 20px;font-weight:700;font-family:inherit;font-size:.95rem;background:var(--clay);color:#fff;transition:background .2s;}
+  button:hover{background:#15452A;}
+  button.secondary{background:var(--sand);color:var(--soil);}
+  button.secondary:hover{background:#d3d9d5;}
+  button.danger{background:var(--danger);}
+  button.danger:hover{background:#c52f3a;}
+  button.success{background:var(--success);}
+  button.success:hover{background:#27ae60;}
+  
+  .form-row{display:flex;gap:12px;flex-wrap:wrap;}
+  .form-row > div{flex:1;min-width:140px;}
+  
+  .product-item{background:var(--cream);border-radius:12px;padding:14px;margin-bottom:12px;display:flex;align-items:center;gap:12px;}
+  .product-item img{width:60px;height:60px;border-radius:8px;object-fit:cover;}
+  .product-info{flex:1;}
+  .product-name{font-weight:700;margin-bottom:4px;}
+  .product-price{font-size:0.9rem;color:var(--clay);}
+  .product-qty{font-size:0.85rem;color:#666;}
+  .product-actions{display:flex;gap:6px;}
+  .product-actions button{padding:8px 12px;font-size:0.85rem;}
+  
+  .order-item{background:var(--cream);border-radius:12px;padding:14px;margin-bottom:12px;border-right:4px solid var(--clay);}
+  .order-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .order-id{font-weight:700;color:var(--clay);}
+  .order-status{font-size:0.85rem;padding:4px 10px;border-radius:20px;background:var(--success);color:#fff;}
+  .order-details{font-size:0.9rem;color:#666;line-height:1.6;}
+  
+  .chart-container{position:relative;height:300px;margin-bottom:20px;}
+  
+  .image-preview{width:100%;max-width:200px;border-radius:10px;margin-top:10px;object-fit:cover;}
+  .image-gallery{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+  .gallery-img{width:80px;height:80px;border-radius:8px;object-fit:cover;cursor:pointer;border:2px solid transparent;}
+  .gallery-img:hover{border-color:var(--clay);}
+  
+  .success-msg{background:#EAF7EF;color:var(--clay);padding:12px;border-radius:8px;margin-bottom:14px;font-weight:700;}
+  .error-msg{background:#ffebef;color:var(--danger);padding:12px;border-radius:8px;margin-bottom:14px;font-weight:700;}
+  
+  @media (max-width:768px){
+    .form-row > div{min-width:100%;}
+    .stats-grid{grid-template-columns:1fr;}
+    header{flex-direction:column;gap:12px;}
+    .tabs{flex-direction:column;}
+  }
+</style>
 </head>
 <body>
+
+<div class="container">
+  <!-- رأس الصفحة -->
   <header>
-    <div class="container">
-      <h1>🏪 إدارة متجر البستان - النسخة الاحترافية</h1>
-      <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
-    </div>
+    <h1>🌿 لوحة تحكم متجر البستان</h1>
+    <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
   </header>
 
-  <div class="container">
-    <div id="alertBox" class="alert"></div>
+  <!-- التبويبات -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('dashboard')">📊 لوحة المعلومات</button>
+    <button class="tab-btn" onclick="switchTab('products')">📦 المنتجات</button>
+    <button class="tab-btn" onclick="switchTab('orders')">📋 الطلبات</button>
+    <button class="tab-btn" onclick="switchTab('sales')">💰 المبيعات</button>
+    <button class="tab-btn" onclick="switchTab('inventory')">🏪 المخزون</button>
+  </div>
 
-    <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('dashboard')">📊 لوحة المعلومات</button>
-      <button class="tab-btn" onclick="switchTab('orders')">📦 الطلبات الجديدة</button>
-      <button class="tab-btn" onclick="switchTab('products')">🛍️ المنتجات</button>
-      <button class="tab-btn" onclick="switchTab('sales')">💰 المبيعات والأرباح</button>
-      <button class="tab-btn" onclick="switchTab('settings')">⚙️ الإعدادات</button>
+  <!-- لوحة المعلومات -->
+  <div id="dashboard" class="tab-content active">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value" id="totalSales">0</div>
+        <div class="stat-label">إجمالي المبيعات</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="totalProfit">0</div>
+        <div class="stat-label">صافي الأرباح</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="totalOrders">0</div>
+        <div class="stat-label">عدد الطلبات</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="totalProducts">0</div>
+        <div class="stat-label">عدد المنتجات</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="lowStockCount">0</div>
+        <div class="stat-label">منتجات قليلة المخزون</div>
+      </div>
     </div>
 
-    <!-- لوحة المعلومات -->
-    <div id="dashboard" class="tab-content active">
-      <div class="dashboard-grid">
-        <div class="stat-card">
-          <h3>إجمالي المبيعات</h3>
-          <div class="stat-value" id="totalSales">0 د.إ</div>
-          <div class="stat-change positive" id="salesChange">↑ 0%</div>
-        </div>
-        <div class="stat-card">
-          <h3>الأرباح الصافية</h3>
-          <div class="stat-value" id="totalProfit">0 د.إ</div>
-          <div class="stat-change positive" id="profitChange">↑ 0%</div>
-        </div>
-        <div class="stat-card">
-          <h3>عدد الطلبات</h3>
-          <div class="stat-value" id="totalOrders">0</div>
-          <div class="stat-change" id="ordersChange">0 طلب جديد</div>
-        </div>
-        <div class="stat-card">
-          <h3>المنتجات قليلة المخزون</h3>
-          <div class="stat-value" id="lowStockCount">0</div>
-          <div class="stat-change negative">تحتاج تجديد</div>
-        </div>
-      </div>
-
+    <div class="box">
+      <h2>📈 رسم بياني المبيعات</h2>
       <div class="chart-container">
-        <h3 style="margin-bottom: 20px;">📈 رسم بياني للمبيعات</h3>
         <canvas id="salesChart"></canvas>
       </div>
-
-      <div class="chart-container">
-        <h3 style="margin-bottom: 20px;">🏆 أكثر المنتجات مبيعاً</h3>
-        <canvas id="topProductsChart"></canvas>
-      </div>
     </div>
 
-    <!-- الطلبات الجديدة -->
-    <div id="orders" class="tab-content">
-      <div class="form-section">
-        <h3>📥 الطلبات الجديدة من الموقع</h3>
-        <div id="newOrdersList" style="margin-top: 20px;"></div>
-      </div>
-
-      <div class="form-section">
-        <h3>📋 سجل جميع الطلبات</h3>
-        <table class="orders-table">
-          <thead>
-            <tr>
-              <th>رقم الطلب</th>
-              <th>اسم العميل</th>
-              <th>المنتجات</th>
-              <th>المبلغ</th>
-              <th>التاريخ</th>
-              <th>الحالة</th>
-              <th>الإجراءات</th>
-            </tr>
-          </thead>
-          <tbody id="ordersTableBody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- المنتجات -->
-    <div id="products" class="tab-content">
-      <div class="form-section">
-        <h3>🔍 البحث عن المنتجات</h3>
-        <input type="text" id="productSearch" placeholder="ابحث عن منتج..." style="width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 8px; margin-bottom: 20px;">
-        <div id="productsList"></div>
-      </div>
-    </div>
-
-    <!-- المبيعات والأرباح -->
-    <div id="sales" class="tab-content">
-      <div class="form-section">
-        <h3>💵 تسجيل بيعة جديدة</h3>
-        <form id="salesForm" onsubmit="recordSale(event)">
-          <div class="form-row">
-            <div class="form-group">
-              <label>المنتج</label>
-              <select id="saleProductId" required>
-                <option value="">اختر منتج...</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>الكمية المباعة</label>
-              <input type="number" id="saleQuantity" min="1" required>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>سعر البيع (د.إ)</label>
-              <input type="number" id="salePriceInput" step="0.01" min="0" placeholder="ستملأ تلقائياً">
-            </div>
-            <div class="form-group">
-              <label>التكلفة (د.إ)</label>
-              <input type="number" id="saleCostInput" step="0.01" min="0" placeholder="ستملأ تلقائياً">
-            </div>
-          </div>
-          <div class="form-group">
-            <label>ملاحظات</label>
-            <textarea id="saleNotes" rows="3" placeholder="ملاحظات اختيارية..."></textarea>
-          </div>
-          <button type="submit" class="btn btn-secondary">✅ تسجيل البيعة</button>
-        </form>
-      </div>
-
-      <div class="form-section">
-        <h3>📊 سجل المبيعات</h3>
-        <table class="orders-table">
-          <thead>
-            <tr>
-              <th>المنتج</th>
-              <th>الكمية</th>
-              <th>سعر البيع</th>
-              <th>التكلفة</th>
-              <th>الربح</th>
-              <th>التاريخ</th>
-            </tr>
-          </thead>
-          <tbody id="salesTableBody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- الإعدادات -->
-    <div id="settings" class="tab-content">
-      <div class="form-section">
-        <h3>⚙️ إعدادات النظام</h3>
-        <div class="form-group">
-          <label>GitHub Token</label>
-          <input type="password" id="githubToken" placeholder="أدخل GitHub Token الخاص بك">
-          <small style="color: var(--text); margin-top: 5px; display: block;">التوكن محفوظ بأمان في المتصفح فقط</small>
-        </div>
-        <button class="btn btn-primary" onclick="saveSettings()">💾 حفظ الإعدادات</button>
-      </div>
-
-      <div class="form-section">
-        <h3>🔄 النسخة الاحتياطية</h3>
-        <p style="margin-bottom: 15px;">قم بتنزيل نسخة احتياطية من بيانات متجرك</p>
-        <button class="btn btn-primary" onclick="downloadBackup()">📥 تنزيل النسخة الاحتياطية</button>
-      </div>
-
-      <div class="form-section">
-        <h3>🔐 الأمان</h3>
-        <button class="btn btn-danger" onclick="clearAllData()">🗑️ حذف جميع البيانات المحلية</button>
-      </div>
+    <div class="box">
+      <h2>🔝 أكثر المنتجات مبيعاً</h2>
+      <div id="topProducts"></div>
     </div>
   </div>
 
-  <script>
-    // ===== المتغيرات الأساسية =====
-    const GITHUB_REPO = 'albostan-store';
-    const GITHUB_USER = 'hassansyrn-cmyk';
-    const GITHUB_BRANCH = 'main';
-    
-    let currentLang = 'ar';
-    let allProducts = [];
-    let allOrders = [];
-    let allSales = [];
-    let salesChart = null;
-    let topProductsChart = null;
-
-    // ===== تحميل البيانات من GitHub =====
-    async function loadDataFromGitHub() {
-      try {
-        const token = localStorage.getItem('githubToken');
-        if (!token) {
-          showAlert('يرجى إدخال GitHub Token في الإعدادات', 'error');
-          switchTab('settings');
-          return;
-        }
-
-        // تحميل المنتجات
-        const productsResponse = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/products.json`);
-        if (productsResponse.ok) {
-          allProducts = await productsResponse.json();
-        }
-
-        // تحميل الطلبات
-        const ordersResponse = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/orders.json`);
-        if (ordersResponse.ok) {
-          allOrders = await ordersResponse.json();
-        }
-
-        // تحميل المبيعات
-        const salesResponse = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/sales_data.json`);
-        if (salesResponse.ok) {
-          allSales = await salesResponse.json();
-        }
-
-        updateDashboard();
-        renderProducts();
-        renderOrders();
-        renderSales();
-      } catch (error) {
-        console.error('خطأ في تحميل البيانات:', error);
-        showAlert('خطأ في تحميل البيانات من GitHub', 'error');
-      }
-    }
-
-    // ===== تحديث لوحة المعلومات =====
-    function updateDashboard() {
-      // حساب الإحصائيات
-      const totalSales = allSales.reduce((sum, sale) => sum + (sale.salePrice * sale.quantity), 0);
-      const totalProfit = allSales.reduce((sum, sale) => sum + ((sale.salePrice - sale.cost) * sale.quantity), 0);
-      const lowStockProducts = allProducts.filter(p => p.quantity && p.quantity < 5).length;
-
-      document.getElementById('totalSales').textContent = totalSales.toFixed(2) + ' د.إ';
-      document.getElementById('totalProfit').textContent = totalProfit.toFixed(2) + ' د.إ';
-      document.getElementById('totalOrders').textContent = allOrders.length;
-      document.getElementById('lowStockCount').textContent = lowStockProducts;
-
-      // رسم الرسوم البيانية
-      drawSalesChart();
-      drawTopProductsChart();
-    }
-
-    // ===== رسم رسم بياني المبيعات =====
-    function drawSalesChart() {
-      const ctx = document.getElementById('salesChart').getContext('2d');
-      
-      const last7Days = [];
-      const salesByDay = {};
-      
-      for (let i = 6; i >= 0; i--) {
-        const date = new Date();
-        date.setDate(date.getDate() - i);
-        const dateStr = date.toLocaleDateString('ar-AE');
-        last7Days.push(dateStr);
-        salesByDay[dateStr] = 0;
-      }
-
-      allSales.forEach(sale => {
-        const date = new Date(sale.date).toLocaleDateString('ar-AE');
-        if (salesByDay.hasOwnProperty(date)) {
-          salesByDay[date] += sale.salePrice * sale.quantity;
-        }
-      });
-
-      const data = last7Days.map(date => salesByDay[date] || 0);
-
-      if (salesChart) {
-        salesChart.destroy();
-      }
-
-      salesChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: last7Days,
-          datasets: [{
-            label: 'المبيعات اليومية',
-            data: data,
-            borderColor: '#1F5E3B',
-            backgroundColor: 'rgba(31, 94, 59, 0.1)',
-            tension: 0.4,
-            fill: true,
-            pointRadius: 5,
-            pointBackgroundColor: '#1F5E3B',
-            pointBorderColor: '#fff',
-            pointBorderWidth: 2
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: true,
-          plugins: {
-            legend: {
-              display: true,
-              labels: { font: { family: "'Tajawal', sans-serif" } }
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: { font: { family: "'Tajawal', sans-serif" } }
-            },
-            x: {
-              ticks: { font: { family: "'Tajawal', sans-serif" } }
-            }
-          }
-        }
-      });
-    }
-
-    // ===== رسم رسم بياني أكثر المنتجات مبيعاً =====
-    function drawTopProductsChart() {
-      const ctx = document.getElementById('topProductsChart').getContext('2d');
-      
-      const productSales = {};
-      allSales.forEach(sale => {
-        if (!productSales[sale.productId]) {
-          productSales[sale.productId] = 0;
-        }
-        productSales[sale.productId] += sale.quantity;
-      });
-
-      const topProducts = Object.entries(productSales)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 5);
-
-      const labels = topProducts.map(([id, _]) => {
-        const product = allProducts.find(p => p.id === id);
-        return product ? product.nameAr : 'منتج غير معروف';
-      });
-
-      const data = topProducts.map(([_, qty]) => qty);
-
-      if (topProductsChart) {
-        topProductsChart.destroy();
-      }
-
-      topProductsChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'الكمية المباعة',
-            data: data,
-            backgroundColor: '#1F5E3B',
-            borderColor: '#15452A',
-            borderWidth: 2
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: true,
-          plugins: {
-            legend: {
-              display: true,
-              labels: { font: { family: "'Tajawal', sans-serif" } }
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: { font: { family: "'Tajawal', sans-serif" } }
-            },
-            x: {
-              ticks: { font: { family: "'Tajawal', sans-serif" } }
-            }
-          }
-        }
-      });
-    }
-
-    // ===== عرض المنتجات =====
-    function renderProducts() {
-      const searchTerm = document.getElementById('productSearch')?.value.toLowerCase() || '';
-      const filtered = allProducts.filter(p => 
-        p.nameAr.toLowerCase().includes(searchTerm) || 
-        p.nameEn.toLowerCase().includes(searchTerm)
-      );
-
-      const html = filtered.map(product => `
-        <div class="product-item">
-          <div class="product-info">
-            <h4>${product.nameAr}</h4>
-            <p>السعر: ${product.price} د.إ | المخزون: ${product.quantity || 0} قطعة</p>
-            <p>التكلفة: ${product.cost || 0} د.إ</p>
-          </div>
-          <div class="product-actions">
-            <button class="btn btn-small btn-primary" onclick="editProduct('${product.id}')">✏️ تعديل</button>
-            <button class="btn btn-small btn-danger" onclick="deleteProduct('${product.id}')">🗑️ حذف</button>
-          </div>
+  <!-- المنتجات -->
+  <div id="products" class="tab-content">
+    <div class="box">
+      <h2>➕ إضافة منتج جديد</h2>
+      <div id="addProductMsg"></div>
+      <div class="form-row">
+        <div>
+          <label>الاسم (عربي) *</label>
+          <input type="text" id="productNameAr" placeholder="اسم المنتج بالعربية">
         </div>
-      `).join('');
+        <div>
+          <label>الاسم (إنجليزي) *</label>
+          <input type="text" id="productNameEn" placeholder="Product Name">
+        </div>
+      </div>
+      <div class="form-row">
+        <div>
+          <label>السعر الحالي *</label>
+          <input type="number" id="productPrice" placeholder="0.00" step="0.01">
+        </div>
+        <div>
+          <label>السعر القديم (للخصم)</label>
+          <input type="number" id="productOldPrice" placeholder="0.00" step="0.01">
+        </div>
+        <div>
+          <label>تكلفة المنتج *</label>
+          <input type="number" id="productCost" placeholder="0.00" step="0.01">
+        </div>
+        <div>
+          <label>الكمية المتوفرة *</label>
+          <input type="number" id="productQuantity" placeholder="0" min="0">
+        </div>
+      </div>
+      <div>
+        <label>الوصف</label>
+        <textarea id="productDescription" placeholder="وصف المنتج..."></textarea>
+      </div>
+      <div>
+        <label>الصور (يمكن رفع عدة صور)</label>
+        <input type="file" id="productImages" multiple accept="image/*">
+        <div id="imagePreview"></div>
+      </div>
+      <button onclick="addProduct()">✅ إضافة المنتج</button>
+    </div>
 
-      const container = document.getElementById('productsList');
-      if (container) {
-        container.innerHTML = html || '<div class="empty-state"><div class="empty-state-icon">📭</div><h3>لا توجد منتجات</h3></div>';
+    <div class="box">
+      <h2>📦 المنتجات الموجودة</h2>
+      <div id="productsList"></div>
+    </div>
+  </div>
+
+  <!-- الطلبات -->
+  <div id="orders" class="tab-content">
+    <div class="box">
+      <h2>📋 الطلبات الجديدة من الموقع</h2>
+      <div id="ordersList"></div>
+    </div>
+  </div>
+
+  <!-- المبيعات -->
+  <div id="sales" class="tab-content">
+    <div class="box">
+      <h2>💰 تسجيل بيعة جديدة</h2>
+      <div id="addSaleMsg"></div>
+      <div class="form-row">
+        <div>
+          <label>المنتج *</label>
+          <select id="saleProductId">
+            <option value="">اختر منتج...</option>
+          </select>
+        </div>
+        <div>
+          <label>الكمية *</label>
+          <input type="number" id="saleQuantity" placeholder="0" min="1">
+        </div>
+        <div>
+          <label>سعر البيع</label>
+          <input type="number" id="salePriceOverride" placeholder="0.00" step="0.01">
+        </div>
+      </div>
+      <button onclick="recordSale()">✅ تسجيل البيعة</button>
+    </div>
+
+    <div class="box">
+      <h2>📊 سجل المبيعات</h2>
+      <div id="salesHistory"></div>
+    </div>
+  </div>
+
+  <!-- المخزون -->
+  <div id="inventory" class="tab-content">
+    <div class="box">
+      <h2>🏪 حالة المخزون</h2>
+      <div id="inventoryStatus"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const GITHUB_REPO = 'albostan-store';
+  const GITHUB_USER = 'hassansyrn-cmyk';
+  const GITHUB_BRANCH = 'main';
+  const GITHUB_TOKEN = localStorage.getItem('github_token');
+
+  let products = [];
+  let orders = [];
+  let sales = [];
+  let salesChart = null;
+
+  // تحميل البيانات عند فتح الصفحة
+  window.addEventListener('load', () => {
+    loadAllData();
+    updateDashboard();
+  });
+
+  async function loadAllData() {
+    try {
+      // تحميل المنتجات
+      const productsResponse = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/products.json`);
+      if (productsResponse.ok) {
+        products = await productsResponse.json();
       }
 
-      // تحديث قائمة المنتجات في نموذج البيعة
-      const saleProductSelect = document.getElementById('saleProductId');
-      if (saleProductSelect) {
-        saleProductSelect.innerHTML = '<option value="">اختر منتج...</option>' + 
-          allProducts.map(p => `<option value="${p.id}">${p.nameAr}</option>`).join('');
+      // تحميل الطلبات
+      const ordersResponse = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/orders.json`);
+      if (ordersResponse.ok) {
+        orders = await ordersResponse.json();
       }
+
+      // تحميل المبيعات
+      const salesResponse = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/sales.json`);
+      if (salesResponse.ok) {
+        sales = await salesResponse.json();
+      }
+
+      renderProducts();
+      renderOrders();
+      renderSales();
+      updateProductSelect();
+    } catch (error) {
+      console.error('خطأ في تحميل البيانات:', error);
     }
+  }
 
-    // ===== عرض الطلبات =====
-    function renderOrders() {
-      const html = allOrders.map(order => `
-        <tr>
-          <td>#${order.id}</td>
-          <td>${order.customerName}</td>
-          <td>${order.items.length} منتج</td>
-          <td>${order.total} د.إ</td>
-          <td>${new Date(order.date).toLocaleDateString('ar-AE')}</td>
-          <td><span class="status-badge status-${order.status}">${order.status}</span></td>
-          <td>
-            <button class="btn btn-small btn-primary" onclick="viewOrder('${order.id}')">👁️ عرض</button>
-          </td>
-        </tr>
-      `).join('');
+  function switchTab(tabName) {
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(tabName).classList.add('active');
+    event.target.classList.add('active');
+  }
 
-      const tbody = document.getElementById('ordersTableBody');
-      if (tbody) {
-        tbody.innerHTML = html || '<tr><td colspan="7" style="text-align: center; padding: 40px;">لا توجد طلبات</td></tr>';
-      }
-    }
+  function updateDashboard() {
+    // حساب الإحصائيات
+    const totalSales = sales.reduce((sum, sale) => sum + (sale.total || 0), 0);
+    const totalProfit = sales.reduce((sum, sale) => sum + (sale.profit || 0), 0);
+    const lowStock = products.filter(p => (p.quantity || 0) < 5).length;
 
-    // ===== عرض المبيعات =====
-    function renderSales() {
-      const html = allSales.map(sale => {
-        const product = allProducts.find(p => p.id === sale.productId);
-        const profit = (sale.salePrice - sale.cost) * sale.quantity;
-        return `
-          <tr>
-            <td>${product ? product.nameAr : 'منتج غير معروف'}</td>
-            <td>${sale.quantity}</td>
-            <td>${sale.salePrice} د.إ</td>
-            <td>${sale.cost} د.إ</td>
-            <td style="color: #27ae60; font-weight: 700;">${profit.toFixed(2)} د.إ</td>
-            <td>${new Date(sale.date).toLocaleDateString('ar-AE')}</td>
-          </tr>
-        `;
-      }).join('');
+    document.getElementById('totalSales').textContent = totalSales.toFixed(2);
+    document.getElementById('totalProfit').textContent = totalProfit.toFixed(2);
+    document.getElementById('totalOrders').textContent = orders.length;
+    document.getElementById('totalProducts').textContent = products.length;
+    document.getElementById('lowStockCount').textContent = lowStock;
 
-      const tbody = document.getElementById('salesTableBody');
-      if (tbody) {
-        tbody.innerHTML = html || '<tr><td colspan="6" style="text-align: center; padding: 40px;">لا توجد مبيعات مسجلة</td></tr>';
-      }
-    }
+    // رسم البياني
+    drawSalesChart();
+    renderTopProducts();
+  }
 
-    // ===== تسجيل بيعة جديدة =====
-    async function recordSale(event) {
-      event.preventDefault();
+  function drawSalesChart() {
+    const ctx = document.getElementById('salesChart');
+    if (!ctx) return;
+
+    const last7Days = [];
+    const salesData = [];
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toLocaleDateString('ar-AE');
+      last7Days.push(dateStr);
       
-      const productId = document.getElementById('saleProductId').value;
-      const quantity = parseInt(document.getElementById('saleQuantity').value);
-      const salePrice = parseFloat(document.getElementById('salePriceInput').value);
-      const cost = parseFloat(document.getElementById('saleCostInput').value);
-      const notes = document.getElementById('saleNotes').value;
-
-      if (!productId || !quantity || !salePrice || !cost) {
-        showAlert('يرجى ملء جميع الحقول المطلوبة', 'error');
-        return;
-      }
-
-      const product = allProducts.find(p => p.id === productId);
-      if (!product) {
-        showAlert('المنتج غير موجود', 'error');
-        return;
-      }
-
-      // إنشاء بيعة جديدة
-      const newSale = {
-        id: Date.now().toString(),
-        productId: productId,
-        quantity: quantity,
-        salePrice: salePrice,
-        cost: cost,
-        profit: (salePrice - cost) * quantity,
-        date: new Date().toISOString(),
-        notes: notes
-      };
-
-      allSales.push(newSale);
-
-      // تحديث المخزون
-      product.quantity = (product.quantity || 0) - quantity;
-
-      // حفظ البيانات
-      await saveDataToGitHub();
-
-      // إعادة تحميل البيانات
-      await loadDataFromGitHub();
-
-      // تنظيف النموذج
-      document.getElementById('salesForm').reset();
-      showAlert('✅ تم تسجيل البيعة بنجاح', 'success');
+      const daySales = sales.filter(s => {
+        const saleDate = new Date(s.date).toLocaleDateString('ar-AE');
+        return saleDate === dateStr;
+      }).reduce((sum, s) => sum + (s.total || 0), 0);
+      salesData.push(daySales);
     }
 
-    // ===== حفظ البيانات إلى GitHub =====
-    async function saveDataToGitHub() {
-      const token = localStorage.getItem('githubToken');
-      if (!token) {
-        showAlert('يرجى إدخال GitHub Token', 'error');
-        return;
-      }
-
-      try {
-        // حفظ المنتجات
-        await updateGitHubFile('products.json', JSON.stringify(allProducts, null, 2), token);
-        
-        // حفظ الطلبات
-        await updateGitHubFile('orders.json', JSON.stringify(allOrders, null, 2), token);
-        
-        // حفظ المبيعات
-        await updateGitHubFile('sales_data.json', JSON.stringify(allSales, null, 2), token);
-      } catch (error) {
-        console.error('خطأ في حفظ البيانات:', error);
-        showAlert('خطأ في حفظ البيانات', 'error');
-      }
-    }
-
-    // ===== تحديث ملف في GitHub =====
-    async function updateGitHubFile(filename, content, token) {
-      const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${filename}`;
-      
-      try {
-        // الحصول على SHA الحالي
-        const getResponse = await fetch(url, {
-          headers: { 'Authorization': `token ${token}` }
-        });
-        
-        let sha = null;
-        if (getResponse.ok) {
-          const data = await getResponse.json();
-          sha = data.sha;
+    if (salesChart) salesChart.destroy();
+    
+    salesChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: last7Days,
+        datasets: [{
+          label: 'المبيعات اليومية',
+          data: salesData,
+          borderColor: '#1F5E3B',
+          backgroundColor: 'rgba(31, 94, 59, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: true }
         }
-
-        // تحديث الملف
-        const updateResponse = await fetch(url, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `token ${token}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            message: `Update ${filename}`,
-            content: btoa(content),
-            sha: sha
-          })
-        });
-
-        if (!updateResponse.ok) {
-          throw new Error('فشل تحديث الملف');
-        }
-      } catch (error) {
-        console.error(`خطأ في تحديث ${filename}:`, error);
-        throw error;
-      }
-    }
-
-    // ===== التبديل بين التبويبات =====
-    function switchTab(tabName) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      
-      document.getElementById(tabName).classList.add('active');
-      event.target.classList.add('active');
-    }
-
-    // ===== عرض الرسائل =====
-    function showAlert(message, type = 'info') {
-      const alertBox = document.getElementById('alertBox');
-      alertBox.textContent = message;
-      alertBox.className = `alert show alert-${type}`;
-      
-      setTimeout(() => {
-        alertBox.classList.remove('show');
-      }, 5000);
-    }
-
-    // ===== حفظ الإعدادات =====
-    function saveSettings() {
-      const token = document.getElementById('githubToken').value;
-      if (!token) {
-        showAlert('يرجى إدخال GitHub Token', 'error');
-        return;
-      }
-      
-      localStorage.setItem('githubToken', token);
-      showAlert('✅ تم حفظ الإعدادات بنجاح', 'success');
-    }
-
-    // ===== تحميل النسخة الاحتياطية =====
-    function downloadBackup() {
-      const backup = {
-        products: allProducts,
-        orders: allOrders,
-        sales: allSales,
-        date: new Date().toISOString()
-      };
-
-      const dataStr = JSON.stringify(backup, null, 2);
-      const dataBlob = new Blob([dataStr], { type: 'application/json' });
-      const url = URL.createObjectURL(dataBlob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `albostan-backup-${new Date().toISOString().split('T')[0]}.json`;
-      link.click();
-      
-      showAlert('✅ تم تنزيل النسخة الاحتياطية', 'success');
-    }
-
-    // ===== حذف جميع البيانات =====
-    function clearAllData() {
-      if (confirm('هل أنت متأكد من حذف جميع البيانات المحلية؟ هذا لن يؤثر على البيانات في GitHub')) {
-        localStorage.clear();
-        location.reload();
-      }
-    }
-
-    // ===== تسجيل الخروج =====
-    function logout() {
-      localStorage.removeItem('githubToken');
-      location.href = 'admin.html'; // العودة للوحة التحكم الاحتياطية
-    }
-
-    // ===== التهيئة =====
-    document.addEventListener('DOMContentLoaded', () => {
-      loadDataFromGitHub();
-      
-      // بحث المنتجات
-      const searchInput = document.getElementById('productSearch');
-      if (searchInput) {
-        searchInput.addEventListener('input', renderProducts);
       }
     });
-  </script>
+  }
+
+  function renderTopProducts() {
+    const topProducts = sales
+      .reduce((acc, sale) => {
+        const existing = acc.find(p => p.id === sale.productId);
+        if (existing) {
+          existing.qty += sale.quantity;
+          existing.total += sale.total;
+        } else {
+          acc.push({ id: sale.productId, qty: sale.quantity, total: sale.total });
+        }
+        return acc;
+      }, [])
+      .sort((a, b) => b.qty - a.qty)
+      .slice(0, 5);
+
+    const html = topProducts.map(item => {
+      const product = products.find(p => p.id === item.id);
+      return `
+        <div class="product-item">
+          <div class="product-info">
+            <div class="product-name">${product?.nameAr || 'منتج محذوف'}</div>
+            <div class="product-qty">عدد البيعات: ${item.qty} | الإجمالي: ${item.total.toFixed(2)} د.إ</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    document.getElementById('topProducts').innerHTML = html || '<p>لا توجد مبيعات حتى الآن</p>';
+  }
+
+  async function addProduct() {
+    const nameAr = document.getElementById('productNameAr').value;
+    const nameEn = document.getElementById('productNameEn').value;
+    const price = parseFloat(document.getElementById('productPrice').value);
+    const oldPrice = parseFloat(document.getElementById('productOldPrice').value) || 0;
+    const cost = parseFloat(document.getElementById('productCost').value);
+    const quantity = parseInt(document.getElementById('productQuantity').value);
+
+    if (!nameAr || !nameEn || !price || !cost || !quantity) {
+      showMessage('addProductMsg', 'يرجى ملء جميع الحقول المطلوبة', 'error');
+      return;
+    }
+
+    const product = {
+      id: Date.now().toString(),
+      nameAr,
+      nameEn,
+      price,
+      oldPrice,
+      cost,
+      quantity,
+      discount: oldPrice > 0 ? Math.round(((oldPrice - price) / oldPrice) * 100) + '%' : '',
+      description: document.getElementById('productDescription').value,
+      images: [],
+      createdAt: new Date().toISOString()
+    };
+
+    products.push(product);
+    await saveProducts();
+    
+    document.getElementById('productNameAr').value = '';
+    document.getElementById('productNameEn').value = '';
+    document.getElementById('productPrice').value = '';
+    document.getElementById('productOldPrice').value = '';
+    document.getElementById('productCost').value = '';
+    document.getElementById('productQuantity').value = '';
+    document.getElementById('productDescription').value = '';
+
+    showMessage('addProductMsg', '✅ تم إضافة المنتج بنجاح', 'success');
+    renderProducts();
+    updateProductSelect();
+  }
+
+  function renderProducts() {
+    const html = products.map(p => `
+      <div class="product-item">
+        <div class="product-info">
+          <div class="product-name">${p.nameAr}</div>
+          <div class="product-price">السعر: ${p.price} د.إ | التكلفة: ${p.cost} د.إ</div>
+          <div class="product-qty">المخزون: ${p.quantity} قطعة</div>
+        </div>
+        <div class="product-actions">
+          <button onclick="deleteProduct('${p.id}')" class="danger">حذف</button>
+        </div>
+      </div>
+    `).join('');
+
+    document.getElementById('productsList').innerHTML = html || '<p>لا توجد منتجات</p>';
+  }
+
+  async function recordSale() {
+    const productId = document.getElementById('saleProductId').value;
+    const quantity = parseInt(document.getElementById('saleQuantity').value);
+    const priceOverride = parseFloat(document.getElementById('salePriceOverride').value) || 0;
+
+    if (!productId || !quantity) {
+      showMessage('addSaleMsg', 'يرجى اختيار منتج وكمية', 'error');
+      return;
+    }
+
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+
+    if (product.quantity < quantity) {
+      showMessage('addSaleMsg', 'الكمية المطلوبة أكثر من المخزون', 'error');
+      return;
+    }
+
+    const salePrice = priceOverride || product.price;
+    const profit = (salePrice - product.cost) * quantity;
+
+    const sale = {
+      id: Date.now().toString(),
+      productId,
+      quantity,
+      price: salePrice,
+      total: salePrice * quantity,
+      profit,
+      date: new Date().toISOString()
+    };
+
+    sales.push(sale);
+    product.quantity -= quantity;
+
+    await saveProducts();
+    await saveSales();
+
+    document.getElementById('saleProductId').value = '';
+    document.getElementById('saleQuantity').value = '';
+    document.getElementById('salePriceOverride').value = '';
+
+    showMessage('addSaleMsg', '✅ تم تسجيل البيعة بنجاح', 'success');
+    renderSales();
+    updateDashboard();
+  }
+
+  function renderSales() {
+    const html = sales.slice().reverse().map(s => {
+      const product = products.find(p => p.id === s.productId);
+      return `
+        <div class="order-item">
+          <div class="order-header">
+            <div class="order-id">${product?.nameAr || 'منتج محذوف'}</div>
+            <div class="order-status">${new Date(s.date).toLocaleDateString('ar-AE')}</div>
+          </div>
+          <div class="order-details">
+            الكمية: ${s.quantity} | السعر: ${s.price} د.إ | الإجمالي: ${s.total.toFixed(2)} د.إ | الربح: ${s.profit.toFixed(2)} د.إ
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    document.getElementById('salesHistory').innerHTML = html || '<p>لا توجد مبيعات</p>';
+  }
+
+  function renderOrders() {
+    const html = orders.slice().reverse().map(o => `
+      <div class="order-item">
+        <div class="order-header">
+          <div class="order-id">طلب #${o.id}</div>
+          <div class="order-status">${o.status === 'pending' ? '⏳ قيد الانتظار' : '✅ مكتمل'}</div>
+        </div>
+        <div class="order-details">
+          👤 ${o.customerName} | 📞 ${o.customerPhone}<br>
+          📍 ${o.customerEmirate} - ${o.customerAddress}<br>
+          💰 الإجمالي: ${o.total.toFixed(2)} د.إ<br>
+          📅 ${new Date(o.date).toLocaleDateString('ar-AE')}
+        </div>
+      </div>
+    `).join('');
+
+    document.getElementById('ordersList').innerHTML = html || '<p>لا توجد طلبات</p>';
+  }
+
+  function renderInventoryStatus() {
+    const lowStock = products.filter(p => p.quantity < 5);
+    const outOfStock = products.filter(p => p.quantity === 0);
+
+    let html = '<h3>⚠️ منتجات قليلة المخزون (أقل من 5 قطع)</h3>';
+    html += lowStock.map(p => `
+      <div class="product-item">
+        <div class="product-info">
+          <div class="product-name">${p.nameAr}</div>
+          <div class="product-qty">المخزون: ${p.quantity} قطعة</div>
+        </div>
+      </div>
+    `).join('');
+
+    html += '<h3 style="margin-top:20px;">❌ منتجات نفدت من المخزون</h3>';
+    html += outOfStock.map(p => `
+      <div class="product-item" style="opacity:0.6;">
+        <div class="product-info">
+          <div class="product-name">${p.nameAr}</div>
+          <div class="product-qty">المخزون: 0 قطعة</div>
+        </div>
+      </div>
+    `).join('');
+
+    document.getElementById('inventoryStatus').innerHTML = html || '<p>المخزون بحالة جيدة</p>';
+  }
+
+  function updateProductSelect() {
+    const select = document.getElementById('saleProductId');
+    select.innerHTML = '<option value="">اختر منتج...</option>' + products.map(p => 
+      `<option value="${p.id}">${p.nameAr} (${p.quantity} متوفر)</option>`
+    ).join('');
+  }
+
+  async function deleteProduct(id) {
+    if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+      products = products.filter(p => p.id !== id);
+      await saveProducts();
+      renderProducts();
+      updateProductSelect();
+    }
+  }
+
+  async function saveProducts() {
+    localStorage.setItem('products', JSON.stringify(products));
+  }
+
+  async function saveSales() {
+    localStorage.setItem('sales', JSON.stringify(sales));
+  }
+
+  function showMessage(elementId, message, type) {
+    const element = document.getElementById(elementId);
+    element.textContent = message;
+    element.className = type === 'error' ? 'error-msg' : 'success-msg';
+    setTimeout(() => element.textContent = '', 3000);
+  }
+
+  function logout() {
+    localStorage.removeItem('github_token');
+    location.reload();
+  }
+
+  // تحديث المخزون عند التبديل للتبويب
+  document.addEventListener('click', (e) => {
+    if (e.target.textContent.includes('المخزون')) {
+      renderInventoryStatus();
+    }
+  });
+</script>
+
 </body>
 </html>
