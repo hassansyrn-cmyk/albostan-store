@@ -2520,7 +2520,8 @@
     applyLanguage(currentLang === 'ar' ? 'en' : 'ar');
   });
 
-  // ===== جلب المنتجات من Google Sheet =====
+  // ===== جلب المنتجات من JSON =====
+  const PRODUCTS_JSON_URL = '/products.json';
   const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1kdO5E6o8FW3X2qHQefOa9tlH0Qdnoqzuwx7UvPyyqTU/gviz/tq?tqx=out:csv&sheet=Products';
 
   const fallbackProducts = [
@@ -2611,9 +2612,19 @@
 
   async function loadProductsFromSheet(){
     try{
-      const res = await fetch(SHEET_CSV_URL + `&_cb=${new Date().getTime()}`);
-      if(!res.ok){ renderProductsFromSheet(fallbackProducts); return; }
-      const text = await res.text();
+      // محاولة جلب البيانات من JSON أولاً
+      const res = await fetch(PRODUCTS_JSON_URL + `?_cb=${new Date().getTime()}`);
+      if(res.ok){
+        const products = await res.json();
+        if(Array.isArray(products) && products.length > 0){
+          renderProductsFromSheet(products);
+          return;
+        }
+      }
+      // إذا فشل JSON، حاول Google Sheet
+      const sheetRes = await fetch(SHEET_CSV_URL + `&_cb=${new Date().getTime()}`);
+      if(!sheetRes.ok){ renderProductsFromSheet(fallbackProducts); return; }
+      const text = await sheetRes.text();
       const rows = parseCSV(text).filter(r => r.length > 1 && r.some(c => c.trim() !== ''));
       if(rows.length < 2){ renderProductsFromSheet(fallbackProducts); return; }
       const headers = rows[0].map(h => h.trim());
@@ -2621,7 +2632,7 @@
       if(products.length > 0) renderProductsFromSheet(products);
       else renderProductsFromSheet(fallbackProducts);
     }catch(err){ 
-      console.warn('Google Sheet unavailable, using fallback', err); 
+      console.warn('Products unavailable, using fallback', err); 
       renderProductsFromSheet(fallbackProducts); 
     }
   }
