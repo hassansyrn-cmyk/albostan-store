@@ -3,19 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة تحكم AlBostan Store</title>
+<title>لوحة تحكم AlBostan Store - النسخة المحسّنة</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=El+Messiri:wght@600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --clay:#1F5E3B; --cream:#F5F7F5; --sand:#E8ECE9; --soil:#181A19; --white:#FFFFFF; --danger:#e63946;
+    --clay:#1F5E3B; --cream:#F5F7F5; --sand:#E8ECE9; --soil:#181A19; --white:#FFFFFF; --danger:#e63946; --success:#2ecc71; --warning:#f39c12;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   body{font-family:'Tajawal',sans-serif;background:var(--cream);color:var(--soil);padding:20px;line-height:1.6;}
   h1{font-family:'El Messiri',serif;color:var(--clay);font-size:1.7rem;margin-bottom:18px;}
   h2{font-family:'El Messiri',serif;color:var(--clay);font-size:1.2rem;margin:24px 0 12px;}
+  h3{font-family:'El Messiri',serif;color:var(--clay);font-size:1rem;margin:12px 0 8px;}
   .box{background:var(--white);border-radius:18px;padding:18px;margin-bottom:18px;box-shadow:0 4px 14px -8px rgba(31,94,59,.15);}
+  .tabs{display:flex;gap:8px;margin-bottom:18px;border-bottom:2px solid var(--sand);flex-wrap:wrap;}
+  .tab-btn{background:none;border:none;padding:10px 16px;font-weight:700;color:var(--soil);cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s;}
+  .tab-btn.active{color:var(--clay);border-bottom-color:var(--clay);}
+  .tab-content{display:none;}
+  .tab-content.active{display:block;}
   label{display:block;font-weight:700;font-size:.85rem;margin-bottom:5px;color:var(--soil);}
   input, select, textarea{
     width:100%;padding:10px 12px;border-radius:10px;border:2px solid var(--sand);
@@ -32,6 +38,8 @@
   button.danger:hover{background:#c52f3a;}
   button.secondary{background:var(--sand);color:var(--soil);}
   button.secondary:hover{background:#d3d9d5;}
+  button.success{background:var(--success);}
+  button.success:hover{background:#27ae60;}
   .hint{font-size:.8rem;opacity:.65;margin-top:6px;}
   .form-row{display:flex;gap:12px;flex-wrap:wrap;}
   .form-row > div{flex:1;min-width:140px;}
@@ -44,15 +52,28 @@
   .prow-actions{display:flex;gap:6px;flex-shrink:0;}
   .prow-actions button{padding:7px 12px;font-size:.82rem;}
   #f_imagePreview{display:none;max-width:80px;border-radius:10px;margin-top:6px;}
+  .image-gallery{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+  .gallery-item{position:relative;width:80px;height:80px;border-radius:10px;overflow:hidden;background:var(--sand);}
+  .gallery-item img{width:100%;height:100%;object-fit:cover;}
+  .gallery-item .remove-img{position:absolute;top:2px;right:2px;background:var(--danger);color:#fff;border:none;width:20px;height:20px;border-radius:50%;font-size:0.8rem;padding:0;display:none;}
+  .gallery-item:hover .remove-img{display:block;}
+  .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px;}
+  .stat-card{background:var(--white);border-radius:14px;padding:16px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+  .stat-value{font-size:1.8rem;font-weight:800;color:var(--clay);}
+  .stat-label{font-size:0.85rem;color:var(--soil);margin-top:4px;}
+  .sales-item{background:var(--cream);border-radius:14px;padding:12px;margin-bottom:10px;border-left:4px solid var(--clay);}
+  .sales-item.pending{border-left-color:var(--warning);}
+  .sales-item.confirmed{border-left-color:var(--success);}
   @media (max-width:680px){
     .form-row > div{min-width:100%;}
     .product-row{flex-wrap:wrap;}
+    .tabs{flex-direction:column;}
   }
 </style>
 </head>
 <body>
 
-<h1>🛠️ لوحة تحكم متجر البستان</h1>
+<h1>🛠️ لوحة تحكم متجر البستان - النسخة المحسّنة</h1>
 
 <div class="box">
   <label>GitHub Token (Personal Access Token)</label>
@@ -61,82 +82,133 @@
     <div><button id="saveTokenBtn">حفظ التوكن بهذا المتصفح</button></div>
     <div><button id="loadProductsBtn" class="secondary">تحميل المنتجات</button></div>
   </div>
-  <p class="hint">⚠️ التوكن يُحفظ فقط داخل متصفحك (localStorage) ولا يُرسل لأي مكان غير GitHub. لا تشارك رابط هذه الصفحة مع أي شخص، ولا ترفعها مرتبطة من الموقع العام.</p>
+  <p class="hint">⚠️ التوكن يُحفظ فقط داخل متصفحك (localStorage) ولا يُرسل لأي مكان غير GitHub. لا تشارك رابط هذه الصفحة مع أي شخص.</p>
 </div>
 
 <div id="statusMsg"></div>
 
+<!-- التبويبات الرئيسية -->
 <div class="box">
-  <h2 id="formTitle">➕ إضافة منتج جديد</h2>
-  <input type="hidden" id="editIndex" value="-1">
-
-  <div class="form-row">
-    <div><label>الاسم (عربي) *</label><input id="f_nameAr"></div>
-    <div><label>الاسم (إنجليزي) *</label><input id="f_nameEn"></div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('products')">📦 المنتجات</button>
+    <button class="tab-btn" onclick="switchTab('sales')">📊 المبيعات والأرباح</button>
+    <button class="tab-btn" onclick="switchTab('stats')">📈 الإحصائيات</button>
   </div>
 
-  <div class="form-row">
-    <div><label>السعر *</label><input type="number" id="f_price"></div>
-    <div><label>السعر القديم (اختياري)</label><input type="number" id="f_oldPrice"></div>
-    <div><label>نص الخصم (مثل -20%)</label><input id="f_discount"></div>
-  </div>
+  <!-- تبويب المنتجات -->
+  <div id="products" class="tab-content active">
+    <h2 id="formTitle">➕ إضافة منتج جديد</h2>
+    <input type="hidden" id="editIndex" value="-1">
 
-  <div class="form-row">
-    <div>
-      <label>القسم</label>
-      <select id="f_category">
-        <option value="Grocery" data-ar="بقالة">بقالة</option>
-        <option value="Electronics" data-ar="إلكترونيات">إلكترونيات</option>
-        <option value="Fashion" data-ar="أزياء">أزياء</option>
-        <option value="Home & Garden" data-ar="المنزل والحديقة">المنزل والحديقة</option>
-        <option value="Kids" data-ar="أطفال">أطفال</option>
-        <option value="Sports" data-ar="رياضة">رياضة</option>
-        <option value="Personal Care" data-ar="العناية الشخصية">العناية الشخصية</option>
-      </select>
+    <div class="form-row">
+      <div><label>الاسم (عربي) *</label><input id="f_nameAr"></div>
+      <div><label>الاسم (إنجليزي) *</label><input id="f_nameEn"></div>
     </div>
-    <div>
-      <label>متوفر؟</label>
-      <select id="f_available">
-        <option value="yes">متوفر</option>
-        <option value="no">غير متوفر</option>
-      </select>
+
+    <div class="form-row">
+      <div><label>السعر *</label><input type="number" id="f_price"></div>
+      <div><label>السعر القديم (اختياري)</label><input type="number" id="f_oldPrice"></div>
+      <div><label>نص الخصم (مثل -20%)</label><input id="f_discount"></div>
     </div>
-    <div><label>التقييم (1-5، اختياري)</label><input type="number" id="f_rating" min="1" max="5"></div>
-  </div>
 
-  <div class="form-row">
-    <div><label>الوصف (عربي)</label><textarea id="f_descAr"></textarea></div>
-    <div><label>الوصف (إنجليزي)</label><textarea id="f_descEn"></textarea></div>
-  </div>
-
-  <div class="form-row">
-    <div>
-      <label>صورة المنتج (رفع مباشر)</label>
-      <input type="file" id="f_imageFile" accept="image/*">
-      <img id="f_imagePreview">
+    <div class="form-row">
+      <div><label>الكمية المتوفرة *</label><input type="number" id="f_quantity" min="0" value="0"></div>
+      <div><label>السعر الأساسي (التكلفة)</label><input type="number" id="f_cost" min="0"></div>
     </div>
-    <div><label>إيموجي بديل (لو بدون صورة)</label><input id="f_emoji" placeholder="🛒"></div>
+
+    <div class="form-row">
+      <div>
+        <label>القسم</label>
+        <select id="f_category">
+          <option value="Grocery" data-ar="بقالة">بقالة</option>
+          <option value="Electronics" data-ar="إلكترونيات">إلكترونيات</option>
+          <option value="Fashion" data-ar="أزياء">أزياء</option>
+          <option value="Home & Garden" data-ar="المنزل والحديقة">المنزل والحديقة</option>
+          <option value="Kids" data-ar="أطفال">أطفال</option>
+          <option value="Sports" data-ar="رياضة">رياضة</option>
+          <option value="Personal Care" data-ar="العناية الشخصية">العناية الشخصية</option>
+        </select>
+      </div>
+      <div>
+        <label>متوفر؟</label>
+        <select id="f_available">
+          <option value="yes">متوفر</option>
+          <option value="no">غير متوفر</option>
+        </select>
+      </div>
+      <div><label>التقييم (1-5، اختياري)</label><input type="number" id="f_rating" min="1" max="5"></div>
+    </div>
+
+    <div class="form-row">
+      <div><label>الوصف (عربي)</label><textarea id="f_descAr"></textarea></div>
+      <div><label>الوصف (إنجليزي)</label><textarea id="f_descEn"></textarea></div>
+    </div>
+
+    <div class="form-row">
+      <div>
+        <label>صور المنتج (رفع مباشر - يمكن أكثر من صورة)</label>
+        <input type="file" id="f_imageFiles" accept="image/*" multiple>
+        <div id="f_imageGallery" class="image-gallery"></div>
+      </div>
+      <div><label>إيموجي بديل (لو بدون صورة)</label><input id="f_emoji" placeholder="🛒"></div>
+    </div>
+
+    <div class="form-row">
+      <div><button id="saveProductBtn">💾 حفظ المنتج على GitHub</button></div>
+      <div><button id="cancelEditBtn" class="secondary" style="display:none;">إلغاء التعديل</button></div>
+    </div>
+
+    <h2>📦 المنتجات الحالية (<span id="productCountLabel">0</span>)</h2>
+    <div id="productsListArea" class="box"><p>اضغط "تحميل المنتجات" أعلاه للبدء.</p></div>
   </div>
 
-  <div class="form-row">
-    <div><button id="saveProductBtn">💾 حفظ المنتج على GitHub</button></div>
-    <div><button id="cancelEditBtn" class="secondary" style="display:none;">إلغاء التعديل</button></div>
+  <!-- تبويب المبيعات -->
+  <div id="sales" class="tab-content">
+    <h2>📊 إدارة المبيعات</h2>
+    <p class="hint">تأكيد الطلبات وتسجيل البيعات لتحديث المخزون والأرباح تلقائياً.</p>
+    <div id="salesListArea" class="box"><p>لا توجد مبيعات مسجلة حتى الآن.</p></div>
+  </div>
+
+  <!-- تبويب الإحصائيات -->
+  <div id="stats" class="tab-content">
+    <h2>📈 الإحصائيات والأرباح</h2>
+    <div id="statsArea" class="box">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="totalSalesValue">0</div>
+          <div class="stat-label">إجمالي المبيعات</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalProfitValue">0</div>
+          <div class="stat-label">صافي الأرباح</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalOrdersValue">0</div>
+          <div class="stat-label">عدد الطلبات</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="lowStockValue">0</div>
+          <div class="stat-label">منتجات قليلة المخزون</div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-
-<h2>📦 المنتجات الحالية (<span id="productCountLabel">0</span>)</h2>
-<div id="productsListArea" class="box"><p>اضغط "تحميل المنتجات" أعلاه للبدء.</p></div>
 
 <script>
   const OWNER = 'hassansyrn-cmyk';
   const REPO = 'albostan-store';
   const BRANCH = 'main';
   const PRODUCTS_PATH = 'products.json';
+  const SALES_PATH = 'sales_data.json';
   const IMAGES_FOLDER = 'images';
   const TOKEN_STORAGE_KEY = 'albostan_admin_token';
 
   let products = [];
+  let salesData = [];
   let productsFileSha = null;
+  let salesFileSha = null;
+  let selectedImages = [];
 
   const tokenInput = document.getElementById('ghToken');
   const statusEl = document.getElementById('statusMsg');
@@ -174,6 +246,14 @@
     return btoa(binary);
   }
 
+  function switchTab(tabName){
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabName).classList.add('active');
+    event.target.classList.add('active');
+    if(tabName === 'stats') updateStats();
+  }
+
   async function loadProducts(){
     if(!getToken()){
       setStatus('أدخل التوكن أولًا واحفظه قبل التحميل.', true);
@@ -190,7 +270,7 @@
         return;
       }
       if(!res.ok){
-        setStatus('فشل التحميل (كود ' + res.status + ') — تحقق من صلاحية التوكن (يحتاج صلاحية Contents: Read and write).', true);
+        setStatus('فشل التحميل (كود ' + res.status + ') — تحقق من صلاحية التوكن.', true);
         return;
       }
       const data = await res.json();
@@ -198,8 +278,28 @@
       products = JSON.parse(b64DecodeUnicode(data.content));
       renderProductsList();
       setStatus('تم تحميل ' + products.length + ' منتج بنجاح ✅');
+      loadSalesData();
     }catch(e){
       setStatus('حدث خطأ غير متوقع: ' + e.message, true);
+    }
+  }
+
+  async function loadSalesData(){
+    try{
+      const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${SALES_PATH}?ref=${BRANCH}`, { headers: ghHeaders() });
+      if(res.status === 404){
+        salesData = [];
+        salesFileSha = null;
+        return;
+      }
+      if(res.ok){
+        const data = await res.json();
+        salesFileSha = data.sha;
+        salesData = JSON.parse(b64DecodeUnicode(data.content));
+      }
+    }catch(e){
+      console.warn('Sales data not found, starting fresh');
+      salesData = [];
     }
   }
 
@@ -220,13 +320,27 @@
     productsFileSha = data.content.sha;
   }
 
+  async function saveSalesFile(commitMessage){
+    const content = b64EncodeUnicode(JSON.stringify(salesData, null, 2));
+    const body = { message: commitMessage || 'Update sales_data.json via admin panel', content: content, branch: BRANCH };
+    if(salesFileSha) body.sha = salesFileSha;
+    const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${SALES_PATH}`, {
+      method: 'PUT',
+      headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if(!res.ok) throw new Error('فشل حفظ ملف المبيعات');
+    const data = await res.json();
+    salesFileSha = data.content.sha;
+  }
+
   function uploadImage(file){
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = async () => {
         try{
           const base64 = reader.result.split(',')[1];
-          const safeName = Date.now() + '-' + file.name.replace(/[^a-zA-Z0-9.\-_]/g, '');
+          const safeName = Date.now() + '-' + Math.random().toString(36).substr(2,9) + '-' + file.name.replace(/[^a-zA-Z0-9.\-_]/g, '');
           const path = IMAGES_FOLDER + '/' + safeName;
           const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}`, {
             method: 'PUT',
@@ -256,6 +370,7 @@
     const nameAr = document.getElementById('f_nameAr').value.trim();
     const nameEn = document.getElementById('f_nameEn').value.trim();
     const price = document.getElementById('f_price').value.trim();
+    const quantity = parseInt(document.getElementById('f_quantity').value) || 0;
 
     if(!nameAr || !nameEn || !price){
       setStatus('الاسم بالعربي والإنجليزي والسعر حقول مطلوبة.', true);
@@ -264,6 +379,8 @@
 
     const product = {
       nameAr, nameEn, price,
+      quantity: quantity,
+      cost: document.getElementById('f_cost').value.trim() || '0',
       oldPrice: document.getElementById('f_oldPrice').value.trim(),
       discount: document.getElementById('f_discount').value.trim(),
       categoryAr: categoryAr,
@@ -273,21 +390,27 @@
       available: document.getElementById('f_available').value,
       rating: document.getElementById('f_rating').value.trim(),
       emoji: document.getElementById('f_emoji').value.trim() || '🛒',
-      img: idx > -1 ? (products[idx].img || '') : ''
+      img: idx > -1 ? (products[idx].img || '') : '',
+      images: selectedImages.length > 0 ? selectedImages : (idx > -1 && products[idx].images ? products[idx].images : [])
     };
 
     setStatus('جاري الحفظ...');
     try{
-      const fileInput = document.getElementById('f_imageFile');
-      if(fileInput.files && fileInput.files[0]){
-        setStatus('جاري رفع الصورة...');
-        const imgPath = await uploadImage(fileInput.files[0]);
-        product.img = imgPath;
+      const fileInput = document.getElementById('f_imageFiles');
+      if(fileInput.files && fileInput.files.length > 0){
+        setStatus('جاري رفع الصور...');
+        const uploadedImages = [];
+        for(let file of fileInput.files){
+          const imgPath = await uploadImage(file);
+          uploadedImages.push(imgPath);
+        }
+        product.images = uploadedImages;
+        if(uploadedImages.length > 0) product.img = uploadedImages[0];
       }
       if(idx > -1){ products[idx] = product; } else { products.push(product); }
       setStatus('جاري حفظ بيانات المنتج...');
       await saveProductsFile(idx > -1 ? 'Update product: ' + nameEn : 'Add product: ' + nameEn);
-      setStatus('تم الحفظ بنجاح ✅ — التغيير سيظهر بالموقع بعد دقيقة تقريبًا (وقت بناء Vercel).');
+      setStatus('تم الحفظ بنجاح ✅ — التغيير سيظهر بالموقع بعد دقيقة تقريبًا.');
       resetForm();
       renderProductsList();
     }catch(e){
@@ -302,19 +425,22 @@
       area.innerHTML = '<p>لا توجد منتجات حتى الآن.</p>';
       return;
     }
-    area.innerHTML = products.map((p, i) => `
+    area.innerHTML = products.map((p, i) => {
+      const images = Array.isArray(p.images) ? p.images : (p.img ? [p.img] : []);
+      const imgCount = images.length > 0 ? `📷 ${images.length}` : 'بدون صور';
+      return `
       <div class="product-row">
-        <img class="prow-img" src="${escapeHtml(p.img)}" onerror="this.style.visibility='hidden'">
+        <img class="prow-img" src="${escapeHtml(p.img || '')}" onerror="this.style.visibility='hidden'">
         <div class="prow-info">
           <strong>${escapeHtml(p.nameAr)}</strong> / ${escapeHtml(p.nameEn)}<br>
-          <span>${escapeHtml(p.price)} د.إ — ${escapeHtml(p.categoryAr)} — ${p.available === 'no' ? 'غير متوفر' : 'متوفر'}</span>
+          <span>${escapeHtml(p.price)} د.إ — ${escapeHtml(p.categoryAr)} — ${p.available === 'no' ? 'غير متوفر' : 'متوفر'} — الكمية: ${p.quantity || 0} — ${imgCount}</span>
         </div>
         <div class="prow-actions">
           <button onclick="editProduct(${i})">تعديل</button>
           <button class="danger" onclick="deleteProduct(${i})">حذف</button>
         </div>
       </div>
-    `).join('');
+    `}).join('');
   }
 
   window.editProduct = function(i){
@@ -323,6 +449,8 @@
     document.getElementById('f_nameAr').value = p.nameAr || '';
     document.getElementById('f_nameEn').value = p.nameEn || '';
     document.getElementById('f_price').value = p.price || '';
+    document.getElementById('f_quantity').value = p.quantity || 0;
+    document.getElementById('f_cost').value = p.cost || '';
     document.getElementById('f_oldPrice').value = p.oldPrice || '';
     document.getElementById('f_discount').value = p.discount || '';
     document.getElementById('f_category').value = p.categoryEn || 'Grocery';
@@ -331,11 +459,9 @@
     document.getElementById('f_descAr').value = p.descAr || '';
     document.getElementById('f_descEn').value = p.descEn || '';
     document.getElementById('f_emoji').value = p.emoji || '';
-    document.getElementById('f_imageFile').value = '';
-
-    const preview = document.getElementById('f_imagePreview');
-    if(p.img){ preview.src = p.img; preview.style.display = 'inline-block'; }
-    else { preview.style.display = 'none'; }
+    document.getElementById('f_imageFiles').value = '';
+    selectedImages = Array.isArray(p.images) ? [...p.images] : [];
+    renderImageGallery();
 
     document.getElementById('formTitle').textContent = '✏️ تعديل منتج: ' + p.nameAr;
     document.getElementById('cancelEditBtn').style.display = 'inline-block';
@@ -357,26 +483,71 @@
     }
   };
 
+  function renderImageGallery(){
+    const gallery = document.getElementById('f_imageGallery');
+    if(selectedImages.length === 0){
+      gallery.innerHTML = '<p style="font-size:0.85rem; color:#999;">لا توجد صور محددة حتى الآن</p>';
+      return;
+    }
+    gallery.innerHTML = selectedImages.map((img, idx) => `
+      <div class="gallery-item">
+        <img src="${escapeHtml(img)}" alt="">
+        <button class="remove-img" onclick="removeImage(${idx})">×</button>
+      </div>
+    `).join('');
+  }
+
+  window.removeImage = function(idx){
+    selectedImages.splice(idx, 1);
+    renderImageGallery();
+  };
+
   function resetForm(){
     document.getElementById('editIndex').value = -1;
-    ['f_nameAr','f_nameEn','f_price','f_oldPrice','f_discount','f_descAr','f_descEn','f_emoji','f_rating'].forEach(id => {
+    ['f_nameAr','f_nameEn','f_price','f_quantity','f_cost','f_oldPrice','f_discount','f_descAr','f_descEn','f_emoji','f_rating'].forEach(id => {
       document.getElementById(id).value = '';
     });
-    document.getElementById('f_imageFile').value = '';
-    document.getElementById('f_imagePreview').style.display = 'none';
+    document.getElementById('f_imageFiles').value = '';
+    selectedImages = [];
+    renderImageGallery();
     document.getElementById('f_available').value = 'yes';
     document.getElementById('f_category').value = 'Grocery';
     document.getElementById('formTitle').textContent = '➕ إضافة منتج جديد';
     document.getElementById('cancelEditBtn').style.display = 'none';
   }
 
-  document.getElementById('f_imageFile').addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    const preview = document.getElementById('f_imagePreview');
-    if(!file){ preview.style.display = 'none'; return; }
-    const reader = new FileReader();
-    reader.onload = (ev) => { preview.src = ev.target.result; preview.style.display = 'inline-block'; };
-    reader.readAsDataURL(file);
+  function updateStats(){
+    let totalSales = 0, totalProfit = 0, totalOrders = 0, lowStock = 0;
+    
+    salesData.forEach(sale => {
+      if(sale.status === 'confirmed'){
+        totalSales += parseFloat(sale.total) || 0;
+        totalProfit += parseFloat(sale.profit) || 0;
+        totalOrders++;
+      }
+    });
+
+    products.forEach(p => {
+      if((p.quantity || 0) <= 5 && (p.quantity || 0) > 0) lowStock++;
+    });
+
+    document.getElementById('totalSalesValue').textContent = totalSales.toFixed(2) + ' د.إ';
+    document.getElementById('totalProfitValue').textContent = totalProfit.toFixed(2) + ' د.إ';
+    document.getElementById('totalOrdersValue').textContent = totalOrders;
+    document.getElementById('lowStockValue').textContent = lowStock;
+  }
+
+  document.getElementById('f_imageFiles').addEventListener('change', (e) => {
+    const files = e.target.files;
+    selectedImages = [];
+    for(let file of files){
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        selectedImages.push(ev.target.result);
+        renderImageGallery();
+      };
+      reader.readAsDataURL(file);
+    }
   });
 
   document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
