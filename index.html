@@ -1555,8 +1555,13 @@
 <div class="modal-overlay" id="productModal">
   <div class="modal-box">
     <button class="modal-close" id="modalClose">×</button>
-    <img class="modal-img" id="mImg" src="" alt="">
-    <div class="modal-emoji" id="mEmoji">🛒</div>
+    <div style="position:relative; display:flex; align-items:center; justify-content:center; margin-bottom:16px;">
+      <img class="modal-img" id="mImg" src="" alt="" style="max-height:300px; object-fit:contain;">
+      <div class="modal-emoji" id="mEmoji" style="font-size:4rem;">🛒</div>
+      <button id="mImgPrev" style="position:absolute; left:10px; background:rgba(0,0,0,0.5); color:#fff; border:none; width:30px; height:30px; border-radius:50%; cursor:pointer; font-size:1.2rem; display:none;">‹</button>
+      <button id="mImgNext" style="position:absolute; right:10px; background:rgba(0,0,0,0.5); color:#fff; border:none; width:30px; height:30px; border-radius:50%; cursor:pointer; font-size:1.2rem; display:none;">›</button>
+      <div id="mImgCounter" style="position:absolute; bottom:10px; background:rgba(0,0,0,0.6); color:#fff; padding:4px 8px; border-radius:50px; font-size:0.8rem; display:none;"></div>
+    </div>
     <div class="modal-cat" id="mCat"></div>
     <h3 class="modal-title" id="mTitle"></h3>
     <div id="mRating" style="display:flex; justify-content:center; margin-bottom:6px;"></div>
@@ -2432,8 +2437,28 @@
       mAddBtn.disabled = true; mDirectWaBtn.disabled = true;
     } else { mAddBtn.disabled = false; mDirectWaBtn.disabled = false; }
     mPrice.innerHTML = priceHtml;
-    if(data.img){ mEmoji.style.display = 'none'; mImg.style.display = 'inline-block'; mImg.src = data.img; mImg.onerror = function(){ mImg.style.display = 'none'; mEmoji.style.display = 'inline-block'; mEmoji.textContent = data.emoji || '🛒'; }; }
-    else { mImg.style.display = 'none'; mEmoji.style.display = 'inline-block'; mEmoji.textContent = data.emoji || '🛒'; }
+    // دعم الصور المتعددة
+    let images = [];
+    try { images = data.images ? JSON.parse(data.images) : []; } catch(e) { images = []; }
+    if(images.length === 0 && data.img) images = [data.img];
+    
+    if(images.length > 0){
+      mEmoji.style.display = 'none';
+      mImg.style.display = 'inline-block';
+      mImg.src = images[0];
+      mImg.dataset.imageIndex = '0';
+      mImg.dataset.totalImages = images.length;
+      mImg.dataset.allImages = JSON.stringify(images);
+      mImg.onerror = function(){
+        mImg.style.display = 'none';
+        mEmoji.style.display = 'inline-block';
+        mEmoji.textContent = data.emoji || '🛒';
+      };
+    } else {
+      mImg.style.display = 'none';
+      mEmoji.style.display = 'inline-block';
+      mEmoji.textContent = data.emoji || '🛒';
+    }
     renderRelatedProducts(data);
   }
 
@@ -2455,7 +2480,14 @@
     });
   }
 
-  function openModal(productData){ currentModalProduct = productData; modalSelectedQty = 1; updateModalContent(); modalOverlay.classList.add('open'); trackGAEvent('product_view', { item_name: productData.nameEn }); }
+  function openModal(productData){ 
+    currentModalProduct = productData; 
+    modalSelectedQty = 1; 
+    updateModalContent();
+    setTimeout(() => updateImageGallery(), 100);
+    modalOverlay.classList.add('open'); 
+    trackGAEvent('product_view', { item_name: productData.nameEn }); 
+  }
   function closeModal(){ modalOverlay.classList.remove('open'); currentModalProduct = null; }
 
   modalClose.addEventListener('click', closeModal);
@@ -2478,6 +2510,51 @@
     const shareText = `${pName} - ${data.price} ${T[currentLang].currency}`;
     if(navigator.share){ try{ await navigator.share({ title: pName, text: shareText, url: window.location.href }); }catch(err){} }
     else { const d = document.createElement('textarea'); d.value = `${shareText} \n ${window.location.href}`; document.body.appendChild(d); d.select(); document.execCommand('copy'); document.body.removeChild(d); showToast(T[currentLang].copied); }
+  });
+  
+  // معرض الصور المتعددة
+  const mImgPrev = document.getElementById('mImgPrev');
+  const mImgNext = document.getElementById('mImgNext');
+  const mImgCounter = document.getElementById('mImgCounter');
+  
+  function updateImageGallery(){
+    const totalImages = parseInt(mImg.dataset.totalImages) || 1;
+    const currentIndex = parseInt(mImg.dataset.imageIndex) || 0;
+    
+    if(totalImages > 1){
+      mImgPrev.style.display = 'block';
+      mImgNext.style.display = 'block';
+      mImgCounter.style.display = 'block';
+      mImgCounter.textContent = `${currentIndex + 1} / ${totalImages}`;
+    } else {
+      mImgPrev.style.display = 'none';
+      mImgNext.style.display = 'none';
+      mImgCounter.style.display = 'none';
+    }
+  }
+  
+  mImgPrev.addEventListener('click', (e) => {
+    e.stopPropagation();
+    try{
+      const images = JSON.parse(mImg.dataset.allImages);
+      let currentIndex = parseInt(mImg.dataset.imageIndex) || 0;
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      mImg.src = images[currentIndex];
+      mImg.dataset.imageIndex = currentIndex;
+      updateImageGallery();
+    }catch(err){}
+  });
+  
+  mImgNext.addEventListener('click', (e) => {
+    e.stopPropagation();
+    try{
+      const images = JSON.parse(mImg.dataset.allImages);
+      let currentIndex = parseInt(mImg.dataset.imageIndex) || 0;
+      currentIndex = (currentIndex + 1) % images.length;
+      mImg.src = images[currentIndex];
+      mImg.dataset.imageIndex = currentIndex;
+      updateImageGallery();
+    }catch(err){}
   });
 
   // ===== الأسئلة الشائعة =====
@@ -2567,6 +2644,8 @@
       const available = escapeHTML(p.available || 'yes').toLowerCase();
       const badgeAr = escapeHTML(p.badgeAr), badgeEn = escapeHTML(p.badgeEn);
       const ratingVal = p.rating ? Math.round(Number(p.rating)) : 0;
+      const quantity = p.quantity ? parseInt(p.quantity) : 0;
+      const images = Array.isArray(p.images) ? p.images.map(i => escapeHTML(i)) : (img ? [img] : []);
 
       const card = document.createElement('div');
       card.className = 'prod-card';
@@ -2575,6 +2654,8 @@
       card.dataset.emoji = emoji; card.dataset.img = img; card.dataset.categoryAr = categoryAr;
       card.dataset.categoryEn = categoryEn; card.dataset.descAr = descAr; card.dataset.descEn = descEn;
       card.dataset.available = available; card.dataset.rating = ratingVal > 0 ? ratingVal : '';
+      card.dataset.quantity = quantity;
+      card.dataset.images = JSON.stringify(images);
 
       let badgeHtml = '';
       if(currentLang === 'ar' && badgeAr) badgeHtml = `<div class="prod-badge">${badgeAr}</div>`;
@@ -2583,6 +2664,9 @@
 
       let stockOverlayHtml = '';
       if(available === 'no'){ const textLabel = currentLang === 'ar' ? T.ar.outOfStock : T.en.outOfStock; stockOverlayHtml = `<div class="out-of-stock-badge"><span class="out-of-stock-text">${textLabel}</span></div>`; }
+      
+      let quantityBadgeHtml = '';
+      if(quantity > 0 && quantity <= 5){ quantityBadgeHtml = `<div class="prod-quantity-badge" style="position:absolute;top:50%;right:50%;transform:translate(50%,-50%);background:rgba(255,255,255,0.95);padding:4px 8px;border-radius:6px;font-size:0.75rem;font-weight:700;color:var(--clay);">${currentLang === 'ar' ? 'متبقي: ' + quantity : 'Only ' + quantity + ' left'}</div>`; }
 
       let priceDisplayHtml = `<span class="price">${price} ${T[currentLang].currency}</span>`;
       if(oldPrice && Number(oldPrice) > Number(price)) priceDisplayHtml = `<span class="price">${price} ${T[currentLang].currency}</span><span class="price-old">${oldPrice} ${T[currentLang].currency}</span>`;
@@ -2591,7 +2675,7 @@
       if(ratingVal >= 1 && ratingVal <= 5) ratingStarsHtml = `<div class="prod-rating">${'★'.repeat(ratingVal)}${'☆'.repeat(5-ratingVal)}</div>`;
 
       card.innerHTML = `
-        ${badgeHtml}${stockOverlayHtml}
+        ${badgeHtml}${stockOverlayHtml}${quantityBadgeHtml}
         <button class="prod-wishlist-btn" aria-label="أضف للمفضلة">🤍</button>
         <div class="prod-thumb" style="background:var(--sand);">
           <img src="${img}" alt="" class="prod-img" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -2602,7 +2686,8 @@
           <h4 data-ar="${nameAr}" data-en="${nameEn}">${currentLang === 'ar' ? nameAr : nameEn}</h4>
           ${ratingStarsHtml}
           <div class="prod-foot">${priceDisplayHtml}<button class="add-btn" aria-label="أضف للسلة" ${available === 'no' ? 'disabled' : ''}>+</button></div>
-        </div>`;
+        </div>
+      `;
       grid.appendChild(card);
     });
     bindProductCardEvents();
