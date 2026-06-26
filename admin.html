@@ -1535,7 +1535,8 @@
 
 <script>
 
-  // ===== GitHub API Configuration & Sync (Enhanced) =====
+  // ===== GitHub OAuth Proxy Configuration =====
+  const PROXY_URL = 'https://albostan-oauth-proxy.vercel.app';
   const OWNER = 'hassansyrn-cmyk';
   const REPO = 'albostan-store';
   const BRANCH = 'main';
@@ -1590,7 +1591,7 @@
 
   async function loadAllData() {
     try {
-      showStatus('جاري مزامنة البيانات من GitHub...', 'loading');
+      showStatus('جاري مزامنة البيانات...', 'loading');
       const pData = await ghFetch(PRODUCTS_PATH);
       if (pData) { products = pData.content; prodsSha = pData.sha; }
       const cData = await ghFetch(COUPONS_PATH);
@@ -1604,6 +1605,40 @@
     } catch (e) {
       showStatus('فشل المزامنة: ' + e.message, 'err');
     }
+  }
+
+  // OAuth Login Logic
+  function login() {
+    window.location.href = `${PROXY_URL}/api/auth`;
+  }
+
+  async function checkAuth() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    const storedToken = localStorage.getItem('albostan_admin_token');
+
+    if (code) {
+      showStatus('جاري استخراج التوكن...', 'loading');
+      try {
+        const res = await fetch(`${PROXY_URL}/api/token?code=${code}`);
+        const data = await res.json();
+        if (data.access_token) {
+          accessToken = data.access_token;
+          localStorage.setItem('albostan_admin_token', accessToken);
+          window.history.replaceState({}, document.title, window.location.pathname);
+          initPanel();
+        }
+      } catch (e) { showStatus('خطأ في تسجيل الدخول', 'err'); }
+    } else if (storedToken) {
+      accessToken = storedToken;
+      initPanel();
+    }
+  }
+
+  function initPanel() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+    loadAllData();
   }
 
   async function saveProductsFile(msg = 'Update products') {
