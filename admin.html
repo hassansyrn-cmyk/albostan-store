@@ -1561,9 +1561,13 @@
     } catch(e) { return atob(str); }
   }
 
+  function ghHeaders() {
+    return { 'Authorization': `Bearer ${accessToken}`, 'Accept': 'application/vnd.github+json' };
+  }
+
   async function ghFetch(path) {
     const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}?ref=${BRANCH}&_cb=${Date.now()}`, {
-      headers: { 'Authorization': `Bearer ${accessToken}`, 'Accept': 'application/vnd.github+json' }
+      headers: ghHeaders()
     });
     if (!res.ok) return null;
     const data = await res.json();
@@ -1608,9 +1612,9 @@
   }
 
   // OAuth Login Logic
-  function login() {
+  window.login = function() {
     window.location.href = `${PROXY_URL}/api/auth`;
-  }
+  };
 
   async function checkAuth() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -1627,6 +1631,8 @@
           localStorage.setItem('albostan_admin_token', accessToken);
           window.history.replaceState({}, document.title, window.location.pathname);
           initPanel();
+        } else {
+          showStatus('فشل استخراج التوكن', 'err');
         }
       } catch (e) { showStatus('خطأ في تسجيل الدخول', 'err'); }
     } else if (storedToken) {
@@ -2771,3 +2777,4 @@
 
 </body>
 </html>
+<script>checkAuth();</script>
