@@ -1621,8 +1621,27 @@
     document.getElementById('f_descEn').value = p.descEn || '';
     document.getElementById('f_emoji').value = p.emoji || '🛒';
     document.getElementById('f_rating').value = p.rating || '';
-    document.getElementById('f_badgeAr').value = p.badgeAr || '';
-    document.getElementById('f_badgeEn').value = p.badgeEn || '';
+    const badgeAr = p.badgeAr || '';
+    const badgeEn = p.badgeEn || '';
+    document.getElementById('f_badgeAr').value = badgeAr;
+    document.getElementById('f_badgeEn').value = badgeEn;
+    
+    if (badgeMap[badgeAr]) {
+      document.getElementById('f_badgeSelectAr').value = badgeAr;
+      document.getElementById('f_badgeSelectEn').value = badgeMap[badgeAr];
+      document.getElementById('f_badgeAr').style.display = 'none';
+      document.getElementById('f_badgeEn').style.display = 'none';
+    } else if (badgeAr === "") {
+      document.getElementById('f_badgeSelectAr').value = "";
+      document.getElementById('f_badgeSelectEn').value = "";
+      document.getElementById('f_badgeAr').style.display = 'none';
+      document.getElementById('f_badgeEn').style.display = 'none';
+    } else {
+      document.getElementById('f_badgeSelectAr').value = "أخرى";
+      document.getElementById('f_badgeSelectEn').value = "Other";
+      document.getElementById('f_badgeAr').style.display = 'block';
+      document.getElementById('f_badgeEn').style.display = 'block';
+    }
     document.getElementById('f_available').value = p.available || 'yes';
     document.getElementById('formTitle').textContent = '✏️ تعديل: ' + p.nameAr;
     document.getElementById('cancelEditBtn').style.display = 'inline-block';
@@ -1876,6 +1895,48 @@
   setupBiDirectionalTranslate('f_nameAr', 'f_nameEn');
   setupBiDirectionalTranslate('f_descAr', 'f_descEn');
   setupBiDirectionalTranslate('f_badgeAr', 'f_badgeEn');
+
+  // ===== ربط الشارات الذكي (مصحح) =====
+  const badgeMap = {
+    'جديد': 'New',
+    'عرض خاص': 'Special Offer',
+    'تخفيضات': 'Sale',
+    'كمية محدودة': 'Limited Quantity',
+    'عرض لفترة محدودة': 'Limited Time Offer',
+    'صفقة لا تفوت': 'Unmissable Deal'
+  };
+  const badgeMapEnToAr = Object.fromEntries(Object.entries(badgeMap).map(([k, v]) => [v, k]));
+
+  function handleBadgeChange(sourceSelectId, targetSelectId, sourceInputId, targetInputId, map) {
+    const sourceSelect = document.getElementById(sourceSelectId);
+    const targetSelect = document.getElementById(targetSelectId);
+    const sourceInput = document.getElementById(sourceInputId);
+    const targetInput = document.getElementById(targetInputId);
+    
+    const val = sourceSelect.value;
+    if (val === 'أخرى' || val === 'Other') {
+      sourceInput.style.display = 'block';
+      targetInput.style.display = 'block';
+      targetSelect.value = (sourceSelectId === 'f_badgeSelectAr') ? 'Other' : 'أخرى';
+    } else {
+      sourceInput.style.display = 'none';
+      targetInput.style.display = 'none';
+      sourceInput.value = val;
+      if (map[val]) {
+        targetSelect.value = map[val];
+        targetInput.value = map[val];
+      } else if (val === "") {
+        targetSelect.value = "";
+        targetInput.value = "";
+      }
+    }
+  }
+
+  document.getElementById('f_badgeSelectAr').addEventListener('change', () => 
+    handleBadgeChange('f_badgeSelectAr', 'f_badgeSelectEn', 'f_badgeAr', 'f_badgeEn', badgeMap));
+  
+  document.getElementById('f_badgeSelectEn').addEventListener('change', () => 
+    handleBadgeChange('f_badgeSelectEn', 'f_badgeSelectAr', 'f_badgeEn', 'f_badgeAr', badgeMapEnToAr));
   
   // ===== اختيار الإيموجي الذكي (نسخة موسعة) =====
   const emojiKeywords = {
