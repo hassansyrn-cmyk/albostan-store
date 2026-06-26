@@ -23,7 +23,6 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-THWNP61B6M"></script>
 <script>
 
-  // GitHub API Configuration
   const OWNER = 'hassansyrn-cmyk';
   const REPO = 'albostan-store';
   const BRANCH = 'main';
@@ -42,19 +41,14 @@
       if(pRes.ok) {
         const pData = await pRes.json();
         const products = JSON.parse(b64DecodeUnicode(pData.content));
-        if(Array.isArray(products) && products.length > 0) {
-          renderProductsFromSheet(products);
-          console.log('Products loaded from GitHub');
-        }
+        if(Array.isArray(products)) renderProductsFromSheet(products);
       }
       const cRes = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${COUPONS_PATH}?ref=${BRANCH}&_cb=${Date.now()}`);
       if(cRes.ok) {
         const cData = await cRes.json();
-        const coupons = b64DecodeUnicode(cData.content);
-        localStorage.setItem('albostan_coupons', coupons);
-        console.log('Coupons loaded from GitHub');
+        localStorage.setItem('albostan_coupons', b64DecodeUnicode(cData.content));
       }
-    } catch(e) { console.error('GitHub Sync Error:', e); }
+    } catch(e) {}
   }
 
   window.dataLayer = window.dataLayer || [];
@@ -2228,10 +2222,15 @@
     const coupon = coupons.find(c => c.code === couponEntered && c.active);
     
     if (coupon) {
+      if (coupon.minOrder && subtotal < coupon.minOrder) {
+        showToast(currentLang === "ar" ? "الحد الأدنى للكوبون " + coupon.minOrder : "Min order for coupon " + coupon.minOrder);
+        return;
+      }
       if (coupon.expiry && new Date(coupon.expiry) < new Date()) {
         discountRow.style.display = 'none';
       } else if (coupon.type === 'percentage') {
         discount = subtotal * (coupon.value / 100);
+        if(coupon.maxDiscount && discount > coupon.maxDiscount) discount = coupon.maxDiscount;
         discountRow.style.display = 'flex';
         document.getElementById('summaryDiscountValue').textContent = `${discount.toFixed(2)} AED`;
       } else if (coupon.type === 'fixed') {
@@ -2273,11 +2272,16 @@
     const coupon = coupons.find(c => c.code === couponEntered && c.active);
     
     if (coupon) {
+      if (coupon.minOrder && subtotal < coupon.minOrder) {
+        showToast(currentLang === "ar" ? "الحد الأدنى للكوبون " + coupon.minOrder : "Min order for coupon " + coupon.minOrder);
+        return;
+      }
       if (coupon.expiry && new Date(coupon.expiry) < new Date()) {
         showToast(currentLang === 'ar' ? 'انتهت صلاحية الكوبون' : 'Coupon expired');
         return;
       } else if (coupon.type === 'percentage') {
         discount = subtotal * (coupon.value / 100);
+        if(coupon.maxDiscount && discount > coupon.maxDiscount) discount = coupon.maxDiscount;
       } else if (coupon.type === 'fixed') {
         discount = coupon.value;
       }
@@ -2836,7 +2840,7 @@
   renderCart();
   renderWishlist();
   renderLastOrderBox();
-  loadDataFromGitHub(); // Added GitHub Sync
+    loadDataFromGitHub();
 </script>
 </body>
 </html>
