@@ -1,4 +1,4 @@
-// api/log-order.js
+// api/log-order.js - نسخة مؤقتة بالتوكن مباشرة
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -6,14 +6,11 @@ export default async function handler(req, res) {
 
   const { orderId, orderDate, items, customer, totals } = req.body;
   
-  const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+  // مؤقت: التوكن مدمج مباشرة (غيّره لاحقاً لـ env)
+  const GITHUB_TOKEN = "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";
   const OWNER = 'hassansyrn-cmyk';
   const REPO = 'albostan-store';
   const BRANCH = 'main';
-
-  if (!GITHUB_TOKEN) {
-    return res.status(500).json({ error: 'Missing GITHUB_TOKEN' });
-  }
 
   const headers = {
     'Authorization': `Bearer ${GITHUB_TOKEN}`,
@@ -23,14 +20,14 @@ export default async function handler(req, res) {
   };
 
   try {
-    // 1. Ø¬Ù„Ø¨ Ø§Ù„Ù…Ù†ØªØ¬Ø§Øª
+    // 1. جلب المنتجات
     const prodRes = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/products.json?ref=${BRANCH}`, { headers });
     if (!prodRes.ok) throw new Error('Failed to fetch products');
     const prodData = await prodRes.json();
     const products = JSON.parse(Buffer.from(prodData.content, 'base64').toString('utf-8'));
     const prodSha = prodData.sha;
 
-    // 2. Ø®ØµÙ… Ø§Ù„ÙƒÙ…ÙŠØ§Øª
+    // 2. خصم الكميات
     items.forEach(item => {
       const p = products.find(pr => pr.nameAr === item.nameAr);
       if (p) {
@@ -39,7 +36,7 @@ export default async function handler(req, res) {
       }
     });
 
-    // 3. Ø­ÙØ¸ Ø§Ù„Ù…Ù†ØªØ¬Ø§Øª
+    // 3. حفظ المنتجات
     await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/products.json`, {
       method: 'PUT',
       headers,
@@ -51,7 +48,7 @@ export default async function handler(req, res) {
       })
     });
 
-    // 4. Ø¬Ù„Ø¨ Ø§Ù„Ù…Ø¨ÙŠØ¹Ø§Øª
+    // 4. جلب المبيعات
     let sales = [];
     let salesSha = null;
     const salesRes = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/sales_data.json?ref=${BRANCH}`, { headers });
@@ -61,7 +58,7 @@ export default async function handler(req, res) {
       salesSha = salesData.sha;
     }
 
-    // 5. Ø¥Ø¶Ø§ÙØ© Ø§Ù„Ù…Ø¨ÙŠØ¹Ø§Øª
+    // 5. إضافة المبيعات
     items.forEach(item => {
       const p = products.find(pr => pr.nameAr === item.nameAr);
       const cost = parseFloat(p?.cost || 0);
@@ -84,7 +81,7 @@ export default async function handler(req, res) {
       });
     });
 
-    // 6. Ø­ÙØ¸ Ø§Ù„Ù…Ø¨ÙŠØ¹Ø§Øª
+    // 6. حفظ المبيعات
     await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/sales_data.json`, {
       method: 'PUT',
       headers,
