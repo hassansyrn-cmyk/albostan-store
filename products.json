@@ -123,5 +123,27 @@
     "images": [
       "images/1782466527069-atci3ttxx-94686.jpg"
     ]
+  },
+  {
+    "nameAr": "زهور",
+    "nameEn": "Flowers",
+    "price": "20",
+    "categoryAr": "المنزل والحديقة",
+    "categoryEn": "Home & Garden",
+    "quantity": 10,
+    "cost": "5",
+    "oldPrice": "35",
+    "discount": "خصم 43%",
+    "descAr": "ورود جميلة",
+    "descEn": "Beautiful roses",
+    "emoji": "🏠",
+    "rating": "",
+    "badgeAr": "جديد",
+    "badgeEn": "New",
+    "available": "yes",
+    "img": "images/1782504210157-1ug39hi44-1901.jpg",
+    "images": [
+      "images/1782504210157-1ug39hi44-1901.jpg"
+    ]
   }
 ]
