@@ -33,5 +33,18 @@
     "usedCount": 0,
     "createdAt": "2026-06-26T21:46:06.584Z",
     "updatedAt": "2026-06-26T21:46:06.584Z"
+  },
+  {
+    "code": "LUCKY",
+    "type": "fixed",
+    "value": 15,
+    "minOrder": 200,
+    "maxDiscount": 0,
+    "expiry": "2026-06-30",
+    "limit": 1,
+    "active": true,
+    "usedCount": 0,
+    "createdAt": "2026-06-26T22:05:16.903Z",
+    "updatedAt": "2026-06-26T22:05:16.903Z"
   }
 ]
