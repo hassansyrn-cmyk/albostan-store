@@ -106,6 +106,8 @@
     "nameAr": "بطارية توشيبا",
     "nameEn": "Toshiba Battery",
     "price": "10",
+    "categoryAr": "",
+    "categoryEn": "",
     "quantity": 10,
     "cost": "5",
     "oldPrice": "15",
@@ -113,6 +115,10 @@
     "descAr": "",
     "descEn": "",
     "emoji": "🛒",
+    "rating": "",
+    "badgeAr": "تخفيضات",
+    "badgeEn": "Discounts",
+    "available": "yes",
     "img": "images/1782466527069-atci3ttxx-94686.jpg",
     "images": [
       "images/1782466527069-atci3ttxx-94686.jpg"
