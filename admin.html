@@ -7,6 +7,11 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=El+Messiri:wght@600;700&display=swap" rel="stylesheet">
+<!-- مكتبات متقدمة للميزات الجديدة -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 <style>
   :root {
     --clay: #1F5E3B;
@@ -985,6 +990,22 @@
           <span class="icon">📈</span>
           <span>التقارير والتحليلات</span>
         </button>
+        <button class="nav-btn" data-target="analytics">
+          <span class="icon">📊</span>
+          <span>التحليلات المتقدمة</span>
+        </button>
+        <button class="nav-btn" data-target="coupons">
+          <span class="icon">🎟️</span>
+          <span>إدارة الكوبونات</span>
+        </button>
+        <button class="nav-btn" data-target="bulk-actions">
+          <span class="icon">⚙️</span>
+          <span>الإجراءات الجماعية</span>
+        </button>
+        <button class="nav-btn" data-target="activity-log">
+          <span class="icon">📋</span>
+          <span>سجل النشاطات</span>
+        </button>
       </nav>
       
       <div class="user-box">
@@ -1345,6 +1366,156 @@
           <h3 style="margin-bottom: 20px; color: var(--clay);">📦 تقرير المخزون</h3>
           <div id="inventoryReportArea">
             <p style="text-align:center; padding:20px; color:#888;">لا توجد منتجات في المخزن</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- ===== قسم التحليلات المتقدمة ===== -->
+      <div id="analytics" class="tab-content">
+        <div class="page-header">
+          <h1>📊 التحليلات المتقدمة</h1>
+          <p>رسوم بيانية تفاعلية وتحليلات معمقة لأداء متجرك</p>
+        </div>
+        
+        <div class="stats-grid">
+          <div class="box" style="grid-column: span 2;">
+            <h3>📈 منحنى المبيعات والأرباح</h3>
+            <canvas id="salesChart" height="80"></canvas>
+          </div>
+          <div class="box">
+            <h3>🏆 أفضل 5 منتجات</h3>
+            <canvas id="topProductsChart" height="80"></canvas>
+          </div>
+        </div>
+        
+        <div class="box">
+          <h3>⚠️ المنتجات ذات المخزون المنخفض</h3>
+          <div id="lowStockAlert"></div>
+        </div>
+        
+        <div class="stats-grid">
+          <button class="btn primary" onclick="exportToExcel()">📥 تحميل Excel</button>
+          <button class="btn primary" onclick="exportToPDF()">📄 تحميل PDF</button>
+        </div>
+      </div>
+      
+      <!-- ===== قسم إدارة الكوبونات ===== -->
+      <div id="coupons" class="tab-content">
+        <div class="page-header">
+          <h1>🎟️ إدارة الكوبونات والخصومات</h1>
+          <p>إنشاء وإدارة أكواد الخصم للعملاء</p>
+        </div>
+        
+        <div class="box">
+          <h3 style="margin-bottom: 20px; color: var(--clay);">➕ إضافة كوبون جديد</h3>
+          
+          <div class="form-row">
+            <div>
+              <label>كود الكوبون <span class="required">*</span></label>
+              <input id="c_code" placeholder="مثال: RAMADAN20">
+            </div>
+            <div>
+              <label>نوع الخصم <span class="required">*</span></label>
+              <select id="c_type">
+                <option value="percentage">نسبة مئوية (%)</option>
+                <option value="fixed">مبلغ ثابت (د.إ)</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div>
+              <label>قيمة الخصم <span class="required">*</span></label>
+              <input type="number" id="c_value" placeholder="20" min="0">
+            </div>
+            <div>
+              <label>تاريخ الانتهاء</label>
+              <input type="date" id="c_expiry">
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div>
+              <label>عدد الاستخدامات المسموحة</label>
+              <input type="number" id="c_limit" placeholder="غير محدود" min="0">
+            </div>
+          </div>
+          
+          <button class="btn primary" onclick="addCoupon()">✅ إضافة الكوبون</button>
+        </div>
+        
+        <div class="box">
+          <h3>الكوبونات النشطة</h3>
+          <div id="couponsListArea"></div>
+        </div>
+      </div>
+      
+      <!-- ===== قسم الإجراءات الجماعية ===== -->
+      <div id="bulk-actions" class="tab-content">
+        <div class="page-header">
+          <h1>⚙️ الإجراءات الجماعية</h1>
+          <p>تطبيق تغييرات على عدة منتجات في نفس الوقت</p>
+        </div>
+        
+        <div class="box">
+          <h3 style="margin-bottom: 20px; color: var(--clay);">💰 تعديل الأسعار الجماعي</h3>
+          
+          <div class="form-row">
+            <div>
+              <label>اختر القسم <span class="required">*</span></label>
+              <select id="b_category">
+                <option value="">-- جميع الأقسام --</option>
+                <option value="بقالة">بقالة</option>
+                <option value="إلكترونيات">إلكترونيات</option>
+                <option value="أزياء">أزياء</option>
+                <option value="المنزل والحديقة">المنزل والحديقة</option>
+                <option value="أطفال">أطفال</option>
+                <option value="رياضة">رياضة</option>
+              </select>
+            </div>
+            <div>
+              <label>نوع التعديل <span class="required">*</span></label>
+              <select id="b_type">
+                <option value="increase">زيادة</option>
+                <option value="decrease">خفض</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div>
+              <label>النسبة المئوية <span class="required">*</span></label>
+              <input type="number" id="b_percentage" placeholder="10" min="0" max="100">
+            </div>
+          </div>
+          
+          <button class="btn primary" onclick="applyBulkPriceChange()">✅ تطبيق التغيير</button>
+        </div>
+      </div>
+      
+      <!-- ===== قسم سجل النشاطات ===== -->
+      <div id="activity-log" class="tab-content">
+        <div class="page-header">
+          <h1>📋 سجل النشاطات</h1>
+          <p>تتبع جميع التغييرات والعمليات في المتجر</p>
+        </div>
+        
+        <div class="box">
+          <h3>آخر النشاطات</h3>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>التاريخ والوقت</th>
+                  <th>نوع النشاط</th>
+                  <th>التفاصيل</th>
+                  <th>الحالة</th>
+                </tr>
+              </thead>
+              <tbody id="activityLogArea">
+                <tr><td colspan="4" style="text-align:center; color:#888;">لا توجد نشاطات مسجلة حالياً</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -2207,12 +2378,262 @@
   document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
   document.getElementById('recordSaleBtn').addEventListener('click', handleRecordSale);
   
+  // ===== المتغيرات العامة للميزات الجديدة =====
+  let coupons = [];
+  let activityLog = [];
+  let salesChart = null;
+  let topProductsChart = null;
+  
+  // ===== نظام الرسوم البيانية =====
+  function initializeCharts() {
+    const salesCtx = document.getElementById('salesChart')?.getContext('2d');
+    if (salesCtx) {
+      const last7Days = [];
+      const salesValues = [];
+      const profitValues = [];
+      
+      for (let i = 6; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        last7Days.push(date.toLocaleDateString('ar-SA', { month: 'short', day: 'numeric' }));
+        
+        const daySales = salesData.filter(s => new Date(s.date).toDateString() === date.toDateString());
+        salesValues.push(daySales.reduce((sum, s) => sum + parseFloat(s.total || 0), 0));
+        profitValues.push(daySales.reduce((sum, s) => sum + parseFloat(s.profit || 0), 0));
+      }
+      
+      if (salesChart) salesChart.destroy();
+      salesChart = new Chart(salesCtx, {
+        type: 'line',
+        data: {
+          labels: last7Days,
+          datasets: [
+            {
+              label: 'المبيعات',
+              data: salesValues,
+              borderColor: '#1F5E3B',
+              backgroundColor: 'rgba(31, 94, 59, 0.1)',
+              tension: 0.4
+            },
+            {
+              label: 'الأرباح',
+              data: profitValues,
+              borderColor: '#c9a961',
+              backgroundColor: 'rgba(201, 169, 97, 0.1)',
+              tension: 0.4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: true, position: 'top' } }
+        }
+      });
+    }
+    
+    const topCtx = document.getElementById('topProductsChart')?.getContext('2d');
+    if (topCtx) {
+      const productSales = {};
+      salesData.forEach(s => {
+        productSales[s.productName] = (productSales[s.productName] || 0) + parseInt(s.quantity || 0);
+      });
+      
+      const topProducts = Object.entries(productSales).sort((a, b) => b[1] - a[1]).slice(0, 5);
+      
+      if (topProductsChart) topProductsChart.destroy();
+      topProductsChart = new Chart(topCtx, {
+        type: 'doughnut',
+        data: {
+          labels: topProducts.map(p => p[0]),
+          datasets: [{
+            data: topProducts.map(p => p[1]),
+            backgroundColor: ['#1F5E3B', '#c9a961', '#2ecc71', '#f39c12', '#e63946']
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+      });
+    }
+  }
+  
+  // ===== نظام المخزون المنخفض =====
+  function displayLowStockAlert() {
+    const lowStockProducts = products.filter(p => parseInt(p.quantity || 0) < 5);
+    const alertArea = document.getElementById('lowStockAlert');
+    
+    if (lowStockProducts.length === 0) {
+      alertArea.innerHTML = '<p style="text-align:center; color:#2ecc71; padding:20px;">✅ جميع المنتجات لديها مخزون كافي</p>';
+    } else {
+      alertArea.innerHTML = lowStockProducts.map(p => `
+        <div style="padding:12px; background:#fff3cd; border-right:4px solid #f39c12; margin-bottom:10px; border-radius:8px;">
+          <strong>${p.nameAr}</strong> - الكمية: <span style="color:#f39c12;">${p.quantity}</span>
+        </div>
+      `).join('');
+    }
+  }
+  
+  // ===== نظام تصدير البيانات =====
+  function exportToExcel() {
+    const data = products.map(p => ({
+      'الاسم بالعربي': p.nameAr,
+      'الاسم بالإنجليزي': p.nameEn,
+      'السعر': p.price,
+      'الكمية': p.quantity,
+      'القسم': p.categoryAr
+    }));
+    
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'المنتجات');
+    XLSX.writeFile(wb, `منتجات_${new Date().toISOString().split('T')[0]}.xlsx`);
+    logActivity('تصدير', 'تم تصدير البيانات إلى Excel', 'success');
+  }
+  
+  function exportToPDF() {
+    const element = document.createElement('div');
+    element.innerHTML = `
+      <h1>قائمة المنتجات</h1>
+      <table style="width:100%; border-collapse:collapse;">
+        <tr style="background:#1F5E3B; color:white;">
+          <th style="border:1px solid #ddd; padding:8px;">الاسم</th>
+          <th style="border:1px solid #ddd; padding:8px;">السعر</th>
+          <th style="border:1px solid #ddd; padding:8px;">الكمية</th>
+        </tr>
+        ${products.map(p => `
+          <tr>
+            <td style="border:1px solid #ddd; padding:8px;">${p.nameAr}</td>
+            <td style="border:1px solid #ddd; padding:8px;">${p.price}</td>
+            <td style="border:1px solid #ddd; padding:8px;">${p.quantity}</td>
+          </tr>
+        `).join('')}
+      </table>
+    `;
+    
+    const opt = { margin: 10, filename: `منتجات_${new Date().toISOString().split('T')[0]}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' } };
+    html2pdf().set(opt).from(element).save();
+    logActivity('تصدير', 'تم تصدير البيانات إلى PDF', 'success');
+  }
+  
+  // ===== نظام الكوبونات =====
+  async function addCoupon() {
+    const code = document.getElementById('c_code').value.trim().toUpperCase();
+    const type = document.getElementById('c_type').value;
+    const value = parseFloat(document.getElementById('c_value').value);
+    const expiry = document.getElementById('c_expiry').value;
+    const limit = parseInt(document.getElementById('c_limit').value) || null;
+    
+    if (!code || !value) {
+      showStatus('يرجى ملء الحقول المطلوبة', 'err');
+      return;
+    }
+    
+    const coupon = { code, type, value, expiry, limit, active: true, usedCount: 0, createdAt: new Date().toISOString() };
+    coupons.push(coupon);
+    
+    document.getElementById('c_code').value = '';
+    document.getElementById('c_value').value = '';
+    document.getElementById('c_expiry').value = '';
+    document.getElementById('c_limit').value = '';
+    
+    renderCouponsList();
+    showStatus('تم إضافة الكوبون بنجاح', 'ok');
+    logActivity('كوبون', `تم إضافة كوبون: ${code}`, 'success');
+  }
+  
+  function renderCouponsList() {
+    const area = document.getElementById('couponsListArea');
+    if (coupons.length === 0) {
+      area.innerHTML = '<p style="text-align:center; color:#888; padding:20px;">لا توجد كوبونات مسجلة</p>';
+      return;
+    }
+    
+    area.innerHTML = coupons.map((c, idx) => `
+      <div style="padding:15px; background:${c.active ? '#e8f5e9' : '#ffebee'}; border-radius:8px; margin-bottom:10px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <strong style="font-size:1.1rem;">${c.code}</strong>
+            <p style="color:#666; font-size:0.9rem; margin-top:5px;">خصم ${c.type === 'percentage' ? c.value + '%' : c.value + ' د.إ'} ${c.expiry ? '| انتهاء: ' + c.expiry : ''}</p>
+          </div>
+          <div>
+            <button class="btn small" onclick="toggleCoupon(${idx})" style="background:${c.active ? '#f39c12' : '#2ecc71'};">${c.active ? 'تعطيل' : 'تفعيل'}</button>
+            <button class="btn danger small" onclick="deleteCoupon(${idx})">حذف</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+  
+  function toggleCoupon(idx) { coupons[idx].active = !coupons[idx].active; renderCouponsList(); }
+  function deleteCoupon(idx) { coupons.splice(idx, 1); renderCouponsList(); logActivity('كوبون', 'تم حذف كوبون', 'warning'); }
+  
+  // ===== نظام الإجراءات الجماعية =====
+  async function applyBulkPriceChange() {
+    const category = document.getElementById('b_category').value;
+    const type = document.getElementById('b_type').value;
+    const percentage = parseFloat(document.getElementById('b_percentage').value);
+    
+    if (!percentage || percentage < 0) {
+      showStatus('يرجى إدخال نسبة صحيحة', 'err');
+      return;
+    }
+    
+    let updated = 0;
+    products.forEach(p => {
+      if (!category || p.categoryAr === category) {
+        const oldPrice = parseFloat(p.price);
+        const change = (oldPrice * percentage) / 100;
+        p.price = type === 'increase' ? (oldPrice + change).toFixed(2) : (oldPrice - change).toFixed(2);
+        updated++;
+      }
+    });
+    
+    await saveProductsToGitHub();
+    showStatus(`تم تعديل ${updated} منتج`, 'ok');
+    logActivity('تعديل أسعار', `تم تعديل ${updated} منتج بنسبة ${percentage}%`, 'success');
+  }
+  
+  // ===== نظام سجل النشاطات =====
+  function logActivity(type, details, status = 'info') {
+    const entry = {
+      timestamp: new Date().toLocaleString('ar-SA'),
+      type,
+      details,
+      status
+    };
+    activityLog.unshift(entry);
+    if (activityLog.length > 100) activityLog.pop();
+    renderActivityLog();
+  }
+  
+  function renderActivityLog() {
+    const tbody = document.getElementById('activityLogArea');
+    if (activityLog.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#888;">لا توجد نشاطات مسجلة</td></tr>';
+      return;
+    }
+    
+    tbody.innerHTML = activityLog.map(log => `
+      <tr>
+        <td>${log.timestamp}</td>
+        <td>${log.type}</td>
+        <td>${log.details}</td>
+        <td><span style="padding:4px 8px; background:${log.status === 'success' ? '#2ecc71' : log.status === 'warning' ? '#f39c12' : '#2196f3'}; color:white; border-radius:4px; font-size:0.85rem;">${log.status}</span></td>
+      </tr>
+    `).join('');
+  }
+  
   // ===== التهيئة =====
   window.addEventListener('load', () => {
     const token = getStoredToken();
     if (token) {
       accessToken = token;
       showAdminPanel();
+      setTimeout(() => {
+        initializeCharts();
+        displayLowStockAlert();
+        renderCouponsList();
+        renderActivityLog();
+      }, 500);
     }
     handleOAuthCallback();
   });
