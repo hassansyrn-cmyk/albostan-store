@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=El+Messiri:wght@600;700&display=swap" rel="stylesheet">
 <!-- مكتبات متقدمة للميزات الجديدة -->
 
-  // ===== نظام الكوبونات المطور والمزامن =====
+  // ===== نظام مزامنة الكوبونات المطور =====
   const COUPONS_PATH = 'coupons.json';
   let couponsFileSha = null;
 
@@ -75,10 +75,10 @@
   };
 
   window.deleteCoupon = async function(code) {
-    if (!confirm('حذف الكوبون؟')) return;
+    if (!confirm('هل أنت متأكد من حذف الكوبون؟')) return;
     coupons = coupons.filter(c => c.code !== code);
     try {
-      showStatus('جاري الحذف...', 'loading');
+      showStatus('جاري الحذف من GitHub...', 'loading');
       await saveCouponsFile('Delete coupon: ' + code);
       renderCouponsList();
       showStatus('تم الحذف بنجاح ✅', 'ok');
@@ -87,15 +87,17 @@
 
   function renderCouponsList() {
     const area = document.getElementById('couponsListArea');
-    if (!area || coupons.length === 0) { 
-      if(area) area.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">لا توجد كوبونات</p>'; 
+    if (!area) return;
+    if (coupons.length === 0) { 
+      area.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">لا توجد كوبونات حالياً</p>'; 
       return; 
     }
     area.innerHTML = coupons.map(c => `
-      <div class="product-row">
+      <div class="product-row" style="margin-bottom: 10px; border-radius: 12px; padding: 15px; background: #f9f9f9;">
         <div class="prow-info">
           <strong>${c.code}</strong>
-          <span>${c.description} — حد أدنى: ${c.minOrder || 0}</span>
+          <span style="display:block;">${c.description}</span>
+          <small style="color:#888;">حد أدنى: ${c.minOrder || 0} د.إ — حد أقصى: ${c.maxDiscount || 0} د.إ</small>
         </div>
         <div class="prow-actions">
           <button class="danger small" onclick="deleteCoupon('${c.code}')">حذف</button>
@@ -106,7 +108,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-  // ===== نظام الكوبونات المطور والمزامن =====
+  // ===== نظام مزامنة الكوبونات المطور =====
   const COUPONS_PATH = 'coupons.json';
   let couponsFileSha = null;
 
@@ -172,10 +174,10 @@
   };
 
   window.deleteCoupon = async function(code) {
-    if (!confirm('حذف الكوبون؟')) return;
+    if (!confirm('هل أنت متأكد من حذف الكوبون؟')) return;
     coupons = coupons.filter(c => c.code !== code);
     try {
-      showStatus('جاري الحذف...', 'loading');
+      showStatus('جاري الحذف من GitHub...', 'loading');
       await saveCouponsFile('Delete coupon: ' + code);
       renderCouponsList();
       showStatus('تم الحذف بنجاح ✅', 'ok');
@@ -184,15 +186,17 @@
 
   function renderCouponsList() {
     const area = document.getElementById('couponsListArea');
-    if (!area || coupons.length === 0) { 
-      if(area) area.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">لا توجد كوبونات</p>'; 
+    if (!area) return;
+    if (coupons.length === 0) { 
+      area.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">لا توجد كوبونات حالياً</p>'; 
       return; 
     }
     area.innerHTML = coupons.map(c => `
-      <div class="product-row">
+      <div class="product-row" style="margin-bottom: 10px; border-radius: 12px; padding: 15px; background: #f9f9f9;">
         <div class="prow-info">
           <strong>${c.code}</strong>
-          <span>${c.description} — حد أدنى: ${c.minOrder || 0}</span>
+          <span style="display:block;">${c.description}</span>
+          <small style="color:#888;">حد أدنى: ${c.minOrder || 0} د.إ — حد أقصى: ${c.maxDiscount || 0} د.إ</small>
         </div>
         <div class="prow-actions">
           <button class="danger small" onclick="deleteCoupon('${c.code}')">حذف</button>
@@ -203,7 +207,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
 
-  // ===== نظام الكوبونات المطور والمزامن =====
+  // ===== نظام مزامنة الكوبونات المطور =====
   const COUPONS_PATH = 'coupons.json';
   let couponsFileSha = null;
 
@@ -269,10 +273,10 @@
   };
 
   window.deleteCoupon = async function(code) {
-    if (!confirm('حذف الكوبون؟')) return;
+    if (!confirm('هل أنت متأكد من حذف الكوبون؟')) return;
     coupons = coupons.filter(c => c.code !== code);
     try {
-      showStatus('جاري الحذف...', 'loading');
+      showStatus('جاري الحذف من GitHub...', 'loading');
       await saveCouponsFile('Delete coupon: ' + code);
       renderCouponsList();
       showStatus('تم الحذف بنجاح ✅', 'ok');
@@ -281,15 +285,17 @@
 
   function renderCouponsList() {
     const area = document.getElementById('couponsListArea');
-    if (!area || coupons.length === 0) { 
-      if(area) area.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">لا توجد كوبونات</p>'; 
+    if (!area) return;
+    if (coupons.length === 0) { 
+      area.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">لا توجد كوبونات حالياً</p>'; 
       return; 
     }
     area.innerHTML = coupons.map(c => `
-      <div class="product-row">
+      <div class="product-row" style="margin-bottom: 10px; border-radius: 12px; padding: 15px; background: #f9f9f9;">
         <div class="prow-info">
           <strong>${c.code}</strong>
-          <span>${c.description} — حد أدنى: ${c.minOrder || 0}</span>
+          <span style="display:block;">${c.description}</span>
+          <small style="color:#888;">حد أدنى: ${c.minOrder || 0} د.إ — حد أقصى: ${c.maxDiscount || 0} د.إ</small>
         </div>
         <div class="prow-actions">
           <button class="danger small" onclick="deleteCoupon('${c.code}')">حذف</button>
@@ -300,7 +306,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-  // ===== نظام الكوبونات المطور والمزامن =====
+  // ===== نظام مزامنة الكوبونات المطور =====
   const COUPONS_PATH = 'coupons.json';
   let couponsFileSha = null;
 
@@ -366,10 +372,10 @@
   };
 
   window.deleteCoupon = async function(code) {
-    if (!confirm('حذف الكوبون؟')) return;
+    if (!confirm('هل أنت متأكد من حذف الكوبون؟')) return;
     coupons = coupons.filter(c => c.code !== code);
     try {
-      showStatus('جاري الحذف...', 'loading');
+      showStatus('جاري الحذف من GitHub...', 'loading');
       await saveCouponsFile('Delete coupon: ' + code);
       renderCouponsList();
       showStatus('تم الحذف بنجاح ✅', 'ok');
@@ -378,15 +384,17 @@
 
   function renderCouponsList() {
     const area = document.getElementById('couponsListArea');
-    if (!area || coupons.length === 0) { 
-      if(area) area.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">لا توجد كوبونات</p>'; 
+    if (!area) return;
+    if (coupons.length === 0) { 
+      area.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">لا توجد كوبونات حالياً</p>'; 
       return; 
     }
     area.innerHTML = coupons.map(c => `
-      <div class="product-row">
+      <div class="product-row" style="margin-bottom: 10px; border-radius: 12px; padding: 15px; background: #f9f9f9;">
         <div class="prow-info">
           <strong>${c.code}</strong>
-          <span>${c.description} — حد أدنى: ${c.minOrder || 0}</span>
+          <span style="display:block;">${c.description}</span>
+          <small style="color:#888;">حد أدنى: ${c.minOrder || 0} د.إ — حد أقصى: ${c.maxDiscount || 0} د.إ</small>
         </div>
         <div class="prow-actions">
           <button class="danger small" onclick="deleteCoupon('${c.code}')">حذف</button>
@@ -2908,7 +2916,6 @@
   }
   
   // ===== نظام الكوبونات =====
-  async function addCoupon() {
     const code = document.getElementById('c_code').value.trim().toUpperCase();
     const type = document.getElementById('c_type').value;
     const value = parseFloat(document.getElementById('c_value').value);
@@ -3031,7 +3038,7 @@
     handleOAuthCallback();
   });
 
-  // ===== نظام الكوبونات المطور والمزامن =====
+  // ===== نظام مزامنة الكوبونات المطور =====
   const COUPONS_PATH = 'coupons.json';
   let couponsFileSha = null;
 
@@ -3097,10 +3104,10 @@
   };
 
   window.deleteCoupon = async function(code) {
-    if (!confirm('حذف الكوبون؟')) return;
+    if (!confirm('هل أنت متأكد من حذف الكوبون؟')) return;
     coupons = coupons.filter(c => c.code !== code);
     try {
-      showStatus('جاري الحذف...', 'loading');
+      showStatus('جاري الحذف من GitHub...', 'loading');
       await saveCouponsFile('Delete coupon: ' + code);
       renderCouponsList();
       showStatus('تم الحذف بنجاح ✅', 'ok');
@@ -3109,15 +3116,17 @@
 
   function renderCouponsList() {
     const area = document.getElementById('couponsListArea');
-    if (!area || coupons.length === 0) { 
-      if(area) area.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">لا توجد كوبونات</p>'; 
+    if (!area) return;
+    if (coupons.length === 0) { 
+      area.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">لا توجد كوبونات حالياً</p>'; 
       return; 
     }
     area.innerHTML = coupons.map(c => `
-      <div class="product-row">
+      <div class="product-row" style="margin-bottom: 10px; border-radius: 12px; padding: 15px; background: #f9f9f9;">
         <div class="prow-info">
           <strong>${c.code}</strong>
-          <span>${c.description} — حد أدنى: ${c.minOrder || 0}</span>
+          <span style="display:block;">${c.description}</span>
+          <small style="color:#888;">حد أدنى: ${c.minOrder || 0} د.إ — حد أقصى: ${c.maxDiscount || 0} د.إ</small>
         </div>
         <div class="prow-actions">
           <button class="danger small" onclick="deleteCoupon('${c.code}')">حذف</button>
