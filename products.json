@@ -2,13 +2,13 @@
   {
     "nameAr": "عسل",
     "nameEn": "Honey",
-    "price": "25",
+    "price": "23.75",
     "categoryAr": "بقالة",
     "categoryEn": "Grocery",
     "quantity": 50,
     "cost": "0",
     "oldPrice": "5",
-    "discount": "",
+    "discount": "خصم 5%",
     "descAr": "عسل طبيعي",
     "descEn": "Natural Honey",
     "emoji": "🛒",
@@ -17,18 +17,20 @@
     "badgeEn": "",
     "available": "yes",
     "img": "images/1782387063608-108951.jpg",
-    "images": []
+    "images": [],
+    "originalPriceBeforeDiscount": "5",
+    "discountEndDate": "2026-06-28"
   },
   {
     "nameAr": "لوحة مفاتيح",
     "nameEn": "Keyboard",
-    "price": "50",
+    "price": "47.50",
     "categoryAr": "بقالة",
     "categoryEn": "Grocery",
     "quantity": 6,
     "cost": "0",
     "oldPrice": "75",
-    "discount": "",
+    "discount": "خصم 5%",
     "descAr": "لوحة مفاتيح عربي-انجليزي",
     "descEn": "Arabic-English keyboard",
     "emoji": "⌨️",
@@ -37,7 +39,9 @@
     "badgeEn": "",
     "available": "no",
     "img": "images/1782387190941-108810.jpg",
-    "images": []
+    "images": [],
+    "originalPriceBeforeDiscount": "75",
+    "discountEndDate": "2026-06-28"
   },
   {
     "nameAr": "سماعات جي بي ال",
@@ -84,11 +88,11 @@
   {
     "nameAr": "لوغو",
     "nameEn": "Logo",
-    "price": "150",
+    "price": "142.50",
     "quantity": 1,
     "cost": "100",
     "oldPrice": "200",
-    "discount": "",
+    "discount": "خصم 5%",
     "categoryAr": "بقالة",
     "categoryEn": "Grocery",
     "descAr": "",
@@ -99,7 +103,9 @@
     "img": "images/1782410409563-iy8xd78f0-108980.png",
     "images": [
       "images/1782410409563-iy8xd78f0-108980.png"
-    ]
+    ],
+    "originalPriceBeforeDiscount": "200",
+    "discountEndDate": "2026-06-28"
   },
   {
     "nameAr": "فيتامينات متعددة",
