@@ -1428,14 +1428,6 @@
               <label>قيمة الخصم <span class="required">*</span></label>
               <input type="number" id="c_value" placeholder="20" min="0">
             </div>
-            <div class="form-group">
-              <label>الحد الأدنى للطلب (AED)</label>
-              <input type="number" id="c_minOrder" value="0">
-            </div>
-            <div class="form-group">
-              <label>الحد الأقصى للخصم (AED)</label>
-              <input type="number" id="c_maxDiscount" value="0">
-            </div>
             <div>
               <label>تاريخ الانتهاء</label>
               <input type="date" id="c_expiry">
@@ -1534,134 +1526,6 @@
 </div>
 
 <script>
-
-  // ===== GitHub OAuth Proxy Configuration =====
-  const PROXY_URL = 'https://albostan-oauth-proxy.vercel.app';
-  const OWNER = 'hassansyrn-cmyk';
-  const REPO = 'albostan-store';
-  const BRANCH = 'main';
-  const PRODUCTS_PATH = 'products.json';
-  const COUPONS_PATH = 'coupons.json';
-  const SALES_PATH = 'sales_data.json';
-
-  let accessToken = '';
-  let prodsSha = '', couponsSha = '', salesSha = '';
-
-  function utf8_to_b64(str) {
-    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
-      return String.fromCharCode('0x' + p1);
-    }));
-  }
-
-  function b64_to_utf8(str) {
-    try {
-      return decodeURIComponent(atob(str).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-    } catch(e) { return atob(str); }
-  }
-
-  function ghHeaders() {
-    return { 'Authorization': `Bearer ${accessToken}`, 'Accept': 'application/vnd.github+json' };
-  }
-
-  async function ghFetch(path) {
-    const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}?ref=${BRANCH}&_cb=${Date.now()}`, {
-      headers: ghHeaders()
-    });
-    if (!res.ok) return null;
-    const data = await res.json();
-    return {
-      sha: data.sha,
-      content: JSON.parse(b64_to_utf8(data.content))
-    };
-  }
-
-  async function ghSave(path, content, sha, msg) {
-    const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}`, {
-      method: 'PUT',
-      headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: msg,
-        content: utf8_to_b64(JSON.stringify(content, null, 2)),
-        sha: sha,
-        branch: BRANCH
-      })
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Error saving to GitHub');
-    return data;
-  }
-
-  async function loadAllData() {
-    try {
-      showStatus('جاري مزامنة البيانات...', 'loading');
-      const pData = await ghFetch(PRODUCTS_PATH);
-      if (pData) { products = pData.content; prodsSha = pData.sha; }
-      const cData = await ghFetch(COUPONS_PATH);
-      if (cData) { coupons = cData.content; couponsSha = cData.sha; }
-      const sData = await ghFetch(SALES_PATH);
-      if (sData) { salesData = sData.content; salesSha = sData.sha; }
-      renderProductsList();
-      renderCouponsList();
-      updateStats();
-      showStatus('تمت المزامنة بنجاح ✅', 'ok');
-    } catch (e) {
-      showStatus('فشل المزامنة: ' + e.message, 'err');
-    }
-  }
-
-  // OAuth Login Logic
-  window.login = function() {
-    window.location.href = `${PROXY_URL}/api/auth`;
-  };
-
-  async function checkAuth() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-    const storedToken = localStorage.getItem('albostan_admin_token');
-
-    if (code) {
-      showStatus('جاري استخراج التوكن...', 'loading');
-      try {
-        const res = await fetch(`${PROXY_URL}/api/token?code=${code}`);
-        const data = await res.json();
-        if (data.access_token) {
-          accessToken = data.access_token;
-          localStorage.setItem('albostan_admin_token', accessToken);
-          window.history.replaceState({}, document.title, window.location.pathname);
-          initPanel();
-        } else {
-          showStatus('فشل استخراج التوكن', 'err');
-        }
-      } catch (e) { showStatus('خطأ في تسجيل الدخول', 'err'); }
-    } else if (storedToken) {
-      accessToken = storedToken;
-      initPanel();
-    }
-  }
-
-  function initPanel() {
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('adminPanel').style.display = 'block';
-    loadAllData();
-  }
-
-  async function saveProductsFile(msg = 'Update products') {
-    const res = await ghSave(PRODUCTS_PATH, products, prodsSha, msg);
-    if (res) prodsSha = res.content.sha;
-  }
-
-  async function saveCouponsFile(msg = 'Update coupons') {
-    const res = await ghSave(COUPONS_PATH, coupons, couponsSha, msg);
-    if (res) couponsSha = res.content.sha;
-  }
-
-  async function saveSalesFile(msg = 'Update sales') {
-    const res = await ghSave(SALES_PATH, salesData, salesSha, msg);
-    if (res) salesSha = res.content.sha;
-  }
-
   // ===== الإعدادات الأساسية =====
   const OAUTH_PROXY = 'https://albostan-oauth-proxy.vercel.app'; 
   const OWNER = 'hassansyrn-cmyk';
@@ -2777,4 +2641,3 @@
 
 </body>
 </html>
-<script>checkAuth();</script>
