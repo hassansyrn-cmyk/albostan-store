@@ -1187,11 +1187,31 @@
           <div class="form-row">
             <div>
               <label>الشارة (عربي)</label>
-              <input id="f_badgeAr" placeholder="مثال: جديد">
+              <select id="f_badgeSelectAr">
+                <option value="">-- بدون شارة --</option>
+                <option value="جديد">جديد</option>
+                <option value="عرض خاص">عرض خاص</option>
+                <option value="تخفيضات">تخفيضات</option>
+                <option value="كمية محدودة">كمية محدودة</option>
+                <option value="عرض لفترة محدودة">عرض لفترة محدودة</option>
+                <option value="صفقة لا تفوت">صفقة لا تفوت</option>
+                <option value="أخرى">أخرى (كتابة يدوية)</option>
+              </select>
+              <input id="f_badgeAr" placeholder="اكتب الشارة بالعربي" style="display:none; margin-top:8px;">
             </div>
             <div>
               <label>الشارة (إنجليزي)</label>
-              <input id="f_badgeEn" placeholder="مثال: New">
+              <select id="f_badgeSelectEn">
+                <option value="">-- No Badge --</option>
+                <option value="New">New</option>
+                <option value="Special Offer">Special Offer</option>
+                <option value="Sale">Sale</option>
+                <option value="Limited Quantity">Limited Quantity</option>
+                <option value="Limited Time Offer">Limited Time Offer</option>
+                <option value="Unmissable Deal">Unmissable Deal</option>
+                <option value="Other">Other (Manual Entry)</option>
+              </select>
+              <input id="f_badgeEn" placeholder="Enter badge in English" style="display:none; margin-top:8px;">
             </div>
           </div>
           
