@@ -22,6 +22,41 @@
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-THWNP61B6M"></script>
 <script>
+
+  // GitHub API Configuration
+  const OWNER = 'hassansyrn-cmyk';
+  const REPO = 'albostan-store';
+  const BRANCH = 'main';
+  const PRODUCTS_PATH = 'products.json';
+  const COUPONS_PATH = 'coupons.json';
+
+  function b64DecodeUnicode(str) { 
+    try {
+      return decodeURIComponent(atob(str).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')); 
+    } catch(e) { return atob(str); }
+  }
+
+  async function loadDataFromGitHub() {
+    try {
+      const pRes = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${PRODUCTS_PATH}?ref=${BRANCH}&_cb=${Date.now()}`);
+      if(pRes.ok) {
+        const pData = await pRes.json();
+        const products = JSON.parse(b64DecodeUnicode(pData.content));
+        if(Array.isArray(products) && products.length > 0) {
+          renderProductsFromSheet(products);
+          console.log('Products loaded from GitHub');
+        }
+      }
+      const cRes = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${COUPONS_PATH}?ref=${BRANCH}&_cb=${Date.now()}`);
+      if(cRes.ok) {
+        const cData = await cRes.json();
+        const coupons = b64DecodeUnicode(cData.content);
+        localStorage.setItem('albostan_coupons', coupons);
+        console.log('Coupons loaded from GitHub');
+      }
+    } catch(e) { console.error('GitHub Sync Error:', e); }
+  }
+
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
@@ -2801,7 +2836,7 @@
   renderCart();
   renderWishlist();
   renderLastOrderBox();
-  loadProductsFromSheet();
+  loadDataFromGitHub(); // Added GitHub Sync
 </script>
 </body>
 </html>
