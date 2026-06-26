@@ -62,10 +62,14 @@
     to { opacity: 1; transform: translateY(0); }
   }
   
-  .login-box .logo { 
-    font-size: 4rem; 
+    .login-box .logo { 
     margin-bottom: 20px;
     animation: float 3s ease-in-out infinite;
+  }
+  
+  .login-box .logo img {
+    max-width: 200px;
+    height: auto;
   }
   
   @keyframes float {
@@ -928,8 +932,10 @@
 
 <!-- شاشة تسجيل الدخول -->
 <div id="loginScreen" class="login-container">
-  <div class="login-box">
-    <div class="logo">🏪</div>
+      <div class="login-box">
+    <div class="logo">
+      <img src="108980.png" alt="لوغو البستان">
+    </div>
     <h1>لوحة تحكم البستان</h1>
     <p class="subtitle">إدارة متقدمة وسهلة للمنتجات والمبيعات والإحصائيات</p>
     <button class="btn-login" id="githubLoginBtn">🔐 تسجيل الدخول عبر GitHub</button>
@@ -956,8 +962,9 @@
     <!-- القائمة الجانبية -->
     <aside class="sidebar" id="sidebar">
       <div class="brand">
-        <h2>🏪 البستان</h2>
-        <p>متجرك الإلكتروني</p>
+        <img src="108980.png" alt="لوغو البستان" style="max-width: 120px; height: auto; margin-bottom: 10px;">
+        <h2>متجر البستان</h2>
+        <p>بوابة الإدارة الاحترافية</p>
       </div>
       
       <nav class="nav-menu">
@@ -1079,12 +1086,30 @@
           
           <div class="form-row">
             <div>
-              <label>الفئة (عربي)</label>
-              <input id="f_categoryAr" placeholder="مثال: العسل والمحليات">
+              <label>القسم (عربي)</label>
+              <select id="f_categoryAr">
+                <option value="">-- اختر القسم --</option>
+                <option value="بقالة">بقالة</option>
+                <option value="إلكترونيات">إلكترونيات</option>
+                <option value="أزياء">أزياء</option>
+                <option value="المنزل والحديقة">المنزل والحديقة</option>
+                <option value="أطفال">أطفال</option>
+                <option value="رياضة">رياضة</option>
+                <option value="أخرى">أخرى</option>
+              </select>
             </div>
             <div>
-              <label>الفئة (إنجليزي)</label>
-              <input id="f_categoryEn" placeholder="مثال: Honey & Sweets">
+              <label>القسم (إنجليزي)</label>
+              <select id="f_categoryEn">
+                <option value="">-- Select Category --</option>
+                <option value="Grocery">Grocery</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Fashion">Fashion</option>
+                <option value="Home & Garden">Home & Garden</option>
+                <option value="Kids">Kids</option>
+                <option value="Sports">Sports</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
           </div>
           
@@ -1749,6 +1774,22 @@
     const total = (price * qty).toFixed(2);
     document.getElementById('s_total').value = total;
   }
+
+  // ===== حساب الخصم تلقائياً =====
+  function calculateDiscount() {
+    const currentPrice = parseFloat(document.getElementById('f_price').value) || 0;
+    const oldPrice = parseFloat(document.getElementById('f_oldPrice').value) || 0;
+    
+    if (oldPrice > currentPrice && currentPrice > 0) {
+      const discountPercent = Math.round(((oldPrice - currentPrice) / oldPrice) * 100);
+      document.getElementById('f_discount').value = `خصم ${discountPercent}%`;
+    } else {
+      document.getElementById('f_discount').value = '';
+    }
+  }
+
+  document.getElementById('f_price').addEventListener('input', calculateDiscount);
+  document.getElementById('f_oldPrice').addEventListener('input', calculateDiscount);
   
   // ===== تسجيل البيعة =====
   async function handleRecordSale() {
