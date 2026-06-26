@@ -423,6 +423,14 @@
     margin-inline-start:6px;
     font-weight:500;
   }
+  .discount-expiry-note{
+    display:block;
+    margin-top:4px;
+    font-size:0.75rem;
+    color:#e63946;
+    font-weight:700;
+    line-height:1.4;
+  }
   .prod-badge{
     position:absolute;
     top:12px;
@@ -1789,6 +1797,61 @@
     return n % 1 === 0 ? String(n) : n.toFixed(2);
   }
 
+
+  // ===== نظام تاريخ نهاية التخفيض =====
+  // يعتمد على الحقول القادمة من لوحة التحكم:
+  // price = السعر الحالي/المخفض، oldPrice = السعر الأصلي قبل التخفيض، discountEndDate = آخر يوم للتخفيض.
+  // إذا انتهى التاريخ، يعرض الموقع السعر الأصلي تلقائيًا ويستخدمه في السلة والطلب.
+  function parseDiscountEndDate(value){
+    if(!value) return null;
+    const raw = String(value).trim();
+    if(!raw) return null;
+    const parts = raw.split('-');
+    if(parts.length === 3){
+      const y = Number(parts[0]);
+      const m = Number(parts[1]);
+      const d = Number(parts[2]);
+      if(y && m && d){
+        return new Date(y, m - 1, d, 23, 59, 59, 999);
+      }
+    }
+    const parsed = new Date(raw);
+    if(isNaN(parsed.getTime())) return null;
+    parsed.setHours(23, 59, 59, 999);
+    return parsed;
+  }
+
+  function isDiscountStillActive(discountEndDate){
+    if(!discountEndDate) return true;
+    const end = parseDiscountEndDate(discountEndDate);
+    if(!end) return true;
+    return new Date().getTime() <= end.getTime();
+  }
+
+  function getEffectiveProductPricing(product){
+    const p = product || {};
+    const currentPrice = Number(p.price || 0);
+    const oldPrice = Number(p.oldPrice || 0);
+    const originalBeforeDiscount = Number(p.originalPriceBeforeDiscount || 0);
+    const candidateOriginal = oldPrice > currentPrice ? oldPrice : (originalBeforeDiscount > currentPrice ? originalBeforeDiscount : 0);
+    const active = candidateOriginal > currentPrice && isDiscountStillActive(p.discountEndDate);
+    const effectivePrice = active ? currentPrice : (candidateOriginal > currentPrice ? candidateOriginal : currentPrice);
+    return {
+      price: effectivePrice,
+      priceText: formatMoney(effectivePrice),
+      oldPrice: active ? candidateOriginal : 0,
+      oldPriceText: active && candidateOriginal ? formatMoney(candidateOriginal) : '',
+      discount: active ? (p.discount || '') : '',
+      discountEndDate: p.discountEndDate || '',
+      isActiveDiscount: active
+    };
+  }
+
+  function formatDiscountEndLabel(discountEndDate){
+    if(!discountEndDate) return '';
+    return currentLang === 'ar' ? 'ينتهي في ' + discountEndDate : 'Ends on ' + discountEndDate;
+  }
+
   // ===== رقم الطلب والتاريخ =====
   function createOrderDate(){
     const d = new Date();
@@ -2094,12 +2157,26 @@
 
   function addToCart(productData, customQty = 1){
     if(productData.available === 'no') return;
+    const pricing = getEffectiveProductPricing(productData);
+    const effectivePrice = Number(pricing.price || productData.price || 0);
     const existing = cart.find(item => item.nameAr === productData.nameAr);
-    if(existing){ existing.quantity += customQty; }
-    else { cart.push({ nameAr: productData.nameAr, nameEn: productData.nameEn, price: Number(productData.price), emoji: productData.emoji || '🛒', quantity: customQty }); }
+    if(existing){
+      existing.quantity += customQty;
+      existing.price = effectivePrice;
+    } else {
+      cart.push({
+        nameAr: productData.nameAr,
+        nameEn: productData.nameEn,
+        price: effectivePrice,
+        emoji: productData.emoji || '🛒',
+        quantity: customQty,
+        discountEndDate: productData.discountEndDate || '',
+        originalPriceBeforeDiscount: productData.originalPriceBeforeDiscount || productData.oldPrice || ''
+      });
+    }
     renderCart();
     showToast(T[currentLang].added);
-    trackGAEvent('add_to_cart', { item_name: productData.nameEn, value: Number(productData.price) });
+    trackGAEvent('add_to_cart', { item_name: productData.nameEn, value: effectivePrice });
   }
 
   function openCart(){ cartDrawer.classList.add('open'); cartOverlay.classList.add('open'); closeWishlist(); }
@@ -2128,7 +2205,7 @@
   function toggleWishlist(productData){
     const index = wishlist.findIndex(item => item.nameAr === productData.nameAr);
     if(index > -1){ wishlist.splice(index, 1); showToast(T[currentLang].wishlistRemoved); }
-    else { wishlist.push({ nameAr: productData.nameAr, nameEn: productData.nameEn, price: productData.price, emoji: productData.emoji || '🛒', img: productData.img || '', categoryAr: productData.categoryAr || '', categoryEn: productData.categoryEn || '', descAr: productData.descAr || '', descEn: productData.descEn || '', available: productData.available || 'yes' }); showToast(T[currentLang].wishlistAdded); }
+    else { const pricing = getEffectiveProductPricing(productData); wishlist.push({ nameAr: productData.nameAr, nameEn: productData.nameEn, price: pricing.priceText, oldPrice: pricing.oldPriceText, discount: pricing.discount, discountEndDate: productData.discountEndDate || '', originalPriceBeforeDiscount: productData.originalPriceBeforeDiscount || productData.oldPrice || '', emoji: productData.emoji || '🛒', img: productData.img || '', categoryAr: productData.categoryAr || '', categoryEn: productData.categoryEn || '', descAr: productData.descAr || '', descEn: productData.descEn || '', available: productData.available || 'yes' }); showToast(T[currentLang].wishlistAdded); }
     saveWishlist();
     renderWishlist();
     syncWishlistHearts();
@@ -2495,10 +2572,19 @@
       if(rateVal >= 1 && rateVal <= 5){ mRating.innerHTML = '★'.repeat(rateVal) + '☆'.repeat(5-rateVal); mRating.style.color = '#FFD700'; mRating.style.fontSize = '1.2rem'; }
     }
     const cur = T[currentLang].currency;
-    let priceHtml = `<span style="color:var(--clay); font-weight:800;">${data.price} ${cur}</span>`;
-    if(data.oldPrice && Number(data.oldPrice) > Number(data.price)){
-      priceHtml += `<span class="price-old">${data.oldPrice} ${cur}</span>`;
-      if(data.discount) priceHtml += ` <span style="background:#e63946; color:#fff; font-size:0.75rem; padding:2px 8px; border-radius:50px;">${data.discount}</span>`;
+    const pricing = getEffectiveProductPricing(data);
+    let priceHtml = `<span style="color:var(--clay); font-weight:800;">${pricing.priceText} ${cur}</span>`;
+    if(pricing.isActiveDiscount && pricing.oldPriceText){
+      priceHtml += `<span class="price-old">${pricing.oldPriceText} ${cur}</span>`;
+      if(pricing.discount) priceHtml += ` <span style="background:#e63946; color:#fff; font-size:0.75rem; padding:2px 8px; border-radius:50px;">${pricing.discount}</span>`;
+      if(data.discountEndDate) priceHtml += `<span class="discount-expiry-note">${formatDiscountEndLabel(data.discountEndDate)}</span>`;
+      data.price = pricing.priceText;
+      data.oldPrice = pricing.oldPriceText;
+      data.discount = pricing.discount;
+    }else{
+      data.price = pricing.priceText;
+      data.oldPrice = '';
+      data.discount = '';
     }
     if(data.available === 'no'){
       priceHtml += ` <span style="background:var(--clay); color:#fff; font-size:0.75rem; padding:2px 8px; border-radius:50px; margin-inline-start:6px;">${T[currentLang].outOfStock}</span>`;
@@ -2538,12 +2624,12 @@
     relatedProductsArea.innerHTML = filtered.map((p, idx) => {
       const pName = currentLang === 'ar' ? p.nameAr : p.nameEn;
       const mediaHtml = p.img ? `<img src="${p.img}" class="related-item-thumb" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">` : '';
-      return `<div class="related-item" data-idx="${idx}">${mediaHtml}<div class="related-item-thumb" style="${p.img ? 'display:none;' : 'display:flex;'}">${escapeHTML(p.emoji||'🛒')}</div><div class="related-item-info"><h5>${escapeHTML(pName)}</h5><span>${escapeHTML(p.price)} ${T[currentLang].currency}</span></div></div>`;
+      return `<div class="related-item" data-idx="${idx}">${mediaHtml}<div class="related-item-thumb" style="${p.img ? 'display:none;' : 'display:flex;'}">${escapeHTML(p.emoji||'🛒')}</div><div class="related-item-info"><h5>${escapeHTML(pName)}</h5><span>${escapeHTML(getEffectiveProductPricing(p).priceText)} ${T[currentLang].currency}</span></div></div>`;
     }).join('');
     relatedProductsArea.querySelectorAll('.related-item').forEach((item, index) => {
       item.addEventListener('click', () => {
         const tp = filtered[index];
-        openModal({ nameAr: tp.nameAr, nameEn: tp.nameEn, price: tp.price, oldPrice: tp.oldPrice, discount: tp.discount, emoji: tp.emoji, img: tp.img, categoryAr: tp.categoryAr, categoryEn: tp.categoryEn, descAr: tp.descAr, descEn: tp.descEn, available: tp.available, rating: tp.rating });
+        openModal({ nameAr: tp.nameAr, nameEn: tp.nameEn, price: tp.price, oldPrice: tp.oldPrice, originalPriceBeforeDiscount: tp.originalPriceBeforeDiscount || tp.oldPrice || '', discount: tp.discount, discountEndDate: tp.discountEndDate || '', emoji: tp.emoji, img: tp.img, categoryAr: tp.categoryAr, categoryEn: tp.categoryEn, descAr: tp.descAr, descEn: tp.descEn, available: tp.available, rating: tp.rating, images: JSON.stringify(Array.isArray(tp.images) ? tp.images : (tp.img ? [tp.img] : [])) });
       });
     });
   }
@@ -2704,9 +2790,16 @@
     if(!grid) return;
     grid.innerHTML = '';
     globalProductsList = products;
+
     products.forEach((p, idx) => {
-      const nameAr = escapeHTML(p.nameAr), nameEn = escapeHTML(p.nameEn), price = escapeHTML(p.price);
-      const oldPrice = escapeHTML(p.oldPrice), discount = escapeHTML(p.discount), emoji = escapeHTML(p.emoji || '🛒');
+      const pricing = getEffectiveProductPricing(p);
+      const nameAr = escapeHTML(p.nameAr), nameEn = escapeHTML(p.nameEn);
+      const price = escapeHTML(pricing.priceText);
+      const oldPrice = escapeHTML(pricing.oldPriceText);
+      const discount = escapeHTML(pricing.discount);
+      const discountEndDate = escapeHTML(p.discountEndDate || '');
+      const originalPriceBeforeDiscount = escapeHTML(p.originalPriceBeforeDiscount || p.oldPrice || '');
+      const emoji = escapeHTML(p.emoji || '🛒');
       const img = escapeHTML(p.img), categoryAr = escapeHTML(p.categoryAr), categoryEn = escapeHTML(p.categoryEn);
       const descAr = escapeHTML(p.descAr), descEn = escapeHTML(p.descEn);
       const available = escapeHTML(p.available || 'yes').toLowerCase();
@@ -2717,30 +2810,57 @@
 
       const card = document.createElement('div');
       card.className = 'prod-card';
-      card.dataset.index = idx; card.dataset.nameAr = nameAr; card.dataset.nameEn = nameEn;
-      card.dataset.price = price; card.dataset.oldPrice = oldPrice; card.dataset.discount = discount;
-      card.dataset.emoji = emoji; card.dataset.img = img; card.dataset.categoryAr = categoryAr;
-      card.dataset.categoryEn = categoryEn; card.dataset.descAr = descAr; card.dataset.descEn = descEn;
-      card.dataset.available = available; card.dataset.rating = ratingVal > 0 ? ratingVal : '';
+      card.dataset.index = idx;
+      card.dataset.nameAr = nameAr;
+      card.dataset.nameEn = nameEn;
+      card.dataset.price = price;
+      card.dataset.rawPrice = escapeHTML(p.price || '');
+      card.dataset.oldPrice = oldPrice;
+      card.dataset.rawOldPrice = escapeHTML(p.oldPrice || '');
+      card.dataset.originalPriceBeforeDiscount = originalPriceBeforeDiscount;
+      card.dataset.discount = discount;
+      card.dataset.discountEndDate = discountEndDate;
+      card.dataset.discountActive = pricing.isActiveDiscount ? 'yes' : 'no';
+      card.dataset.emoji = emoji;
+      card.dataset.img = img;
+      card.dataset.categoryAr = categoryAr;
+      card.dataset.categoryEn = categoryEn;
+      card.dataset.descAr = descAr;
+      card.dataset.descEn = descEn;
+      card.dataset.available = available;
+      card.dataset.rating = ratingVal > 0 ? ratingVal : '';
       card.dataset.quantity = quantity;
       card.dataset.images = JSON.stringify(images);
 
       let badgeHtml = '';
-      if(currentLang === 'ar' && badgeAr) badgeHtml = `<div class="prod-badge">${badgeAr}</div>`;
-      else if(currentLang === 'en' && badgeEn) badgeHtml = `<div class="prod-badge">${badgeEn}</div>`;
-      else if(oldPrice && Number(oldPrice) > Number(price) && discount) badgeHtml = `<div class="prod-badge">${discount}</div>`;
+      if(pricing.isActiveDiscount && discount){
+        badgeHtml = `<div class="prod-badge">${discount}</div>`;
+      }else if(currentLang === 'ar' && badgeAr){
+        badgeHtml = `<div class="prod-badge">${badgeAr}</div>`;
+      }else if(currentLang === 'en' && badgeEn){
+        badgeHtml = `<div class="prod-badge">${badgeEn}</div>`;
+      }
 
       let stockOverlayHtml = '';
-      if(available === 'no'){ const textLabel = currentLang === 'ar' ? T.ar.outOfStock : T.en.outOfStock; stockOverlayHtml = `<div class="out-of-stock-badge"><span class="out-of-stock-text">${textLabel}</span></div>`; }
-      
+      if(available === 'no'){
+        const textLabel = currentLang === 'ar' ? T.ar.outOfStock : T.en.outOfStock;
+        stockOverlayHtml = `<div class="out-of-stock-badge"><span class="out-of-stock-text">${textLabel}</span></div>`;
+      }
+
       let quantityBadgeHtml = '';
-      if(quantity > 0 && quantity <= 5){ quantityBadgeHtml = `<div class="prod-quantity-badge" style="position:absolute;top:50%;right:50%;transform:translate(50%,-50%);background:rgba(255,255,255,0.95);padding:4px 8px;border-radius:6px;font-size:0.75rem;font-weight:700;color:var(--clay);">${currentLang === 'ar' ? 'متبقي: ' + quantity : 'Only ' + quantity + ' left'}</div>`; }
+      if(quantity > 0 && quantity <= 5){
+        quantityBadgeHtml = `<div class="prod-quantity-badge" style="position:absolute;top:50%;right:50%;transform:translate(50%,-50%);background:rgba(255,255,255,0.95);padding:4px 8px;border-radius:6px;font-size:0.75rem;font-weight:700;color:var(--clay);">${currentLang === 'ar' ? 'متبقي: ' + quantity : 'Only ' + quantity + ' left'}</div>`;
+      }
 
       let priceDisplayHtml = `<span class="price">${price} ${T[currentLang].currency}</span>`;
-      if(oldPrice && Number(oldPrice) > Number(price)) priceDisplayHtml = `<span class="price">${price} ${T[currentLang].currency}</span><span class="price-old">${oldPrice} ${T[currentLang].currency}</span>`;
+      if(pricing.isActiveDiscount && oldPrice){
+        priceDisplayHtml = `<div><span class="price">${price} ${T[currentLang].currency}</span><span class="price-old">${oldPrice} ${T[currentLang].currency}</span>${discountEndDate ? `<span class="discount-expiry-note">${formatDiscountEndLabel(discountEndDate)}</span>` : ''}</div>`;
+      }
 
       let ratingStarsHtml = '';
-      if(ratingVal >= 1 && ratingVal <= 5) ratingStarsHtml = `<div class="prod-rating">${'★'.repeat(ratingVal)}${'☆'.repeat(5-ratingVal)}</div>`;
+      if(ratingVal >= 1 && ratingVal <= 5){
+        ratingStarsHtml = `<div class="prod-rating">${'★'.repeat(ratingVal)}${'☆'.repeat(5-ratingVal)}</div>`;
+      }
 
       card.innerHTML = `
         ${badgeHtml}${stockOverlayHtml}${quantityBadgeHtml}
@@ -2758,6 +2878,7 @@
       `;
       grid.appendChild(card);
     });
+
     bindProductCardEvents();
     syncWishlistHearts();
     filterProducts();
