@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=El+Messiri:wght@600;700&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.jsscript>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
@@ -1224,6 +1224,11 @@ tr:hover{
               <label>نص التخفيض</label>
               <input id="f_discount" placeholder="مثال: خصم 20%">
             </div>
+            <div>
+              <label>تاريخ نهاية التخفيض</label>
+              <input type="date" id="f_discountEndDate">
+              <small style="color:#999;display:block;margin-top:6px;">اتركه فارغاً إذا كان التخفيض بدون تاريخ انتهاء</small>
+            </div>
           </div>
 
           <h3 style="margin-bottom:20px;margin-top:30px;color:var(--clay);">📦 المخزون والتكاليف</h3>
@@ -1574,6 +1579,11 @@ tr:hover{
             <div>
               <label>النسبة المئوية <span class="required">*</span></label>
               <input type="number" id="b_percentage" placeholder="10" min="0" max="100">
+            </div>
+            <div>
+              <label>تاريخ نهاية التخفيض</label>
+              <input type="date" id="b_discountEndDate">
+              <small style="color:#999;display:block;margin-top:6px;">يُستخدم عند اختيار نوع التعديل: خفض</small>
             </div>
           </div>
 
@@ -1961,7 +1971,7 @@ function renderProductsList(){
         <div class="product-img">${imgHtml}</div>
         <div class="prow-info">
           <strong>${esc(p.nameAr)}</strong>
-          <span>${esc(p.nameEn)} — <b style="color:var(--clay);">${esc(p.price)} د.إ</b> — ${stockBadge}</span>
+          <span>${esc(p.nameEn)} — <b style="color:var(--clay);">${esc(getAdminDisplayPrice(p).price)} د.إ</b> — ${p.discountEndDate ? 'ينتهي التخفيض: ' + esc(p.discountEndDate) + ' — ' : ''}${stockBadge}</span>
         </div>
         <div class="prow-actions">
           <button class="small" onclick="editProduct(${p.originalIndex})">✏️ تعديل</button>
@@ -1986,6 +1996,7 @@ window.editProduct = function(i){
   $('f_cost').value = p.cost || '';
   $('f_oldPrice').value = p.oldPrice || '';
   $('f_discount').value = p.discount || '';
+  if($('f_discountEndDate')) $('f_discountEndDate').value = p.discountEndDate || '';
   $('f_descAr').value = p.descAr || '';
   $('f_descEn').value = p.descEn || '';
   $('f_emoji').value = p.emoji || '🛒';
@@ -2033,7 +2044,7 @@ function resetForm(){
   [
     'f_nameAr','f_nameEn','f_price','f_quantity','f_cost',
     'f_oldPrice','f_discount','f_descAr','f_descEn','f_rating',
-    'f_badgeAr','f_badgeEn'
+    'f_badgeAr','f_badgeEn','f_discountEndDate'
   ].forEach(function(id){
     $(id).value = '';
   });
@@ -2059,7 +2070,7 @@ function renderImageGallery(){
   gallery.innerHTML = selectedImages.map(function(img,idx){
     return `
       <div class="image-item">
-        ${img}
+        <img src="${img}" alt="">
         <button class="remove-btn" onclick="removeImage(${idx})">×</button>
       </div>
     `;
@@ -2135,6 +2146,8 @@ async function handleSaveProduct(){
     cost:$('f_cost').value.trim() || '0',
     oldPrice:$('f_oldPrice').value.trim(),
     discount:$('f_discount').value.trim(),
+    discountEndDate:$('f_discountEndDate') ? $('f_discountEndDate').value : '',
+    originalPriceBeforeDiscount: oldProduct.originalPriceBeforeDiscount || $('f_oldPrice').value.trim() || '',
     descAr:$('f_descAr').value.trim(),
     descEn:$('f_descEn').value.trim(),
     emoji:$('f_emoji').value.trim() || '🛒',
@@ -2503,10 +2516,19 @@ async function applyBulkPriceChange(){
   const category = $('b_category').value;
   const type = $('b_type').value;
   const percentage = parseFloat($('b_percentage').value);
+  const discountEndDate = $('b_discountEndDate') ? $('b_discountEndDate').value : '';
 
   if(!percentage || percentage < 0){
     showStatus('يرجى إدخال نسبة صحيحة','err');
     return;
+  }
+
+  if(type === 'decrease' && discountEndDate){
+    const end = parseDiscountEndDateAdmin(discountEndDate);
+    if(!end || end.getTime() < new Date().setHours(0,0,0,0)){
+      showStatus('يرجى اختيار تاريخ نهاية تخفيض صحيح أو مستقبلي','err');
+      return;
+    }
   }
 
   let updated = 0;
@@ -2517,18 +2539,29 @@ async function applyBulkPriceChange(){
       const change = (oldPrice * percentage) / 100;
       const newPrice = type === 'increase' ? oldPrice + change : oldPrice - change;
 
-      p.oldPrice = p.price;
-      p.price = Math.max(0,newPrice).toFixed(2);
+      if(type === 'decrease'){
+        if(!p.originalPriceBeforeDiscount) p.originalPriceBeforeDiscount = p.oldPrice || p.price;
+        p.oldPrice = p.originalPriceBeforeDiscount || p.price;
+        p.price = Math.max(0,newPrice).toFixed(2);
+        p.discount = 'خصم ' + percentage + '%';
+        p.discountEndDate = discountEndDate || '';
+      }else{
+        p.oldPrice = p.price;
+        p.price = Math.max(0,newPrice).toFixed(2);
+        p.discount = '';
+        p.discountEndDate = '';
+        p.originalPriceBeforeDiscount = '';
+      }
       updated++;
     }
   });
 
   try{
     showStatus('جاري حفظ تعديل الأسعار...','loading');
-    await saveProductsFile('Bulk price change');
+    await saveProductsFile('Bulk price change with discount end date');
     renderProductsList();
     updateStats();
-    logActivity('تعديل أسعار','تم تعديل ' + updated + ' منتج بنسبة ' + percentage + '%','success');
+    logActivity('تعديل أسعار','تم تعديل ' + updated + ' منتج بنسبة ' + percentage + '%' + (discountEndDate ? ' حتى ' + discountEndDate : ''),'success');
     showStatus('تم تعديل ' + updated + ' منتج ✅','ok');
   }catch(e){
     showStatus('خطأ في تعديل الأسعار: ' + e.message,'err');
@@ -2692,7 +2725,8 @@ function exportToExcel(){
       'الكمية':p.quantity || 0,
       'القسم':p.categoryAr || '',
       'التكلفة':p.cost || '',
-      'التوفر':p.available || ''
+      'التوفر':p.available || '',
+      'تاريخ نهاية التخفيض':p.discountEndDate || ''
     };
   });
 
@@ -2782,6 +2816,43 @@ function renderActivityLog(){
       </tr>
     `;
   }).join('');
+}
+
+
+function parseDiscountEndDateAdmin(value){
+  if(!value) return null;
+  const parts = String(value).split('-');
+  if(parts.length === 3){
+    const y = Number(parts[0]);
+    const m = Number(parts[1]);
+    const d = Number(parts[2]);
+    if(y && m && d) return new Date(y, m - 1, d, 23, 59, 59, 999);
+  }
+  const parsed = new Date(value);
+  if(isNaN(parsed.getTime())) return null;
+  parsed.setHours(23,59,59,999);
+  return parsed;
+}
+
+function isProductDiscountActiveAdmin(p){
+  if(!p || !p.discountEndDate) return !!(p && p.oldPrice && Number(p.oldPrice) > Number(p.price));
+  const end = parseDiscountEndDateAdmin(p.discountEndDate);
+  if(!end) return true;
+  return new Date().getTime() <= end.getTime();
+}
+
+function getAdminDisplayPrice(p){
+  if(!p) return { price: '0', oldPrice: '', discountActive: false };
+  const current = Number(p.price || 0);
+  const old = Number(p.oldPrice || 0);
+  const original = Number(p.originalPriceBeforeDiscount || 0);
+  const candidateOriginal = old > current ? old : (original > current ? original : 0);
+  const active = candidateOriginal > current && isProductDiscountActiveAdmin(p);
+  return {
+    price: active ? String(p.price || '0') : String(candidateOriginal > current ? candidateOriginal : current),
+    oldPrice: active ? String(candidateOriginal) : '',
+    discountActive: active
+  };
 }
 
 function calculateDiscount(){
@@ -3142,7 +3213,7 @@ function bindEvents(){
 
   setupBiDirectionalTranslate('f_nameAr','f_nameEn');
   setupBiDirectionalTranslate('f_descAr','f_descEn');
-  setupBiDirectionalTranslate('f_badgeAr','f_badgeEn');
+  setupBiDirectionalTranslate('f_badgeAr','f_badgeEn','f_discountEndDate');
 }
 
 window.addEventListener('load',async function(){
