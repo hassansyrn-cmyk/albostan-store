@@ -1550,7 +1550,7 @@
   let salesFileSha = null;
   let currentSearchQuery = "";
 
-  // ===== نظام الكوبونات المطور =====
+  // ===== نظام الكوبونات المطور والمزامن =====
   const COUPONS_PATH = 'coupons.json';
   let couponsFileSha = null;
 
@@ -1580,57 +1580,96 @@
     couponsFileSha = data.content.sha;
   }
 
-  window.handleSaveCoupon = async function() {
+  window.addCoupon = async function() {
     const code = document.getElementById('c_code').value.trim().toUpperCase();
     const type = document.getElementById('c_type').value;
     const value = parseFloat(document.getElementById('c_value').value) || 0;
     const minOrder = parseFloat(document.getElementById('c_minOrder').value) || 0;
     const maxDiscount = parseFloat(document.getElementById('c_maxDiscount').value) || 0;
-    const desc = document.getElementById('c_desc').value.trim();
+    const expiry = document.getElementById('c_expiry').value;
+    const limit = document.getElementById('c_limit').value;
 
     if (!code || value <= 0) { showStatus('يرجى إدخال الكود والقيمة', 'err'); return; }
 
-    const idx = coupons.findIndex(c => c.code === code);
-    const coupon = { code, type, value, minOrder, maxDiscount, description: desc, active: true };
+    const coupon = { 
+      code, type, value, minOrder, maxDiscount, expiry, limit,
+      active: true,
+      description: type === 'percentage' ? `خصم ${value}%` : `خصم ${value} د.إ`
+    };
 
     try {
-      showStatus('جاري حفظ الكوبون...', 'loading');
+      showStatus('جاري حفظ الكوبون في GitHub...', 'loading');
+      const idx = coupons.findIndex(c => c.code === code);
       if (idx > -1) coupons[idx] = coupon;
       else coupons.push(coupon);
+      
       await saveCouponsFile('Update coupon: ' + code);
       showStatus('تم حفظ الكوبون بنجاح ✅', 'ok');
+      
+      // Reset fields
       document.getElementById('c_code').value = '';
       document.getElementById('c_value').value = '';
       document.getElementById('c_minOrder').value = '0';
       document.getElementById('c_maxDiscount').value = '0';
-      document.getElementById('c_desc').value = '';
+      document.getElementById('c_expiry').value = '';
+      document.getElementById('c_limit').value = '';
+      
       renderCouponsList();
-    } catch (e) { showStatus('خطأ: ' + e.message, 'err'); }
+    } catch (e) { 
+      showStatus('خطأ في الحفظ: ' + e.message, 'err'); 
+    }
   };
 
   window.deleteCoupon = async function(code) {
-    if (!confirm('حذف الكوبون؟')) return;
+    if (!confirm('هل أنت متأكد من حذف الكوبون ' + code + '؟')) return;
+    const originalCoupons = [...coupons];
     coupons = coupons.filter(c => c.code !== code);
     try {
-      showStatus('جاري الحذف...', 'loading');
+      showStatus('جاري الحذف من GitHub...', 'loading');
       await saveCouponsFile('Delete coupon: ' + code);
       renderCouponsList();
       showStatus('تم الحذف بنجاح ✅', 'ok');
-    } catch (e) { showStatus('خطأ: ' + e.message, 'err'); }
+    } catch (e) { 
+      coupons = originalCoupons;
+      showStatus('خطأ في الحذف: ' + e.message, 'err'); 
+    }
+  };
+
+  window.toggleCoupon = async function(code) {
+    const coupon = coupons.find(c => c.code === code);
+    if (!coupon) return;
+    coupon.active = !coupon.active;
+    try {
+      showStatus('جاري تحديث الحالة...', 'loading');
+      await saveCouponsFile('Toggle coupon: ' + code);
+      renderCouponsList();
+      showStatus('تم التحديث بنجاح ✅', 'ok');
+    } catch (e) { 
+      coupon.active = !coupon.active;
+      showStatus('خطأ: ' + e.message, 'err'); 
+    }
   };
 
   function renderCouponsList() {
     const area = document.getElementById('couponsListArea');
     if (!area) return;
-    if (coupons.length === 0) { area.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">لا توجد كوبونات</p>'; return; }
+    if (coupons.length === 0) { 
+      area.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">لا توجد كوبونات نشطة حالياً</p>'; 
+      return; 
+    }
+    
     area.innerHTML = coupons.map(c => `
-      <div class="product-row">
+      <div class="product-row" style="background: ${c.active ? '#eaf7ef' : '#fee2e2'}; margin-bottom: 10px; border-radius: 12px; padding: 15px;">
         <div class="prow-info">
-          <strong>${c.code}</strong>
-          <span>${c.type === 'percentage' ? c.value + '%' : c.value + ' د.إ'} — حد أدنى: ${c.minOrder} — حد أقصى: ${c.maxDiscount}</span>
+          <strong style="font-size: 1.2rem;">${c.code}</strong>
+          <span style="display:block; margin-top:5px; color:#555;">${c.description}</span>
+          <small style="color:#888;">حد أدنى: ${c.minOrder || 0} د.إ — حد أقصى: ${c.maxDiscount || 0} د.إ</small>
         </div>
-        <div class="prow-actions">
-          <button class="danger small" onclick="deleteCoupon('${c.code}')">🗑️ حذف</button>
+        <div class="prow-actions" style="display:flex; gap:8px;">
+          <button class="${c.active ? 'warning' : 'success'} small" onclick="toggleCoupon('${c.code}')">
+            ${c.active ? 'تعطيل' : 'تفعيل'}
+          </button>
+          <button class="danger small" onclick="deleteCoupon('${c.code}')">حذف</button>
         </div>
       </div>
     `).join('');
@@ -2611,7 +2650,6 @@
   }
   
   // ===== نظام الكوبونات =====
-  async function addCoupon() {
     const code = document.getElementById('c_code').value.trim().toUpperCase();
     const type = document.getElementById('c_type').value;
     const value = parseFloat(document.getElementById('c_value').value);
@@ -2737,4 +2775,3 @@
 
 </body>
 </html>
-<script>document.addEventListener("DOMContentLoaded", () => { document.getElementById("saveCouponBtn")?.addEventListener("click", handleSaveCoupon); });</script>
