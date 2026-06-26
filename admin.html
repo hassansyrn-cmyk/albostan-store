@@ -1428,6 +1428,14 @@
               <label>قيمة الخصم <span class="required">*</span></label>
               <input type="number" id="c_value" placeholder="20" min="0">
             </div>
+            <div class="form-group">
+              <label>الحد الأدنى للطلب (AED)</label>
+              <input type="number" id="c_minOrder" value="0">
+            </div>
+            <div class="form-group">
+              <label>الحد الأقصى للخصم (AED)</label>
+              <input type="number" id="c_maxDiscount" value="0">
+            </div>
             <div>
               <label>تاريخ الانتهاء</label>
               <input type="date" id="c_expiry">
@@ -1527,7 +1535,7 @@
 
 <script>
 
-  // ===== GitHub API Configuration & Sync =====
+  // ===== GitHub API Configuration & Sync (Enhanced) =====
   const OWNER = 'hassansyrn-cmyk';
   const REPO = 'albostan-store';
   const BRANCH = 'main';
@@ -1583,27 +1591,21 @@
   async function loadAllData() {
     try {
       showStatus('جاري مزامنة البيانات من GitHub...', 'loading');
-      
       const pData = await ghFetch(PRODUCTS_PATH);
       if (pData) { products = pData.content; prodsSha = pData.sha; }
-      
       const cData = await ghFetch(COUPONS_PATH);
       if (cData) { coupons = cData.content; couponsSha = cData.sha; }
-      
       const sData = await ghFetch(SALES_PATH);
       if (sData) { salesData = sData.content; salesSha = sData.sha; }
-
       renderProductsList();
       renderCouponsList();
       updateStats();
       showStatus('تمت المزامنة بنجاح ✅', 'ok');
     } catch (e) {
-      console.error(e);
-      showStatus('فشل التحميل من GitHub: ' + e.message, 'err');
+      showStatus('فشل المزامنة: ' + e.message, 'err');
     }
   }
 
-  // Overriding original save functions to sync with GitHub
   async function saveProductsFile(msg = 'Update products') {
     const res = await ghSave(PRODUCTS_PATH, products, prodsSha, msg);
     if (res) prodsSha = res.content.sha;
