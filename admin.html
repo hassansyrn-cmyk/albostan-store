@@ -1835,6 +1835,42 @@
 
   setupAutoTranslate('f_nameAr', 'f_nameEn');
   setupAutoTranslate('f_descAr', 'f_descEn');
+
+  // ===== اختيار الإيموجي الذكي =====
+  const emojiKeywords = {
+    '🍯': ['عسل', 'honey', 'سدر', 'sidr'],
+    '🌴': ['تمر', 'dates', 'خلاص', 'khallas'],
+    '🫒': ['زيت', 'oil', 'زيتون', 'olive'],
+    '📱': ['هاتف', 'phone', 'جوال', 'mobile', 'ايفون', 'iphone', 'سامسونج', 'samsung'],
+    '💻': ['كمبيوتر', 'computer', 'لابتوب', 'laptop'],
+    '👕': ['قميص', 'shirt', 'تيشيرت', 't-shirt', 'ملابس', 'clothes'],
+    '👗': ['فستان', 'dress', 'نسائي', 'women'],
+    '👟': ['حذاء', 'shoe', 'سنيكرز', 'sneakers', 'رياضي', 'sports'],
+    '🧸': ['لعبة', 'toy', 'أطفال', 'kids', 'طفل', 'baby'],
+    '🏠': ['منزل', 'home', 'حديقة', 'garden', 'ديكور', 'decor'],
+    '🏋️': ['رياضة', 'sports', 'جيم', 'gym', 'لياقة', 'fitness'],
+    '💊': ['صحة', 'health', 'فيتامين', 'vitamin', 'مكمل', 'supplement'],
+    '💄': ['جمال', 'beauty', 'مكياج', 'makeup', 'عناية', 'care'],
+    '☕': ['قهوة', 'coffee', 'شاي', 'tea', 'مشروب', 'drink'],
+    '🍫': ['حلويات', 'sweets', 'شوكولاتة', 'chocolate', 'بسكويت', 'biscuit'],
+    '🍎': ['فواكه', 'fruits', 'خضار', 'vegetables', 'طازج', 'fresh']
+  };
+
+  function suggestEmoji(text) {
+    if (!text) return null;
+    const lowerText = text.toLowerCase();
+    for (const [emoji, keywords] of Object.entries(emojiKeywords)) {
+      if (keywords.some(kw => lowerText.includes(kw))) {
+        return emoji;
+      }
+    }
+    return null;
+  }
+
+  document.getElementById('f_nameAr').addEventListener('input', (e) => {
+    const emoji = suggestEmoji(e.target.value);
+    if (emoji) document.getElementById('f_emoji').value = emoji;
+  });
   
   // ===== تسجيل البيعة =====
   async function handleRecordSale() {
