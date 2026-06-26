@@ -1633,6 +1633,10 @@
     ['f_nameAr', 'f_nameEn', 'f_categoryAr', 'f_categoryEn', 'f_price', 'f_quantity', 'f_cost', 'f_oldPrice', 'f_discount', 'f_descAr', 'f_descEn', 'f_rating', 'f_badgeAr', 'f_badgeEn'].forEach(id => {
       document.getElementById(id).value = '';
     });
+    document.getElementById('f_badgeSelectAr').value = "";
+    document.getElementById('f_badgeSelectEn').value = "";
+    document.getElementById('f_badgeAr').style.display = 'none';
+    document.getElementById('f_badgeEn').style.display = 'none';
     document.getElementById('f_emoji').value = '🛒';
     document.getElementById('f_available').value = 'yes';
     document.getElementById('f_imageFiles').value = '';
