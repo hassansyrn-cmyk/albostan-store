@@ -17,8 +17,9 @@
     "code": "FREE_DELIVERY",
     "type": "fixed",
     "value": 0,
-    "active": false,
-    "description": "كوبون غير مفعل حالياً"
+    "active": true,
+    "description": "كوبون غير مفعل حالياً",
+    "updatedAt": "2026-06-26T21:46:11.845Z"
   },
   {
     "code": "NEW10",
