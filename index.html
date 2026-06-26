@@ -2187,7 +2187,24 @@
     const couponEntered = couponCodeInput.value.trim().toUpperCase();
     let discount = 0;
     const discountRow = document.getElementById('summaryDiscountRow');
-    if(couponEntered === 'BOSTAN10'){
+    
+    // البحث عن الكوبون في القائمة المحملة من لوحة التحكم
+    const coupons = JSON.parse(localStorage.getItem('albostan_coupons') || '[]');
+    const coupon = coupons.find(c => c.code === couponEntered && c.active);
+    
+    if (coupon) {
+      if (coupon.expiry && new Date(coupon.expiry) < new Date()) {
+        discountRow.style.display = 'none';
+      } else if (coupon.type === 'percentage') {
+        discount = subtotal * (coupon.value / 100);
+        discountRow.style.display = 'flex';
+        document.getElementById('summaryDiscountValue').textContent = `${discount.toFixed(2)} AED`;
+      } else if (coupon.type === 'fixed') {
+        discount = coupon.value;
+        discountRow.style.display = 'flex';
+        document.getElementById('summaryDiscountValue').textContent = `${discount.toFixed(2)} AED`;
+      }
+    } else if(couponEntered === 'BOSTAN10'){
       discount = subtotal * 0.10;
       if(discount > 10) discount = 10;
       discountRow.style.display = 'flex';
@@ -2217,12 +2234,24 @@
     const fee = deliveryFees[emirate] || 0;
 
     let discount = 0;
-    if(couponEntered === 'BOSTAN10'){
+    const coupons = JSON.parse(localStorage.getItem('albostan_coupons') || '[]');
+    const coupon = coupons.find(c => c.code === couponEntered && c.active);
+    
+    if (coupon) {
+      if (coupon.expiry && new Date(coupon.expiry) < new Date()) {
+        showToast(currentLang === 'ar' ? 'انتهت صلاحية الكوبون' : 'Coupon expired');
+        return;
+      } else if (coupon.type === 'percentage') {
+        discount = subtotal * (coupon.value / 100);
+      } else if (coupon.type === 'fixed') {
+        discount = coupon.value;
+      }
+    } else if(couponEntered === 'BOSTAN10'){
       discount = subtotal * 0.10;
       if(discount > 10) discount = 10;
     } else if(couponEntered !== ''){
       showToast(T[currentLang].couponInvalid);
-      return; // منع الإرسال حتى يتم تصحيح الكوبون أو مسحه
+      return;
     }
     const grandTotal = subtotal - discount + fee;
 
