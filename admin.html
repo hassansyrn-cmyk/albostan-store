@@ -1836,41 +1836,97 @@
   setupAutoTranslate('f_nameAr', 'f_nameEn');
   setupAutoTranslate('f_descAr', 'f_descEn');
 
-  // ===== اختيار الإيموجي الذكي =====
+  // ===== اختيار الإيموجي الذكي (نسخة موسعة) =====
   const emojiKeywords = {
-    '🍯': ['عسل', 'honey', 'سدر', 'sidr'],
-    '🌴': ['تمر', 'dates', 'خلاص', 'khallas'],
+    // طعام ومشروبات
+    '🍯': ['عسل', 'honey', 'سدر', 'sidr', 'نحل', 'bee'],
+    '🌴': ['تمر', 'dates', 'خلاص', 'khallas', 'سكري', 'sukkari'],
     '🫒': ['زيت', 'oil', 'زيتون', 'olive'],
-    '📱': ['هاتف', 'phone', 'جوال', 'mobile', 'ايفون', 'iphone', 'سامسونج', 'samsung'],
-    '💻': ['كمبيوتر', 'computer', 'لابتوب', 'laptop'],
-    '👕': ['قميص', 'shirt', 'تيشيرت', 't-shirt', 'ملابس', 'clothes'],
-    '👗': ['فستان', 'dress', 'نسائي', 'women'],
-    '👟': ['حذاء', 'shoe', 'سنيكرز', 'sneakers', 'رياضي', 'sports'],
-    '🧸': ['لعبة', 'toy', 'أطفال', 'kids', 'طفل', 'baby'],
-    '🏠': ['منزل', 'home', 'حديقة', 'garden', 'ديكور', 'decor'],
-    '🏋️': ['رياضة', 'sports', 'جيم', 'gym', 'لياقة', 'fitness'],
-    '💊': ['صحة', 'health', 'فيتامين', 'vitamin', 'مكمل', 'supplement'],
-    '💄': ['جمال', 'beauty', 'مكياج', 'makeup', 'عناية', 'care'],
-    '☕': ['قهوة', 'coffee', 'شاي', 'tea', 'مشروب', 'drink'],
-    '🍫': ['حلويات', 'sweets', 'شوكولاتة', 'chocolate', 'بسكويت', 'biscuit'],
-    '🍎': ['فواكه', 'fruits', 'خضار', 'vegetables', 'طازج', 'fresh']
+    '☕': ['قهوة', 'coffee', 'شاي', 'tea', 'مشروب', 'drink', 'نسكافيه', 'nescafe'],
+    '🍫': ['حلويات', 'sweets', 'شوكولاتة', 'chocolate', 'بسكويت', 'biscuit', 'كيك', 'cake'],
+    '🍎': ['فواكه', 'fruits', 'تفاح', 'apple', 'موز', 'banana'],
+    '🥦': ['خضار', 'vegetables', 'طماطم', 'tomato', 'خيار', 'cucumber'],
+    '🥛': ['حليب', 'milk', 'لبن', 'yogurt', 'ألبان', 'dairy'],
+    '🍞': ['خبز', 'bread', 'مخبوزات', 'bakery'],
+    '🧂': ['بهارات', 'spices', 'ملح', 'salt', 'فلفل', 'pepper'],
+    '🥩': ['لحم', 'meat', 'دجاج', 'chicken', 'سمك', 'fish'],
+    '💧': ['ماء', 'water', 'مياه', 'juice', 'عصير'],
+    
+    // إلكترونيات
+    '📱': ['هاتف', 'phone', 'جوال', 'mobile', 'ايفون', 'iphone', 'سامسونج', 'samsung', 'هواوي', 'huawei'],
+    '💻': ['كمبيوتر', 'computer', 'لابتوب', 'laptop', 'ماكبوك', 'macbook'],
+    '🎧': ['سماعة', 'headphone', 'airpods', 'سماعات', 'audio'],
+    '⌚': ['ساعة', 'watch', 'smartwatch', 'ذكية'],
+    '📷': ['كاميرا', 'camera', 'تصوير', 'photo'],
+    '🔋': ['بطارية', 'battery', 'شاحن', 'charger', 'باوربانك', 'powerbank'],
+    '📺': ['تلفزيون', 'tv', 'شاشة', 'screen', 'تلفاز'],
+    '🖱️': ['ماوس', 'mouse', 'لوحة مفاتيح', 'keyboard'],
+    '🔌': ['وصلة', 'cable', 'كابل', 'سلك', 'adapter'],
+    
+    // ملابس وإكسسوارات
+    '👕': ['قميص', 'shirt', 'تيشيرت', 't-shirt', 'ملابس', 'clothes', 'توب', 'top'],
+    '👗': ['فستان', 'dress', 'عباية', 'abaya', 'نسائي', 'women'],
+    '👖': ['بنطلون', 'pants', 'jeans', 'جينز'],
+    '👟': ['حذاء', 'shoe', 'سنيكرز', 'sneakers', 'رياضي', 'sports', 'بوت', 'boot'],
+    '👜': ['حقيبة', 'bag', 'شنطة', 'handbag', 'محفظة', 'wallet'],
+    '🕶️': ['نظارة', 'glasses', 'sunglasses', 'شمسية'],
+    '💍': ['خاتم', 'ring', 'مجوهرات', 'jewelry', 'ذهب', 'gold', 'فضة', 'silver'],
+    '🧣': ['شال', 'scarf', 'قبعة', 'hat', 'كاب', 'cap'],
+    
+    // منزل وعناية
+    '🏠': ['منزل', 'home', 'حديقة', 'garden', 'ديكور', 'decor', 'أثاث', 'furniture'],
+    '🛏️': ['سرير', 'bed', 'مفرش', 'blanket', 'وسادة', 'pillow'],
+    '🧼': ['صابون', 'soap', 'شامبو', 'shampoo', 'منظف', 'cleaner'],
+    '🕯️': ['شمعة', 'candle', 'بخور', 'incense', 'فواحة'],
+    '🍽️': ['صحن', 'plate', 'ملعقة', 'spoon', 'مطبخ', 'kitchen', 'أدوات'],
+    '🧴': ['كريم', 'cream', 'لوشن', 'lotion', 'عناية', 'care', 'بشرة', 'skin'],
+    '💄': ['جمال', 'beauty', 'مكياج', 'makeup', 'عطر', 'perfume'],
+    '🧹': ['مكنسة', 'vacuum', 'تنظيف', 'cleaning'],
+    
+    // أطفال ورياضة
+    '🧸': ['لعبة', 'toy', 'أطفال', 'kids', 'طفل', 'baby', 'مواليد'],
+    '🍼': ['رضاعة', 'bottle', 'حفاضات', 'diapers'],
+    '🏋️': ['رياضة', 'sports', 'جيم', 'gym', 'لياقة', 'fitness', 'أثقال'],
+    '⚽': ['كرة', 'ball', 'قدم', 'football'],
+    '🚲': ['دراجة', 'bike', 'سيكل'],
+    
+    // أخرى
+    '💊': ['صحة', 'health', 'فيتامين', 'vitamin', 'مكمل', 'supplement', 'دواء'],
+    '📚': ['كتاب', 'book', 'قرطاسية', 'stationery', 'قلم', 'pen'],
+    '🎁': ['هدية', 'gift', 'بوكس', 'box'],
+    '🚗': ['سيارة', 'car', 'مركبة', 'vehicle', 'اكسسوارات سيارات']
   };
 
-  function suggestEmoji(text) {
-    if (!text) return null;
+  const categoryEmojiMap = {
+    'بقالة': '🍎',
+    'إلكترونيات': '📱',
+    'أزياء': '👕',
+    'المنزل والحديقة': '🏠',
+    'أطفال': '🧸',
+    'رياضة': '🏋️',
+    'أخرى': '📦'
+  };
+
+  function suggestEmoji(text, category = '') {
+    if (!text) return categoryEmojiMap[category] || '📦';
     const lowerText = text.toLowerCase();
     for (const [emoji, keywords] of Object.entries(emojiKeywords)) {
       if (keywords.some(kw => lowerText.includes(kw))) {
         return emoji;
       }
     }
-    return null;
+    return categoryEmojiMap[category] || '📦';
   }
 
-  document.getElementById('f_nameAr').addEventListener('input', (e) => {
-    const emoji = suggestEmoji(e.target.value);
+  function updateSmartEmoji() {
+    const nameText = document.getElementById('f_nameAr').value;
+    const catAr = document.getElementById('f_categoryAr').value;
+    const emoji = suggestEmoji(nameText, catAr);
     if (emoji) document.getElementById('f_emoji').value = emoji;
-  });
+  }
+
+  document.getElementById('f_nameAr').addEventListener('input', updateSmartEmoji);
+  document.getElementById('f_categoryAr').addEventListener('change', updateSmartEmoji);
   
   // ===== تسجيل البيعة =====
   async function handleRecordSale() {
