@@ -1310,17 +1310,19 @@
 
 <script>
   // ===== الإعدادات الأساسية =====
-  const OAUTH_PROXY = 'https://oauth-proxy.example.com'; // استبدل بـ URL الخاص بك
-  const OWNER = 'your-github-username'; // استبدل باسم مستخدم GitHub
-  const REPO = 'your-repo-name'; // استبدل باسم المستودع
+  const OAUTH_PROXY = 'https://albostan-oauth-proxy.vercel.app'; 
+  const OWNER = 'hassansyrn-cmyk';
+  const REPO = 'albostan-store';
   const BRANCH = 'main';
   const PRODUCTS_PATH = 'products.json';
-  const PRODUCTS_JSON_URL = 'https://your-domain.com/products.json';
+  const SALES_PATH = 'sales_data.json';
+  const PRODUCTS_JSON_URL = '/products.json';
   
   let accessToken = null;
   let products = [];
   let salesData = [];
   let productsFileSha = null;
+  let salesFileSha = null;
   let currentSearchQuery = "";
   
   // ===== نظام التنبيهات ===== 
@@ -1393,6 +1395,7 @@
     document.getElementById('mobileHeader').style.display = 'flex';
     loadUserInfo();
     loadProducts();
+    loadSales();
   }
   
   function showLoginPanel() {
@@ -1454,6 +1457,25 @@
       showStatus('خطأ في تحميل المنتجات: ' + e.message, 'err');
     }
   }
+
+  // ===== تحميل المبيعات =====
+  async function loadSales() {
+    try {
+      const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${SALES_PATH}?ref=${BRANCH}`, { headers: ghHeaders() });
+      if (res.status === 404) {
+        salesData = [];
+        updateStats();
+        return;
+      }
+      if (!res.ok) throw new Error('Failed to load sales');
+      const data = await res.json();
+      salesFileSha = data.sha;
+      salesData = JSON.parse(b64DecodeUnicode(data.content));
+      updateStats();
+    } catch (e) {
+      console.error('Failed to load sales:', e);
+    }
+  }
   
   // ===== حفظ المنتجات =====
   async function saveProductsFile(commitMsg) {
@@ -1468,6 +1490,21 @@
     if (!res.ok) throw new Error('Failed to save products');
     const data = await res.json();
     productsFileSha = data.content.sha;
+  }
+
+  // ===== حفظ المبيعات =====
+  async function saveSalesFile(commitMsg) {
+    const content = b64EncodeUnicode(JSON.stringify(salesData, null, 2));
+    const body = { message: commitMsg, content: content, branch: BRANCH };
+    if (salesFileSha) body.sha = salesFileSha;
+    const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${SALES_PATH}`, {
+      method: 'PUT',
+      headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) throw new Error('Failed to save sales');
+    const data = await res.json();
+    salesFileSha = data.content.sha;
   }
   
   // ===== عرض قائمة المنتجات =====
@@ -1747,6 +1784,7 @@
       });
       
       await saveProductsFile('Sale recorded for ' + product.nameEn);
+      await saveSalesFile('Sale data updated for ' + product.nameEn);
       showStatus('تم تسجيل البيعة بنجاح ✅', 'ok');
       document.getElementById('s_quantity').value = 1;
       document.getElementById('s_price').value = '';
