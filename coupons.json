@@ -19,5 +19,18 @@
     "value": 0,
     "active": false,
     "description": "كوبون غير مفعل حالياً"
+  },
+  {
+    "code": "NEW10",
+    "type": "percentage",
+    "value": 10,
+    "minOrder": 50,
+    "maxDiscount": 10,
+    "expiry": "2026-06-30",
+    "limit": 1,
+    "active": true,
+    "usedCount": 0,
+    "createdAt": "2026-06-26T21:46:06.584Z",
+    "updatedAt": "2026-06-26T21:46:06.584Z"
   }
 ]
