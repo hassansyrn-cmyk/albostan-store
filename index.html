@@ -1243,187 +1243,65 @@
     width:calc(100% - 32px);
     box-sizing:border-box;
   }
-  .cat-grid{
-    align-items:stretch;
-  }
-  .cat-item{
-    min-width:0;
-    overflow:hidden;
-    gap:12px;
-    padding:10px 10px 16px!important;
-    border-radius:26px!important;
-  }
-  .cat-circle{
-    width:100%!important;
-    height:auto!important;
-    aspect-ratio:1 / .78;
-    border-radius:22px!important;
-    overflow:hidden;
-    font-size:2.4rem;
-  }
-  .cat-circle .cat-img{
-    width:100%!important;
-    height:100%!important;
-    object-fit:cover!important;
-    object-position:center!important;
-    display:block!important;
-  }
-  .cat-item span{
-    min-height:44px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    line-height:1.25;
-    text-align:center;
-    padding:0 4px;
-  }
+  .cat-grid{align-items:stretch;}
+  .cat-item{min-width:0;overflow:hidden;gap:12px;padding:10px 10px 16px!important;border-radius:26px!important;}
+  .cat-circle{width:100%!important;height:auto!important;aspect-ratio:1 / .78;border-radius:22px!important;overflow:hidden;font-size:2.4rem;}
+  .cat-circle .cat-img{width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;display:block!important;}
+  .cat-item span{min-height:44px;display:flex;align-items:center;justify-content:center;line-height:1.25;text-align:center;padding:0 4px;}
+
+  /* ===== أزرار الهيرو داخل الطرف الفارغ من الصورة ===== */
+  .hero-mobile-cta{display:none;}
   @media(max-width:680px){
-    .hero{
-      width:100%!important;
-      max-width:100%!important;
-      margin:0!important;
-      padding:44px 18px 44px!important;
-      grid-template-columns:1fr!important;
-      gap:28px!important;
-      text-align:center!important;
-      border-radius:0 0 34px 34px!important;
-    }
-    .hero-text p{
-      margin-left:auto!important;
-      margin-right:auto!important;
-      max-width:100%!important;
-    }
-    .cta-row{
-      justify-content:center!important;
-    }
-    .hero-visual{
-      width:100%!important;
-      height:auto!important;
-      margin:2px auto 0!important;
-    }
-    .hero-banner-img{
-      width:min(100%, 560px)!important;
-      border-radius:28px!important;
-      transform:translateY(-2px);
-      filter:drop-shadow(0 20px 25px rgba(31,94,59,.10));
-      -webkit-mask-image:linear-gradient(180deg, transparent 0%, #000 13%, #000 84%, transparent 100%);
-      mask-image:linear-gradient(180deg, transparent 0%, #000 13%, #000 84%, transparent 100%);
-    }
-    .section.categories{
-      width:100%!important;
-      max-width:100%!important;
-      margin:0!important;
-      padding:50px 14px 54px!important;
-      border-radius:30px!important;
-      overflow:hidden!important;
-    }
-    .categories .section-head{
-      margin-bottom:28px!important;
-    }
-    .categories .section-head h2{
-      font-size:2rem!important;
-      line-height:1.25!important;
-    }
-    .cat-grid{
-      grid-template-columns:repeat(2,minmax(0,1fr))!important;
-      gap:14px!important;
-      width:100%!important;
-      max-width:100%!important;
-      margin:0 auto!important;
-    }
-    .cat-item{
-      width:100%!important;
-      min-width:0!important;
-      padding:8px 8px 14px!important;
-      border-radius:22px!important;
-      box-shadow:0 18px 38px -30px rgba(24,26,25,.46)!important;
-    }
-    .cat-circle{
-      width:100%!important;
-      aspect-ratio:1 / .86!important;
-      border-radius:18px!important;
-    }
-    .cat-item span{
-      min-height:38px!important;
-      font-size:.94rem!important;
-      line-height:1.25!important;
-    }
+    .hero{width:100%!important;max-width:100%!important;margin:0!important;padding:44px 18px 44px!important;grid-template-columns:1fr!important;gap:28px!important;text-align:center!important;border-radius:0 0 34px 34px!important;}
+    .hero-text p{margin-left:auto!important;margin-right:auto!important;max-width:100%!important;}
+    .hero-text > .cta-row{display:none!important;}
+    .hero-visual{width:100%!important;height:auto!important;margin:2px auto 0!important;position:relative!important;overflow:visible!important;}
+    .hero-banner-img{width:min(100%, 560px)!important;border-radius:28px!important;transform:translateY(-2px);filter:drop-shadow(0 20px 25px rgba(31,94,59,.10));-webkit-mask-image:linear-gradient(180deg, transparent 0%, #000 13%, #000 84%, transparent 100%);mask-image:linear-gradient(180deg, transparent 0%, #000 13%, #000 84%, transparent 100%);}
+    .hero-mobile-cta{position:absolute;top:50%;right:7%;left:auto;transform:translateY(-50%);z-index:8;display:flex!important;flex-direction:column;align-items:stretch;justify-content:center;gap:8px;width:34%;max-width:150px;pointer-events:auto;}
+    html[dir="ltr"] .hero-mobile-cta{right:7%;left:auto;}
+    .hero-mobile-cta .btn-primary,.hero-mobile-cta .btn-ghost{width:100%;min-height:38px;padding:9px 10px!important;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:999px;font-size:.78rem!important;line-height:1.18;box-shadow:0 12px 22px -18px rgba(24,26,25,.55);white-space:normal;}
+    .hero-mobile-cta .btn-primary{background:rgba(31,94,59,.94);}
+    .hero-mobile-cta .btn-ghost{background:rgba(255,255,255,.72);backdrop-filter:blur(8px);border-width:1.5px;}
+    .section.categories{width:100%!important;max-width:100%!important;margin:0!important;padding:50px 14px 54px!important;border-radius:30px!important;overflow:hidden!important;}
+    .categories .section-head{margin-bottom:28px!important;}
+    .categories .section-head h2{font-size:2rem!important;line-height:1.25!important;}
+    .cat-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important;width:100%!important;max-width:100%!important;margin:0 auto!important;}
+    .cat-item{width:100%!important;min-width:0!important;padding:8px 8px 14px!important;border-radius:22px!important;box-shadow:0 18px 38px -30px rgba(24,26,25,.46)!important;}
+    .cat-circle{width:100%!important;aspect-ratio:1 / .86!important;border-radius:18px!important;}
+    .cat-item span{min-height:38px!important;font-size:.94rem!important;line-height:1.25!important;}
+  }
+  @media(max-width:420px){
+    .hero-mobile-cta{top:49%;right:6%;width:32%;max-width:132px;gap:7px;}
+    html[dir="ltr"] .hero-mobile-cta{right:6%;left:auto;}
+    .hero-mobile-cta .btn-primary,.hero-mobile-cta .btn-ghost{min-height:34px;padding:8px 8px!important;font-size:.68rem!important;}
   }
   @media(max-width:380px){
     .cat-grid{gap:10px!important;}
     .cat-item{padding:7px 7px 12px!important;}
     .cat-item span{font-size:.88rem!important;}
+    .hero-mobile-cta{right:5%;width:31%;max-width:118px;}
+    html[dir="ltr"] .hero-mobile-cta{right:5%;left:auto;}
+    .hero-mobile-cta .btn-primary,.hero-mobile-cta .btn-ghost{font-size:.62rem!important;min-height:32px;}
   }
 
-
-  /* ===== نقل أزرار الهيرو داخل الصورة على الموبايل ===== */
-  .hero-mobile-cta{
-    display:none;
-  }
+  /* ===== ترتيب أيقونات الهيدر واستبدال الإيموجي بأيقونات SVG خفيفة ===== */
+  .icon-btn svg,.menu-toggle svg{width:20px;height:20px;display:block;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .icon-btn .icon-fill{fill:currentColor;stroke:none;}
   @media(max-width:680px){
-    .hero-text > .cta-row{
-      display:none!important;
-    }
-    .hero-visual{
-      position:relative!important;
-      overflow:visible!important;
-    }
-    .hero-mobile-cta{
-      position:absolute;
-      top:50%;
-      right:55%;
-      transform:translateY(-50%);
-      z-index:8;
-      display:flex!important;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      width:42%;
-      max-width:190px;
-      pointer-events:auto;
-    }
-    html[dir="ltr"] .hero-mobile-cta{
-      right:auto;
-      left:55%;
-    }
-    .hero-mobile-cta .btn-primary,
-    .hero-mobile-cta .btn-ghost{
-      width:100%;
-      min-height:44px;
-      padding:11px 12px!important;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      border-radius:999px;
-      font-size:.92rem!important;
-      line-height:1.25;
-      box-shadow:0 14px 24px -18px rgba(24,26,25,.55);
-      white-space:normal;
-    }
-    .hero-mobile-cta .btn-ghost{
-      background:rgba(255,255,255,.74);
-      backdrop-filter:blur(8px);
-    }
+    .nav-wrap{padding:18px 20px!important;gap:10px!important;}
+    .nav-wrap .logo{display:none!important;}
+    .nav-icons{width:100%!important;display:grid!important;grid-template-columns:repeat(6,1fr)!important;align-items:center!important;gap:10px!important;position:relative!important;}
+    .icon-btn,.menu-toggle{width:48px!important;height:48px!important;border-radius:50%!important;background:rgba(255,255,255,.68)!important;border:1px solid rgba(31,94,59,.08)!important;color:var(--clay)!important;box-shadow:0 12px 24px -22px rgba(24,26,25,.45)!important;display:flex!important;align-items:center!important;justify-content:center!important;justify-self:center!important;padding:0!important;}
+    .menu-toggle{font-size:0!important;}
+    .lang-btn{width:64px!important;border-radius:999px!important;background:var(--soil)!important;color:#fff!important;font-size:.96rem!important;font-weight:900!important;}
+    .cart-count{top:-7px!important;left:-5px!important;width:22px!important;height:22px!important;font-size:.75rem!important;background:var(--gold)!important;color:#fff!important;border:2px solid #fff!important;}
+    html[dir="ltr"] .cart-count{left:auto!important;right:-5px!important;}
   }
-  @media(max-width:420px){
-    .hero-mobile-cta{
-      right:53%;
-      width:43%;
-      max-width:170px;
-      gap:9px;
-    }
-    html[dir="ltr"] .hero-mobile-cta{
-      right:auto;
-      left:53%;
-    }
-    .hero-mobile-cta .btn-primary,
-    .hero-mobile-cta .btn-ghost{
-      min-height:40px;
-      padding:9px 10px!important;
-      font-size:.82rem!important;
-    }
+  @media(max-width:390px){
+    .nav-wrap{padding-left:12px!important;padding-right:12px!important;}
+    .nav-icons{gap:6px!important;}
+    .icon-btn,.menu-toggle{width:44px!important;height:44px!important;}
+    .lang-btn{width:58px!important;}
   }
 
   @media (prefers-reduced-motion:reduce){
@@ -1455,20 +1333,20 @@
     </nav>
     <div class="nav-icons">
       <button class="icon-btn lang-btn" id="langToggle">EN</button>
-      <button class="icon-btn" id="installBtn" aria-label="تثبيت التطبيق" style="display:none;">📲</button>
-      <button class="icon-btn" id="accountBtn" aria-label="حسابي" aria-expanded="false">👤</button>
+      <button class="icon-btn" id="installBtn" aria-label="تثبيت التطبيق" style="display:none;"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11"></path><path d="M8 10l4 4 4-4"></path><path d="M5 19h14"></path><path d="M7 21h10"></path></svg></button>
+      <button class="icon-btn" id="accountBtn" aria-label="حسابي" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.8-4 5-6 8-6s6.2 2 8 6"></path></svg></button>
       <div class="account-dropdown" id="accountDropdown">
         <a href="#" data-ar="تسجيل الدخول" data-en="Login">تسجيل الدخول</a>
         <a href="#" data-ar="إنشاء حساب جديد" data-en="Create Account">إنشاء حساب جديد</a>
         <p data-ar="هذا القسم يحتاج ربط بنظام حسابات لاحقًا" data-en="This section will need a real auth system later">هذا القسم يحتاج ربط بنظام حسابات لاحقًا</p>
       </div>
       <button class="icon-btn" id="wishlistBtn" aria-label="المفضلة">
-        ❤️<span class="cart-count" id="wishlistCount">0</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 5.6c-1.7-1.9-4.6-2-6.4-.2L12 7.8 9.6 5.4c-1.8-1.8-4.7-1.7-6.4.2-1.7 1.9-1.6 4.8.2 6.6L12 21l8.6-8.8c1.8-1.8 1.9-4.7.2-6.6z"></path></svg><span class="cart-count" id="wishlistCount">0</span>
       </button>
       <button class="icon-btn" id="cartBtn" aria-label="سلة التسوق">
-        🛒<span class="cart-count" id="cartCount">0</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h2l2.2 10.2a2 2 0 0 0 2 1.6h6.9a2 2 0 0 0 1.9-1.4L21 8H7"></path><circle cx="10" cy="20" r="1.4"></circle><circle cx="18" cy="20" r="1.4"></circle></svg><span class="cart-count" id="cartCount">0</span>
       </button>
-      <button class="menu-toggle" id="menuToggle" aria-label="القائمة" aria-expanded="false">☰</button>
+      <button class="menu-toggle" id="menuToggle" aria-label="القائمة" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h16"></path></svg></button>
     </div>
   </div>
 </header>
