@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="theme_primary">#1F5E3B</color>
+    <color name="theme_primary_dark">#153B24</color>
+    <color name="theme_background">#F5F7F5</color>
+    <color name="theme_surface">#FFFFFF</color>
+    <color name="theme_gold">#C9A227</color>
+    <color name="splash_background">#1F5E3B</color>
+    <color name="white">#FFFFFF</color>
+</resources>
