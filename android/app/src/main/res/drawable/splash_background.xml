@@ -1,6 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item>
-        <color android:color="#F5E8D2"/>
+        <color android:color="#F5E8D2" />
     </item>
 
     <item
@@ -9,4 +11,5 @@
         android:height="200dp">
         @mipmap/ic_launcher
     </item>
+
 </layer-list>
