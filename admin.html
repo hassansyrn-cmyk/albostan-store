@@ -2545,12 +2545,28 @@ async function applyBulkPriceChange(){
         p.price = Math.max(0,newPrice).toFixed(2);
         p.discount = 'خصم ' + percentage + '%';
         p.discountEndDate = discountEndDate || '';
+        p.categoryDeal = true;
+        p.categoryDealType = 'bulk-category-discount';
+        p.categoryDealPercentage = percentage;
+        p.categoryDealCategoryAr = p.categoryAr || category || '';
+        p.categoryDealCategoryEn = p.categoryEn || '';
+        p.categoryDealStartedAt = new Date().toISOString();
+        p.categoryDealTitleAr = 'عرض على قسم ' + (p.categoryAr || category || '');
+        p.categoryDealTitleEn = 'Deal on ' + (p.categoryEn || p.categoryAr || category || 'Category');
       }else{
         p.oldPrice = p.price;
         p.price = Math.max(0,newPrice).toFixed(2);
         p.discount = '';
         p.discountEndDate = '';
         p.originalPriceBeforeDiscount = '';
+        p.categoryDeal = false;
+        p.categoryDealType = '';
+        p.categoryDealPercentage = '';
+        p.categoryDealCategoryAr = '';
+        p.categoryDealCategoryEn = '';
+        p.categoryDealStartedAt = '';
+        p.categoryDealTitleAr = '';
+        p.categoryDealTitleEn = '';
       }
       updated++;
     }
@@ -2558,7 +2574,7 @@ async function applyBulkPriceChange(){
 
   try{
     showStatus('جاري حفظ تعديل الأسعار...','loading');
-    await saveProductsFile('Bulk price change with discount end date');
+    await saveProductsFile('Bulk category deal with countdown metadata');
     renderProductsList();
     updateStats();
     logActivity('تعديل أسعار','تم تعديل ' + updated + ' منتج بنسبة ' + percentage + '%' + (discountEndDate ? ' حتى ' + discountEndDate : ''),'success');
