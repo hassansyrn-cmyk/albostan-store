@@ -1207,7 +1207,7 @@
   @media(max-width:680px){.prod-zoom-btn{opacity:1;transform:none}.ci-thumb{width:48px;height:48px}}
 
 
-  /* ===== AlBostan responsive polish: mobile + desktop + desktop-view on mobile ===== */
+  /* ===== AlBostan final responsive polish + SVG icons ===== */
   .hero{width:100%;max-width:1200px;box-sizing:border-box;overflow:hidden;background:radial-gradient(circle at 18% 18%,rgba(201,162,39,.18),transparent 34%),radial-gradient(circle at 82% 80%,rgba(31,94,59,.12),transparent 38%);border-radius:0 0 42px 42px;}
   .hero-visual{display:flex;align-items:center;justify-content:center;background:transparent;}
   .hero-banner-img{border:0!important;box-shadow:none!important;border-radius:30px!important;background:transparent!important;mix-blend-mode:multiply;filter:drop-shadow(0 26px 34px rgba(31,94,59,.12));-webkit-mask-image:radial-gradient(circle at 48% 48%,#000 68%,rgba(0,0,0,.78) 82%,transparent 100%);mask-image:radial-gradient(circle at 48% 48%,#000 68%,rgba(0,0,0,.78) 82%,transparent 100%);}
@@ -1219,15 +1219,18 @@
   .albostan-step-icon .svg-inline,.why-icon .svg-inline{width:2rem;height:2rem;color:var(--clay);}.wa-float .svg-inline{width:1.9rem;height:1.9rem;}.empty-svg{display:block;margin:0 auto 10px;color:var(--clay);}.empty-svg .svg-inline{width:2.15rem;height:2.15rem;}
   .footer-contact-icon{display:inline-flex;width:1.15rem;height:1.15rem;margin-inline-end:6px;color:var(--gold);vertical-align:middle;}.footer-contact-icon .svg-inline{width:100%;height:100%;}
   .modal-action-btns .svg-inline,.wishlist-actions .svg-inline,.last-order-actions .svg-inline{width:1em;height:1em;margin-inline-end:6px;}.prod-wishlist-btn .svg-inline,.prod-zoom-btn .svg-inline{width:1.05rem;height:1.05rem;}.prod-wishlist-btn.active{color:#e63946;}
-  .modal-emoji .svg-inline,.related-item-thumb .svg-inline,.prod-emoji-fallback .svg-inline,.ci-thumb .svg-inline{width:2.2rem;height:2.2rem;color:var(--clay);}
-  .ci-thumb{font-size:0!important;}.ci-thumb .svg-inline{font-size:16px;}
+  .modal-emoji .svg-inline,.related-item-thumb .svg-inline,.prod-emoji-fallback .svg-inline,.ci-thumb .svg-inline{width:2.2rem;height:2.2rem;color:var(--clay);}.ci-thumb{font-size:0!important;}.ci-thumb .svg-inline{font-size:16px;}
   .download-app-btn::before{content:"";width:1.15rem;height:1.15rem;display:inline-block;background:currentColor;mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 3v11M8 10l4 4 4-4M5 19h14"/></svg>') center/contain no-repeat;-webkit-mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 3v11M8 10l4 4 4-4M5 19h14"/></svg>') center/contain no-repeat;}
+  .mobile-menu-brand{display:none;}
+  .mobile-menu-brand img{height:55px;width:auto;display:block;margin:0 auto 6px;mix-blend-mode:multiply;}
+  .mobile-menu-brand span{display:block;text-align:center;font-family:'El Messiri',serif;color:var(--clay);font-weight:700;font-size:1rem;}
   @media(max-width:680px){
     .hero{width:100%!important;max-width:100%!important;margin:0!important;padding:44px 18px 44px!important;grid-template-columns:1fr!important;gap:28px!important;text-align:center!important;border-radius:0 0 34px 34px!important;}.hero-text p{margin-left:auto!important;margin-right:auto!important;max-width:100%!important;}.hero-text>.cta-row{display:none!important;}
     .hero-visual{width:100%!important;height:auto!important;margin:2px auto 0!important;position:relative!important;overflow:visible!important;}.hero-banner-img{width:min(100%,560px)!important;border-radius:28px!important;transform:translateY(-2px);filter:drop-shadow(0 20px 25px rgba(31,94,59,.10));-webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 13%,#000 84%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0%,#000 13%,#000 84%,transparent 100%);}
     .hero-mobile-cta{position:absolute;top:49%;right:6%;left:auto;transform:translateY(-50%);z-index:8;display:flex!important;flex-direction:column;align-items:stretch;justify-content:center;gap:7px;width:32%;max-width:132px;pointer-events:auto;}html[dir="ltr"] .hero-mobile-cta{right:6%;left:auto;}.hero-mobile-cta .btn-primary,.hero-mobile-cta .btn-ghost{width:100%;min-height:34px;padding:8px 8px!important;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:999px;font-size:.68rem!important;line-height:1.18;box-shadow:0 12px 22px -18px rgba(24,26,25,.55);white-space:normal;}.hero-mobile-cta .btn-primary{background:rgba(31,94,59,.94);}.hero-mobile-cta .btn-ghost{background:rgba(255,255,255,.72);backdrop-filter:blur(8px);border-width:1.5px;}
     .section.categories{width:100%!important;max-width:100%!important;margin:0!important;padding:50px 14px 54px!important;border-radius:30px!important;overflow:hidden!important;}.categories .section-head{margin-bottom:28px!important;}.categories .section-head h2{font-size:2rem!important;line-height:1.25!important;}.cat-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important;width:100%!important;max-width:100%!important;margin:0 auto!important;}.cat-item{width:100%!important;min-width:0!important;padding:8px 8px 14px!important;border-radius:22px!important;box-shadow:0 18px 38px -30px rgba(24,26,25,.46)!important;}.cat-circle{width:100%!important;aspect-ratio:1/.86!important;border-radius:18px!important;}.cat-item span{min-height:38px!important;font-size:.94rem!important;line-height:1.25!important;}
     .nav-wrap{padding:18px 20px!important;gap:10px!important;}.nav-wrap .logo{display:none!important;}.nav-icons{width:100%!important;display:grid!important;grid-template-columns:repeat(6,1fr)!important;align-items:center!important;gap:10px!important;position:relative!important;}.icon-btn,.menu-toggle{width:48px!important;height:48px!important;border-radius:50%!important;background:rgba(255,255,255,.68)!important;border:1px solid rgba(31,94,59,.08)!important;color:var(--clay)!important;box-shadow:0 12px 24px -22px rgba(24,26,25,.45)!important;display:flex!important;align-items:center!important;justify-content:center!important;justify-self:center!important;padding:0!important;}.menu-toggle{font-size:0!important;}.lang-btn{width:64px!important;border-radius:999px!important;background:var(--soil)!important;color:#fff!important;font-size:.96rem!important;font-weight:900!important;}.cart-count{top:-7px!important;left:-5px!important;width:22px!important;height:22px!important;font-size:.75rem!important;background:var(--gold)!important;color:#fff!important;border:2px solid #fff!important;}html[dir="ltr"] .cart-count{left:auto!important;right:-5px!important;}
+    nav.links .mobile-menu-brand{display:block;padding-bottom:10px;margin-bottom:6px;border-bottom:1px solid rgba(31,94,59,.1);}
     .albostan-how-to-section{padding:42px 14px!important;}.albostan-how-to-box{padding:24px 14px!important;border-radius:24px!important;}.albostan-how-to-box .section-head h2{font-size:1.55rem!important;line-height:1.35!important;}.albostan-steps-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin-top:20px!important;}.albostan-step-card{padding:12px 9px!important;border-radius:15px!important;min-height:138px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:flex-start!important;}.albostan-step-icon{font-size:1.45rem!important;margin-bottom:5px!important;line-height:1!important;}.albostan-step-card h4{font-size:.86rem!important;margin-bottom:4px!important;line-height:1.25!important;}.albostan-step-card p{font-size:.72rem!important;line-height:1.45!important;}.albostan-step-card:nth-child(5){grid-column:1 / -1!important;width:min(74%,280px)!important;justify-self:center!important;min-height:118px!important;}.albostan-cod-note{margin-top:14px!important;padding:10px 12px!important;border-radius:14px!important;font-size:.82rem!important;line-height:1.55!important;}
   }
   @media(max-width:390px){.nav-wrap{padding-left:12px!important;padding-right:12px!important;}.nav-icons{gap:6px!important;}.icon-btn,.menu-toggle{width:44px!important;height:44px!important;}.lang-btn{width:58px!important;}.hero-mobile-cta{right:5%;width:31%;max-width:118px;}.hero-mobile-cta .btn-primary,.hero-mobile-cta .btn-ghost{font-size:.62rem!important;min-height:32px;}.cat-grid{gap:10px!important;}.cat-item{padding:7px 7px 12px!important;}.cat-item span{font-size:.88rem!important;}.albostan-step-card{min-height:132px!important;padding:10px 7px!important;}.albostan-step-card p{font-size:.68rem!important;}}
@@ -1250,6 +1253,7 @@
       <img src="108579.png" alt="متجر البستان" class="header-logo-img" onerror="this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='">
     </a>
     <nav class="links">
+      <div class="mobile-menu-brand"><img src="108579.png" alt="متجر البستان" onerror="this.style.display='none'"><span>متجر البستان</span></div>
       <a href="#products" data-ar="المنتجات" data-en="Products">المنتجات</a>
       <a href="#categories" data-ar="الأقسام" data-en="Categories">الأقسام</a>
       <a href="#albostanHowToOrderSection" data-ar="كيف تطلب؟" data-en="How to Order?">كيف تطلب؟</a>
@@ -1262,18 +1266,18 @@
     </nav>
     <div class="nav-icons">
       <button class="icon-btn lang-btn" id="langToggle">EN</button>
-      <button class="icon-btn" id="installBtn" aria-label="تثبيت التطبيق" style="display:none;"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11"></path><path d="M8 10l4 4 4-4"></path><path d="M5 19h14"></path></svg></button>
-      <button class="icon-btn" id="accountBtn" aria-label="حسابي" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.8-4 5-6 8-6s6.2 2 8 6"></path></svg></button>
+      <button class="icon-btn" id="installBtn" aria-label="تثبيت التطبيق" style="display:none;"><svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11"></path><path d="M8 10l4 4 4-4"></path><path d="M5 19h14"></path></svg></button>
+      <button class="icon-btn" id="accountBtn" aria-label="حسابي" aria-expanded="false"><svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.8-4 5-6 8-6s6.2 2 8 6"></path></svg></button>
       <div class="account-dropdown" id="accountDropdown">
         <a href="#" data-ar="تسجيل الدخول" data-en="Login">تسجيل الدخول</a>
         <a href="#" data-ar="إنشاء حساب جديد" data-en="Create Account">إنشاء حساب جديد</a>
         <p data-ar="هذا القسم يحتاج ربط بنظام حسابات لاحقًا" data-en="This section will need a real auth system later">هذا القسم يحتاج ربط بنظام حسابات لاحقًا</p>
       </div>
       <button class="icon-btn" id="wishlistBtn" aria-label="المفضلة">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 5.6c-1.7-1.9-4.6-2-6.4-.2L12 7.8 9.6 5.4c-1.8-1.8-4.7-1.7-6.4.2-1.7 1.9-1.6 4.8.2 6.6L12 21l8.6-8.8c1.8-1.8 1.9-4.7.2-6.6z"></path></svg><span class="cart-count" id="wishlistCount">0</span>
+        <svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 5.6c-1.7-1.9-4.6-2-6.4-.2L12 7.8 9.6 5.4c-1.8-1.8-4.7-1.7-6.4.2-1.7 1.9-1.6 4.8.2 6.6L12 21l8.6-8.8c1.8-1.8 1.9-4.7.2-6.6z"></path></svg><span class="cart-count" id="wishlistCount">0</span>
       </button>
       <button class="icon-btn" id="cartBtn" aria-label="سلة التسوق">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h2l2.2 10.2a2 2 0 0 0 2 1.6h6.9a2 2 0 0 0 1.9-1.4L21 8H7"></path><circle cx="10" cy="20" r="1.4"></circle><circle cx="18" cy="20" r="1.4"></circle></svg><span class="cart-count" id="cartCount">0</span>
+        <svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h2l2.2 10.2a2 2 0 0 0 2 1.6h6.9a2 2 0 0 0 1.9-1.4L21 8H7"></path><circle cx="10" cy="20" r="1.4"></circle><circle cx="18" cy="20" r="1.4"></circle></svg><span class="cart-count" id="cartCount">0</span>
       </button>
       <button class="menu-toggle" id="menuToggle" aria-label="القائمة" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h16"></path></svg></button>
     </div>
@@ -1827,18 +1831,18 @@
       cart:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h2l2.2 10.2a2 2 0 0 0 2 1.6h6.9a2 2 0 0 0 1.9-1.4L21 8H7"></path><circle cx="10" cy="20" r="1.4"></circle><circle cx="18" cy="20" r="1.4"></circle></svg>',
       heart:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 5.6c-1.7-1.9-4.6-2-6.4-.2L12 7.8 9.6 5.4c-1.8-1.8-4.7-1.7-6.4.2-1.7 1.9-1.6 4.8.2 6.6L12 21l8.6-8.8c1.8-1.8 1.9-4.7.2-6.6z"></path></svg>',
       user:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.8-4 5-6 8-6s6.2 2 8 6"></path></svg>',
-      chat:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 18l-2 4 4-2a9 9 0 1 0-2-2z"></path><path d="M8 11h.01M12 11h.01M16 11h.01"></path></svg>',
-      pin:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.2 7-12a7 7 0 0 0-14 0c0 6.8 7 12 7 12z"></path><circle cx="12" cy="9" r="2.3"></circle></svg>',
-      cash:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"></rect><circle cx="12" cy="12" r="3"></circle><path d="M6 9v.01M18 15v.01"></path></svg>',
-      search:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>',
       download:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11"></path><path d="M8 10l4 4 4-4"></path><path d="M5 19h14"></path></svg>',
+      pin:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.2 7-12a7 7 0 0 0-14 0c0 6.8 7 12 7 12z"></path><circle cx="12" cy="9" r="2.3"></circle></svg>',
+      chat:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 18l-2 4 4-2a9 9 0 1 0-2-2z"></path><path d="M8 11h.01M12 11h.01M16 11h.01"></path></svg>',
+      cash:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"></rect><circle cx="12" cy="12" r="3"></circle><path d="M6 9v.01M18 15v.01"></path></svg>',
       phone:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"></path></svg>',
       mail:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg>',
       clock:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>',
       truck:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v10H3z"></path><path d="M14 11h4l3 3v3h-7z"></path><circle cx="7" cy="19" r="2"></circle><circle cx="18" cy="19" r="2"></circle></svg>',
       check:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg>',
       coin:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M12 7v10M9 10c0-1.2 1.2-2 3-2s3 .8 3 2-1.2 2-3 2-3 .8-3 2 1.2 2 3 2 3-.8 3-2"></path></svg>',
-      link:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.1 0l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"></path><path d="M14 11a5 5 0 0 0-7.1 0l-2 2A5 5 0 0 0 12 20.1l1.1-1.1"></path></svg>'
+      link:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.1 0l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"></path><path d="M14 11a5 5 0 0 0-7.1 0l-2 2A5 5 0 0 0 12 20.1l1.1-1.1"></path></svg>',
+      search:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>'
     };
     return icons[name] || icons.bag;
   }
