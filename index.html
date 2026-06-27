@@ -477,6 +477,72 @@
     cursor:not-allowed;
     transform:none !important;
   }
+
+  /* --- أزرار الكمية مباشرة على بطاقة المنتج --- */
+  .prod-card-cart-control{
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:6px;
+    flex-shrink:0;
+  }
+  .prod-card-minus,
+  .prod-card-qty{
+    display:none;
+  }
+  .prod-card-cart-control.active{
+    background:var(--sand);
+    padding:4px 6px;
+    border-radius:50px;
+  }
+  .prod-card-cart-control.active .prod-card-minus,
+  .prod-card-cart-control.active .prod-card-qty{
+    display:flex;
+  }
+  .prod-card-minus,
+  .prod-card-plus{
+    width:32px;
+    height:32px;
+    border-radius:50%;
+    align-items:center;
+    justify-content:center;
+    font-weight:800;
+    line-height:1;
+    box-shadow:none;
+  }
+  .prod-card-minus{
+    background:var(--white);
+    color:var(--clay);
+    border:1px solid rgba(31,94,59,.14);
+    font-size:1.15rem;
+  }
+  .prod-card-plus{
+    width:32px;
+    height:32px;
+    font-size:1.15rem;
+  }
+  .prod-card-qty{
+    min-width:20px;
+    align-items:center;
+    justify-content:center;
+    font-weight:800;
+    color:var(--clay);
+    font-size:.95rem;
+  }
+  .prod-card-cart-control.active .prod-card-plus:hover{
+    transform:scale(1.08);
+  }
+  .prod-card-minus:hover{
+    background:#f8faf8;
+    transform:scale(1.08);
+  }
+  .prod-card-minus:disabled,
+  .prod-card-plus:disabled{
+    background:#ccc;
+    color:#fff;
+    cursor:not-allowed;
+    transform:none !important;
+  }
   
   .prod-wishlist-btn{
     position:absolute;
@@ -1191,39 +1257,12 @@
     }
   }
 
-
-
-  /* ===== PREMIUM STORE FRONT 2026: Hero + Slider + Carousel + Cards ===== */
-  body{background:radial-gradient(circle at 8% 10%,rgba(201,162,39,.18),transparent 28%),radial-gradient(circle at 90% 8%,rgba(31,94,59,.14),transparent 30%),linear-gradient(135deg,#F5F7F5 0%,#EEF3EF 48%,#F8F6EC 100%);} 
-  body::before{content:'';position:fixed;inset:0;z-index:-2;pointer-events:none;background-image:linear-gradient(rgba(31,94,59,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(31,94,59,.045) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.72),transparent 82%);} 
-  .scroll-progress{position:fixed;top:0;right:0;width:0;height:4px;z-index:99999;background:linear-gradient(90deg,var(--gold),#F2D36B,var(--clay));box-shadow:0 0 16px rgba(201,162,39,.45);} 
-  header{transition:.25s;} header.scrolled{background:rgba(255,255,255,.9);box-shadow:0 18px 40px -30px rgba(24,26,25,.55);} 
-  .hero.premium-hero{max-width:1240px;padding:58px 24px 80px;grid-template-columns:1.04fr .96fr;gap:36px;} 
-  .hero-kicker{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.78);border:1px solid rgba(31,94,59,.12);color:var(--clay);font-weight:800;font-size:.9rem;box-shadow:0 12px 30px -22px rgba(31,94,59,.35);margin-bottom:16px;} 
-  .premium-hero .hero-text h1{font-size:4rem;letter-spacing:-.5px;} .premium-hero .hero-text h1 em{background:linear-gradient(90deg,var(--gold),#E9C85E,#AF8120);-webkit-background-clip:text;background-clip:text;color:transparent;} 
-  .hero-trust-row{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 4px}.hero-trust-chip{display:inline-flex;align-items:center;gap:7px;padding:9px 12px;border-radius:999px;background:rgba(255,255,255,.78);border:1px solid rgba(31,94,59,.09);font-size:.86rem;font-weight:800;color:#314238} 
-  .hero-search-wall{margin-top:22px;background:rgba(255,255,255,.74);border:1px solid rgba(31,94,59,.12);border-radius:22px;padding:10px;display:flex;align-items:center;gap:10px;max-width:545px;box-shadow:0 20px 45px -34px rgba(31,94,59,.45)} .hero-search-wall span{font-size:1.25rem;padding-inline-start:8px}.hero-search-wall input{flex:1;border:none;background:transparent;outline:none;font-family:inherit;font-size:.98rem;padding:12px 4px;color:var(--soil)}.hero-search-wall button{padding:12px 20px;border-radius:50px;background:var(--clay);color:#fff;font-weight:800} 
-  .hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px;max-width:560px}.hero-stat{background:rgba(255,255,255,.72);border:1px solid rgba(31,94,59,.10);border-radius:18px;padding:14px 12px;box-shadow:0 14px 28px -24px rgba(31,94,59,.42)}.hero-stat strong{display:block;color:var(--clay);font-size:1.25rem;font-weight:900}.hero-stat small{display:block;color:#65736A;font-weight:700;margin-top:3px} 
-  .premium-visual{height:480px!important;display:flex;align-items:center;justify-content:center}.hero-showcase-card{position:relative;width:min(460px,100%);min-height:420px;border-radius:38px;padding:28px;background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(245,247,245,.78));border:1px solid rgba(31,94,59,.12);box-shadow:0 34px 85px -50px rgba(24,26,25,.6);overflow:hidden}.hero-showcase-card::before{content:'';position:absolute;width:300px;height:300px;border-radius:50%;top:-110px;inset-inline-end:-95px;background:radial-gradient(circle,rgba(201,162,39,.35),transparent 66%);animation:premiumFloat 7s ease-in-out infinite}.hero-showcase-top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}.hero-mini-badge{background:#EAF7EF;color:var(--clay);border:1px solid rgba(31,94,59,.12);padding:8px 12px;border-radius:999px;font-weight:900;font-size:.83rem}.hero-live-dot{display:inline-flex;align-items:center;gap:7px;color:#3A4B41;font-size:.82rem;font-weight:800}.hero-live-dot::before{content:'';width:9px;height:9px;border-radius:50%;background:#2ecc71;box-shadow:0 0 0 7px rgba(46,204,113,.14)} 
-  .hero-logo-orbit{position:relative;height:230px;margin:28px 0 10px;display:flex;align-items:center;justify-content:center}.hero-logo-orbit::before,.hero-logo-orbit::after{content:'';position:absolute;border:1px dashed rgba(31,94,59,.22);border-radius:50%;animation:orbitSpin 16s linear infinite}.hero-logo-orbit::before{width:210px;height:210px}.hero-logo-orbit::after{width:270px;height:270px;animation-direction:reverse;opacity:.7}.hero-logo-orbit img{width:215px;mix-blend-mode:multiply;position:relative;z-index:2;animation:float 5s ease-in-out infinite}.floating-product-pill{position:absolute;z-index:3;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid rgba(31,94,59,.10);border-radius:999px;padding:9px 12px;font-size:.85rem;font-weight:900;box-shadow:0 18px 28px -24px rgba(24,26,25,.55)}.pill-1{top:8px;right:18px;animation:premiumFloat 5.5s ease-in-out infinite}.pill-2{bottom:8px;left:2px;animation:premiumFloat 6s ease-in-out infinite .7s}.pill-3{top:96px;left:8px;animation:premiumFloat 6.5s ease-in-out infinite 1s}.hero-deal-panel{position:relative;z-index:2;background:linear-gradient(135deg,#153B24,#1F5E3B);color:#fff;border-radius:24px;padding:18px;display:flex;align-items:center;justify-content:space-between;gap:14px}.hero-deal-panel h3{font-size:1.1rem;color:var(--gold);margin-bottom:3px}.hero-deal-panel p{font-size:.86rem;opacity:.88;line-height:1.5}.hero-deal-panel a{background:var(--gold);color:#fff;border-radius:999px;padding:11px 16px;font-weight:900;white-space:nowrap}@keyframes orbitSpin{to{transform:rotate(360deg)}}@keyframes premiumFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}} 
-  .offers-slider-section{max-width:1200px;margin:0 auto;padding:20px 24px 70px}.premium-offer-slider{position:relative;border-radius:34px;overflow:hidden;min-height:310px;box-shadow:0 26px 70px -50px rgba(24,26,25,.72)}.offer-slide{position:absolute;inset:0;padding:44px 48px;display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:center;opacity:0;transform:scale(1.02);transition:opacity .55s ease,transform .55s ease;background:linear-gradient(120deg,#153B24,#1F5E3B);color:#fff}.offer-slide.active{opacity:1;transform:scale(1);position:relative}.offer-slide::before{content:'';position:absolute;width:360px;height:360px;border-radius:50%;top:-150px;inset-inline-end:-90px;background:radial-gradient(circle,rgba(201,162,39,.35),transparent 68%)}.offer-content{position:relative;z-index:2}.offer-tag{display:inline-block;background:rgba(201,162,39,.18);border:1px solid rgba(201,162,39,.42);color:#F8D96F;padding:7px 12px;border-radius:999px;font-weight:900;font-size:.82rem;margin-bottom:12px}.offer-content h2{font-size:2.25rem;color:#fff;line-height:1.35;margin-bottom:10px}.offer-content p{opacity:.88;line-height:1.8;max-width:520px;margin-bottom:20px}.offer-visual{position:relative;z-index:2;text-align:center;font-size:8rem;filter:drop-shadow(0 22px 20px rgba(0,0,0,.2));animation:premiumFloat 5.6s ease-in-out infinite}.offer-dots{position:absolute;bottom:18px;inset-inline-start:44px;display:flex;gap:8px;z-index:4}.offer-dot{width:10px;height:10px;border:0;border-radius:999px;background:rgba(255,255,255,.4);cursor:pointer;transition:.25s;padding:0}.offer-dot.active{width:32px;background:var(--gold)} 
-  .seasonal-banner{max-width:1200px;margin:0 auto 30px;padding:0 24px}.seasonal-box{border-radius:32px;padding:30px;background:linear-gradient(135deg,#fff,#F8F3DA);border:1px solid rgba(201,162,39,.22);display:flex;align-items:center;justify-content:space-between;gap:20px;box-shadow:0 22px 55px -45px rgba(24,26,25,.45);overflow:hidden;position:relative}.seasonal-box::after{content:'🎁';position:absolute;inset-inline-end:22%;top:-18px;font-size:5rem;opacity:.10;transform:rotate(-15deg)}.seasonal-copy h2{font-size:1.8rem;color:var(--clay);margin-bottom:8px}.seasonal-copy p{color:#526158;line-height:1.7;font-weight:600}.countdown{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;position:relative;z-index:2}.countdown-box{min-width:74px;background:#fff;border:1px solid rgba(31,94,59,.10);border-radius:18px;padding:12px 10px;text-align:center;box-shadow:0 12px 28px -24px rgba(24,26,25,.45)}.countdown-box strong{display:block;color:var(--clay);font-size:1.4rem;font-weight:900}.countdown-box span{font-size:.78rem;color:#68756D;font-weight:800} 
-  .featured-carousel-section{max-width:1200px;margin:0 auto;padding:70px 24px 10px}.carousel-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:24px}.carousel-head h2{font-size:2.2rem;color:var(--clay)}.carousel-controls{display:flex;gap:8px}.carousel-controls button{width:42px;height:42px;border-radius:50%;padding:0;background:#fff;color:var(--clay);border:1px solid rgba(31,94,59,.12);box-shadow:0 12px 26px -22px rgba(24,26,25,.4)}.featured-carousel{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 2px 20px;scrollbar-width:thin}.featured-card{min-width:260px;scroll-snap-align:start;border-radius:24px;background:#fff;border:1px solid rgba(31,94,59,.10);overflow:hidden;box-shadow:0 18px 38px -32px rgba(24,26,25,.55);cursor:pointer;transition:.25s}.featured-card:hover{transform:translateY(-6px);box-shadow:0 26px 48px -34px rgba(31,94,59,.55)}.featured-thumb{height:150px;background:linear-gradient(135deg,#E8ECE9,#fff);display:flex;align-items:center;justify-content:center;font-size:3.4rem;position:relative;overflow:hidden}.featured-thumb img{width:100%;height:100%;object-fit:cover}.featured-body{padding:16px}.featured-body small{color:var(--gold);font-weight:900}.featured-body h3{font-size:1.05rem;color:var(--soil);margin:7px 0;line-height:1.4}.featured-price{display:flex;align-items:center;justify-content:space-between;color:var(--clay);font-weight:900}.featured-price button{width:34px;height:34px;border-radius:50%;padding:0;background:var(--gold)} 
-  .prod-grid{gap:28px}.prod-card{border:1px solid rgba(31,94,59,.10);box-shadow:0 18px 44px -36px rgba(24,26,25,.55);isolation:isolate}.prod-card::before{content:'';position:absolute;inset:0;border-radius:var(--radius);background:linear-gradient(135deg,rgba(201,162,39,.24),rgba(31,94,59,.18),transparent 54%);opacity:0;z-index:-1;transition:.25s}.prod-card::after{content:'';position:absolute;inset:1px;background:var(--white);border-radius:calc(var(--radius) - 1px);z-index:-1}.prod-card:hover::before{opacity:1}.prod-thumb{height:190px;background:linear-gradient(135deg,#EEF2EF,#fff)!important}.prod-body{padding:18px 18px 20px}.prod-body h4{line-height:1.45;min-height:44px}.prod-foot{gap:12px}.price{font-size:1.18rem}.prod-badge{background:linear-gradient(135deg,#e63946,#F05D6A);box-shadow:0 12px 20px -14px rgba(230,57,70,.75)}.prod-wishlist-btn{backdrop-filter:blur(6px)} 
-  .prod-card-cart-control{display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-shrink:0}.prod-card-minus,.prod-card-qty{display:none}.prod-card-cart-control.active{background:var(--sand);padding:4px 6px;border-radius:50px}.prod-card-cart-control.active .prod-card-minus,.prod-card-cart-control.active .prod-card-qty{display:flex}.prod-card-minus,.prod-card-plus{width:32px;height:32px;border-radius:50%;align-items:center;justify-content:center;font-weight:800;line-height:1;box-shadow:none}.prod-card-minus{background:var(--white);color:var(--clay);border:1px solid rgba(31,94,59,.14);font-size:1.15rem}.prod-card-plus{font-size:1.15rem}.prod-card-qty{min-width:20px;align-items:center;justify-content:center;font-weight:900;color:var(--clay)} 
-  .skeleton-card{background:rgba(255,255,255,.78);border:1px solid rgba(31,94,59,.08);box-shadow:0 14px 34px -30px rgba(24,26,25,.4)}.skeleton-thumb,.skeleton-line{background:linear-gradient(90deg,#E8ECE9,#F9FAF9,#E8ECE9);background-size:220% 100%;animation:premiumSkeleton 1.4s ease-in-out infinite}@keyframes premiumSkeleton{0%{background-position:0 0}100%{background-position:-220% 0}} 
-  .reveal-on-scroll{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s ease}.reveal-on-scroll.is-visible{opacity:1;transform:translateY(0)} 
-  @media(max-width:980px){.hero.premium-hero{grid-template-columns:1fr;padding-top:42px}.premium-hero .hero-text h1{font-size:3rem}.premium-visual{height:auto!important}.offer-slide{grid-template-columns:1fr;padding:36px 26px}.offer-visual{font-size:5.5rem}.seasonal-box{flex-direction:column;text-align:center}} 
-  @media(max-width:680px){.premium-hero .hero-text h1{font-size:2.25rem}.hero-search-wall{flex-direction:column;align-items:stretch}.hero-stats{grid-template-columns:1fr}.hero-showcase-card{min-height:auto;padding:20px;border-radius:28px}.hero-logo-orbit{height:190px}.hero-logo-orbit img{width:170px}.hero-logo-orbit::before{width:170px;height:170px}.hero-logo-orbit::after{width:215px;height:215px}.floating-product-pill{font-size:.76rem;padding:7px 10px}.hero-deal-panel{flex-direction:column;text-align:center}.offer-content h2{font-size:1.65rem}.premium-offer-slider{min-height:390px}.offer-dots{inset-inline-start:26px}.carousel-head{align-items:start;flex-direction:column}}
-
   @media (prefers-reduced-motion:reduce){
     .hero-logo-img{animation:none;}
     .icon-btn, .cat-circle, .prod-thumb, .add-btn, .cat-item, .prod-card, .why-card, .wa-float{transition:none;}
     .icon-btn:hover, .cat-item:hover .cat-circle, .prod-card:hover .prod-thumb, .add-btn:hover, .why-card:hover, .wa-float:hover{transform:none;}
     .modal-box{transition:none;}
     .faq-answer{transition:none;}
-    .premium-hero *, .offer-visual, .wa-float{animation:none!important;}
-    .reveal-on-scroll{opacity:1!important;transform:none!important;transition:none!important;}
   }
 </style>
 </head>
@@ -1292,19 +1331,24 @@
 </aside>
 
 <!-- Hero -->
-<section class="hero premium-hero">
+<section class="hero">
   <div class="hero-text">
-    <div class="hero-kicker" data-ar="✨ تجربة تسوق أسرع وأكثر عصرية" data-en="✨ Faster, smarter shopping experience">✨ تجربة تسوق أسرع وأكثر عصرية</div>
     <p class="eyebrow display" data-ar="متجرك العائلي المتكامل" data-en="Your complete family store">متجرك العائلي المتكامل</p>
-    <h1><span data-ar="كل ما يحتاجه بيتك، " data-en="Everything your home needs, ">كل ما يحتاجه بيتك، </span><em data-ar="بتجربة عصرية" data-en="with a modern experience">بتجربة عصرية</em></h1>
-    <p data-ar="تسوّق منتجات مختارة للعائلة والمنزل داخل الإمارات، أضف للسلة بسهولة، واطلب مباشرة عبر واتساب مع الدفع نقدًا عند الاستلام." data-en="Shop selected family and home products across the UAE, add to cart easily, and order via WhatsApp with Cash on Delivery.">تسوّق منتجات مختارة للعائلة والمنزل داخل الإمارات، أضف للسلة بسهولة، واطلب مباشرة عبر واتساب مع الدفع نقدًا عند الاستلام.</p>
-    <div class="cta-row"><a href="#products" class="btn-primary" data-ar="ابدأ التسوق الآن" data-en="Start Shopping">ابدأ التسوق الآن</a><a href="#premiumOffers" class="btn-ghost" data-ar="شاهد العروض" data-en="View Offers">شاهد العروض</a></div>
-    <div class="hero-search-wall"><span>🔎</span><input id="heroQuickSearch" type="text" data-ar-placeholder="اكتب اسم المنتج وانتقل للنتائج..." data-en-placeholder="Type a product name and jump to results..." placeholder="اكتب اسم المنتج وانتقل للنتائج..."><button type="button" id="heroSearchBtn" data-ar="بحث" data-en="Search">بحث</button></div>
-    <div class="hero-trust-row"><div class="hero-trust-chip" data-ar="🚚 توصيل داخل الإمارات" data-en="🚚 UAE Delivery">🚚 توصيل داخل الإمارات</div><div class="hero-trust-chip" data-ar="💵 الدفع عند الاستلام" data-en="💵 Cash on Delivery">💵 الدفع عند الاستلام</div><div class="hero-trust-chip" data-ar="💬 طلب سريع عبر واتساب" data-en="💬 WhatsApp Ordering">💬 طلب سريع عبر واتساب</div></div>
-    <div class="hero-stats"><div class="hero-stat"><strong id="heroProductCount">+0</strong><small data-ar="منتج متاح" data-en="Available products">منتج متاح</small></div><div class="hero-stat"><strong>2-5</strong><small data-ar="أيام توصيل متوقعة" data-en="Delivery days">أيام توصيل متوقعة</small></div><div class="hero-stat"><strong>COD</strong><small data-ar="نقدًا عند الاستلام" data-en="Cash on Delivery">نقدًا عند الاستلام</small></div></div>
+    <h1><span data-ar="كل ما يحتاجه بيتك، " data-en="Everything your home needs, ">كل ما يحتاجه بيتك، </span><em data-ar="في مكان واحد" data-en="in one place">في مكان واحد</em></h1>
+    <p data-ar="من البقالة اليومية إلى الإلكترونيات والأزياء ومستلزمات المنزل — AlBostan Store يجمع لك كل شيء بجودة موثوقة وأسعار تنافسية." data-en="From daily groceries to electronics, fashion, and home essentials — AlBostan Store brings it all together with trusted quality and competitive prices.">من البقالة اليومية إلى الإلكترونيات والأزياء ومستلزمات المنزل — AlBostan Store يجمع لك كل شيء بجودة موثوقة وأسعار تنافسية.</p>
+    <div class="cta-row">
+      <a href="#products" class="btn-primary" data-ar="تسوّق الآن" data-en="Shop Now">تسوّق الآن</a>
+      <a href="#categories" class="btn-ghost" data-ar="استعرض الأقسام" data-en="Browse Categories">استعرض الأقسام</a>
+    </div>
   </div>
-  <div class="hero-visual premium-visual"><div class="hero-showcase-card"><div class="hero-showcase-top"><span class="hero-mini-badge" data-ar="عروض هذا الأسبوع" data-en="This week's deals">عروض هذا الأسبوع</span><span class="hero-live-dot" data-ar="متجر نشط" data-en="Live store">متجر نشط</span></div><div class="hero-logo-orbit"><span class="floating-product-pill pill-1">🥕 <span data-ar="بقالة" data-en="Grocery">بقالة</span></span><span class="floating-product-pill pill-2">📱 <span data-ar="إلكترونيات" data-en="Electronics">إلكترونيات</span></span><span class="floating-product-pill pill-3">🏠 <span data-ar="منزل" data-en="Home">منزل</span></span><img src="108579.png" alt="AlBostan Store Logo" onerror="this.style.display='none'"></div><div class="hero-deal-panel"><div><h3 data-ar="خصومات متجددة" data-en="Fresh discounts">خصومات متجددة</h3><p data-ar="تابع العروض والمنتجات المميزة قبل انتهاء الكمية." data-en="Catch featured offers before stock runs out.">تابع العروض والمنتجات المميزة قبل انتهاء الكمية.</p></div><a href="#featuredCarouselSection" data-ar="اكتشف" data-en="Explore">اكتشف</a></div></div></div>
+  <div class="hero-visual">
+    <div class="blob b1"></div>
+    <div class="hero-logo-display">
+      <img src="108579.png" alt="AlBostan Store Logo" class="hero-logo-img" onerror="this.style.display='none'">
+    </div>
+  </div>
 </section>
+
 <svg class="wave-divider" viewBox="0 0 1440 60" preserveAspectRatio="none">
   <path d="M0,30 C360,80 1080,-20 1440,30 L1440,60 L0,60 Z"></path>
 </svg>
@@ -1318,17 +1362,6 @@
     <p class="download-app-note" data-ar="ملاحظة: قد يطلب الهاتف السماح بتثبيت التطبيقات من المتصفح لأن التطبيق غير منشور على Google Play بعد." data-en="Note: Your phone may ask to allow installing apps from the browser because the app is not published on Google Play yet.">ملاحظة: قد يطلب الهاتف السماح بتثبيت التطبيقات من المتصفح لأن التطبيق غير منشور على Google Play بعد.</p>
   </div>
 </section>
-
-<!-- سلايدر عروض متحرك -->
-<section class="offers-slider-section" id="premiumOffers">
-  <div class="premium-offer-slider" id="premiumOfferSlider">
-    <div class="offer-slide active"><div class="offer-content"><span class="offer-tag" data-ar="عرض الأسبوع" data-en="Weekly Offer">عرض الأسبوع</span><h2 data-ar="وفّر أكثر مع عروض البستان المتجددة" data-en="Save more with fresh AlBostan deals">وفّر أكثر مع عروض البستان المتجددة</h2><p data-ar="منتجات مختارة للعائلة والمنزل بأسعار منافسة وطلب مباشر عبر واتساب." data-en="Selected family and home products with competitive prices and direct WhatsApp ordering.">منتجات مختارة للعائلة والمنزل بأسعار منافسة وطلب مباشر عبر واتساب.</p><a href="#products" class="btn-primary" data-ar="تسوّق العروض" data-en="Shop Offers">تسوّق العروض</a></div><div class="offer-visual">🛒</div></div>
-    <div class="offer-slide"><div class="offer-content"><span class="offer-tag" data-ar="توصيل داخل الإمارات" data-en="UAE Delivery">توصيل داخل الإمارات</span><h2 data-ar="طلبات أسرع وتجربة أسهل من الهاتف" data-en="Faster orders and smoother mobile shopping">طلبات أسرع وتجربة أسهل من الهاتف</h2><p data-ar="أضف المنتجات، اختر الكمية، وأرسل الطلب برسالة منظمة عبر واتساب." data-en="Add products, choose quantities, and send an organized order via WhatsApp.">أضف المنتجات، اختر الكمية، وأرسل الطلب برسالة منظمة عبر واتساب.</p><a href="#albostanHowToOrderSection" class="btn-primary" data-ar="كيف أطلب؟" data-en="How to order?">كيف أطلب؟</a></div><div class="offer-visual">🚚</div></div>
-    <div class="offer-slide"><div class="offer-content"><span class="offer-tag" data-ar="الدفع عند الاستلام" data-en="Cash on Delivery">الدفع عند الاستلام</span><h2 data-ar="اطلب بثقة وادفع عند الاستلام" data-en="Order with confidence and pay on delivery">اطلب بثقة وادفع عند الاستلام</h2><p data-ar="لا تحتاج بطاقة بنكية الآن، يتم تأكيد الطلب معك عبر واتساب قبل التجهيز." data-en="No card needed now; your order is confirmed via WhatsApp before preparation.">لا تحتاج بطاقة بنكية الآن، يتم تأكيد الطلب معك عبر واتساب قبل التجهيز.</p><a href="#shipping-info" class="btn-primary" data-ar="معلومات الطلب" data-en="Order Info">معلومات الطلب</a></div><div class="offer-visual">💵</div></div>
-    <div class="offer-dots" id="offerDots"></div>
-  </div>
-</section>
-<section class="seasonal-banner" id="seasonalBanner"><div class="seasonal-box"><div class="seasonal-copy"><h2 data-ar="العروض الموسمية لفترة محدودة" data-en="Limited-time seasonal offers">العروض الموسمية لفترة محدودة</h2><p data-ar="لا تفوّت المنتجات المختارة لهذا الأسبوع. العداد التالي يعطي إحساسًا بالعروض المحدودة ويمكن تعديله لاحقًا حسب حملاتك." data-en="Do not miss this week's selected products. This countdown creates urgency and can be adjusted later for your campaigns.">لا تفوّت المنتجات المختارة لهذا الأسبوع. العداد التالي يعطي إحساسًا بالعروض المحدودة ويمكن تعديله لاحقًا حسب حملاتك.</p></div><div class="countdown" id="seasonalCountdown"><div class="countdown-box"><strong id="cdDays">00</strong><span data-ar="يوم" data-en="Days">يوم</span></div><div class="countdown-box"><strong id="cdHours">00</strong><span data-ar="ساعة" data-en="Hours">ساعة</span></div><div class="countdown-box"><strong id="cdMinutes">00</strong><span data-ar="دقيقة" data-en="Minutes">دقيقة</span></div><div class="countdown-box"><strong id="cdSeconds">00</strong><span data-ar="ثانية" data-en="Seconds">ثانية</span></div></div></div></section>
 
 <!-- الأقسام -->
 <section class="section categories" id="categories">
@@ -1387,9 +1420,6 @@
     </div>
   </div>
 </section>
-
-<!-- منتجات مميزة Carousel -->
-<section class="featured-carousel-section" id="featuredCarouselSection"><div class="carousel-head"><div><p class="eyebrow" data-ar="مختارة لك" data-en="Picked for you">مختارة لك</p><h2 data-ar="منتجات مميزة بطريقة عرض عصرية" data-en="Featured products in a modern carousel">منتجات مميزة بطريقة عرض عصرية</h2></div><div class="carousel-controls"><button type="button" id="featuredPrev" aria-label="السابق">‹</button><button type="button" id="featuredNext" aria-label="التالي">›</button></div></div><div class="featured-carousel" id="featuredCarousel"><div class="skeleton-card" style="min-width:260px;"><div class="skeleton-thumb"></div><div class="skeleton-line w-75"></div><div class="skeleton-line w-50"></div></div><div class="skeleton-card" style="min-width:260px;"><div class="skeleton-thumb"></div><div class="skeleton-line w-75"></div><div class="skeleton-line w-50"></div></div><div class="skeleton-card" style="min-width:260px;"><div class="skeleton-thumb"></div><div class="skeleton-line w-75"></div><div class="skeleton-line w-50"></div></div></div></section>
 
 <!-- المنتجات -->
 <section class="section" id="products">
@@ -2812,15 +2842,63 @@
     return rows;
   }
 
-  function getCartItemQuantityByName(nameAr){ const item = cart.find(cartItem => cartItem.nameAr === nameAr); return item ? Number(item.quantity || 0) : 0; }
-  function syncProductQtyControls(){ document.querySelectorAll('.prod-card').forEach(card => { const control = card.querySelector('.prod-card-cart-control'); const qtyText = card.querySelector('.prod-card-qty'); if(!control || !qtyText) return; const qty = getCartItemQuantityByName(card.dataset.nameAr); qtyText.textContent = qty; control.classList.toggle('active', qty > 0); }); }
-  function decreaseProductFromCard(productData){ const idx = cart.findIndex(item => item.nameAr === productData.nameAr); if(idx === -1) return; trackGAEvent('remove_from_cart', { item_name: cart[idx].nameEn, value: cart[idx].price }); cart[idx].quantity--; if(cart[idx].quantity <= 0){ cart.splice(idx, 1); showToast(T[currentLang].removed); } renderCart(); }
+  function getCartItemQuantityByName(nameAr){
+    const item = cart.find(cartItem => cartItem.nameAr === nameAr);
+    return item ? Number(item.quantity || 0) : 0;
+  }
+
+  function updateProductCardQtyControl(card){
+    if(!card) return;
+    const control = card.querySelector('.prod-card-cart-control');
+    const qtyText = card.querySelector('.prod-card-qty');
+    if(!control || !qtyText) return;
+    const qty = getCartItemQuantityByName(card.dataset.nameAr);
+    qtyText.textContent = qty;
+    control.classList.toggle('active', qty > 0);
+  }
+
+  function syncProductQtyControls(){
+    document.querySelectorAll('.prod-card').forEach(card => updateProductCardQtyControl(card));
+  }
+
+  function decreaseProductFromCard(productData){
+    const idx = cart.findIndex(item => item.nameAr === productData.nameAr);
+    if(idx === -1) return;
+    trackGAEvent('remove_from_cart', { item_name: cart[idx].nameEn, value: cart[idx].price });
+    cart[idx].quantity--;
+    if(cart[idx].quantity <= 0){
+      cart.splice(idx, 1);
+      showToast(T[currentLang].removed);
+    }
+    renderCart();
+  }
+
   function bindProductCardEvents(){
-    document.querySelectorAll('.prod-card .prod-card-plus').forEach(btn => { btn.addEventListener('click', (e) => { e.stopPropagation(); const card = btn.closest('.prod-card'); if(!card || card.dataset.available === 'no') return; addToCart(card.dataset, 1); btn.style.transform = 'scale(1.18)'; setTimeout(() => btn.style.transform = '', 150); }); });
-    document.querySelectorAll('.prod-card .prod-card-minus').forEach(btn => { btn.addEventListener('click', (e) => { e.stopPropagation(); const card = btn.closest('.prod-card'); if(!card) return; decreaseProductFromCard(card.dataset); }); });
-    document.querySelectorAll('.prod-card .prod-wishlist-btn').forEach(btn => { btn.addEventListener('click', (e) => { e.stopPropagation(); toggleWishlist(btn.closest('.prod-card').dataset); }); });
-    document.querySelectorAll('.prod-card').forEach(card => { card.addEventListener('click', () => openModal(card.dataset)); });
-    syncProductQtyControls(); refreshRevealTargets();
+    document.querySelectorAll('.prod-card .prod-card-plus').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const card = btn.closest('.prod-card');
+        if(!card || card.dataset.available === 'no') return;
+        addToCart(card.dataset, 1);
+        btn.style.transform = 'scale(1.18)';
+        setTimeout(() => btn.style.transform = '', 150);
+      });
+    });
+    document.querySelectorAll('.prod-card .prod-card-minus').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const card = btn.closest('.prod-card');
+        if(!card) return;
+        decreaseProductFromCard(card.dataset);
+      });
+    });
+    document.querySelectorAll('.prod-card .prod-wishlist-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => { e.stopPropagation(); toggleWishlist(btn.closest('.prod-card').dataset); });
+    });
+    document.querySelectorAll('.prod-card').forEach(card => {
+      card.addEventListener('click', () => openModal(card.dataset));
+    });
+    syncProductQtyControls();
   }
 
   function renderProductsFromSheet(products){
@@ -2911,7 +2989,14 @@
           <p class="prod-cat" data-ar="${categoryAr}" data-en="${categoryEn}">${currentLang === 'ar' ? categoryAr : categoryEn}</p>
           <h4 data-ar="${nameAr}" data-en="${nameEn}">${currentLang === 'ar' ? nameAr : nameEn}</h4>
           ${ratingStarsHtml}
-          <div class="prod-foot">${priceDisplayHtml}<div class="prod-card-cart-control"><button class="prod-card-minus" type="button" aria-label="إنقاص الكمية">−</button><span class="prod-card-qty">0</span><button class="add-btn prod-card-plus" type="button" aria-label="أضف للسلة" ${available === 'no' ? 'disabled' : ''}>+</button></div></div>
+          <div class="prod-foot">
+            ${priceDisplayHtml}
+            <div class="prod-card-cart-control" aria-label="التحكم بكمية المنتج">
+              <button class="prod-card-minus" type="button" aria-label="إنقاص الكمية">−</button>
+              <span class="prod-card-qty">0</span>
+              <button class="add-btn prod-card-plus" type="button" aria-label="أضف للسلة" ${available === 'no' ? 'disabled' : ''}>+</button>
+            </div>
+          </div>
         </div>
       `;
       grid.appendChild(card);
@@ -2920,10 +3005,6 @@
     bindProductCardEvents();
     syncWishlistHearts();
     filterProducts();
-    renderFeaturedCarousel(products);
-    const heroProductCount = document.getElementById('heroProductCount');
-    if(heroProductCount) heroProductCount.textContent = '+' + products.length;
-    refreshRevealTargets();
   }
 
   async function loadProductsFromSheet(){
@@ -2965,20 +3046,6 @@
     if(typeof gtag === 'function') gtag('event', eventName, params);
   }
 
-
-
-  // ===== Premium UI helpers =====
-  let albostanRevealObserver = null, offerSlideIndex = 0, offerSlideTimer = null;
-  function refreshRevealTargets(){ const targets = document.querySelectorAll('.section,.download-app-section,.offers-slider-section,.seasonal-banner,.featured-carousel-section,.albostan-how-to-section,.promo,.prod-card,.featured-card,.cat-item,.why-card,.info-card,.albostan-step-card,.track-order-section,.newsletter'); targets.forEach(el => { if(!el.classList.contains('reveal-on-scroll')) el.classList.add('reveal-on-scroll'); if(albostanRevealObserver) albostanRevealObserver.observe(el); }); }
-  function setupRevealMotion(){ if('IntersectionObserver' in window){ albostanRevealObserver = new IntersectionObserver(entries => { entries.forEach(entry => { if(entry.isIntersecting){ entry.target.classList.add('is-visible'); albostanRevealObserver.unobserve(entry.target); } }); }, {threshold:.12, rootMargin:'0px 0px -45px 0px'}); refreshRevealTargets(); } else { document.querySelectorAll('.reveal-on-scroll').forEach(el => el.classList.add('is-visible')); } }
-  function setupScrollProgress(){ if(!document.querySelector('.scroll-progress')){ const progress = document.createElement('div'); progress.className = 'scroll-progress'; document.body.appendChild(progress); } const progressEl = document.querySelector('.scroll-progress'); const headerEl = document.querySelector('header'); function update(){ const scrollTop = window.scrollY || document.documentElement.scrollTop || 0; const docHeight = Math.max(1, document.documentElement.scrollHeight - window.innerHeight); if(progressEl) progressEl.style.width = Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)) + '%'; if(headerEl) headerEl.classList.toggle('scrolled', scrollTop > 8); } window.addEventListener('scroll', update, {passive:true}); window.addEventListener('resize', update); update(); }
-  function setupHeroQuickSearch(){ const input = document.getElementById('heroQuickSearch'); const btn = document.getElementById('heroSearchBtn'); function goSearch(){ const searchInput = document.getElementById('searchInput'); if(input && searchInput){ searchInput.value = input.value.trim(); searchInput.dispatchEvent(new Event('input', {bubbles:true})); } const productsSection = document.getElementById('products'); if(productsSection) productsSection.scrollIntoView({behavior:'smooth', block:'start'}); } if(btn) btn.addEventListener('click', goSearch); if(input) input.addEventListener('keydown', e => { if(e.key === 'Enter') goSearch(); }); }
-  function setupOfferSlider(){ const slider = document.getElementById('premiumOfferSlider'); if(!slider) return; const slides = Array.from(slider.querySelectorAll('.offer-slide')); const dotsArea = document.getElementById('offerDots'); if(!slides.length || !dotsArea) return; dotsArea.innerHTML = slides.map((_,i)=>`<button class="offer-dot ${i===0?'active':''}" type="button" data-index="${i}"></button>`).join(''); const dots = Array.from(dotsArea.querySelectorAll('.offer-dot')); function showSlide(i){ offerSlideIndex=(i+slides.length)%slides.length; slides.forEach((s,idx)=>s.classList.toggle('active',idx===offerSlideIndex)); dots.forEach((d,idx)=>d.classList.toggle('active',idx===offerSlideIndex)); } function restart(){ clearInterval(offerSlideTimer); offerSlideTimer=setInterval(()=>showSlide(offerSlideIndex+1),4500); } dots.forEach(dot=>dot.addEventListener('click',()=>{showSlide(Number(dot.dataset.index));restart();})); restart(); }
-  function setupSeasonalCountdown(){ const daysEl=document.getElementById('cdDays'),hoursEl=document.getElementById('cdHours'),minutesEl=document.getElementById('cdMinutes'),secondsEl=document.getElementById('cdSeconds'); if(!daysEl||!hoursEl||!minutesEl||!secondsEl) return; const key='albostan_seasonal_countdown_end'; let end=Number(localStorage.getItem(key)||0); if(!end||end<Date.now()){ end=Date.now()+7*24*60*60*1000; try{localStorage.setItem(key,String(end));}catch(e){} } function pad2(n){return String(n).padStart(2,'0');} function update(){ const diff=Math.max(0,end-Date.now()); const totalSeconds=Math.floor(diff/1000); daysEl.textContent=pad2(Math.floor(totalSeconds/86400)); hoursEl.textContent=pad2(Math.floor((totalSeconds%86400)/3600)); minutesEl.textContent=pad2(Math.floor((totalSeconds%3600)/60)); secondsEl.textContent=pad2(totalSeconds%60); } update(); setInterval(update,1000); }
-  function renderFeaturedCarousel(products){ const area=document.getElementById('featuredCarousel'); if(!area||!Array.isArray(products)) return; const items=products.filter(p=>(p.available||'yes')!=='no').slice(0,10); if(!items.length){ area.innerHTML=`<p style="padding:20px;color:#777;">${currentLang==='ar'?'لا توجد منتجات مميزة حاليًا':'No featured products yet'}</p>`; return; } area.innerHTML=items.map((p,idx)=>{ const pricing=getEffectiveProductPricing(p); const name=currentLang==='ar'?(p.nameAr||p.nameEn||''):(p.nameEn||p.nameAr||''); const cat=currentLang==='ar'?(p.categoryAr||''):(p.categoryEn||''); const img=p.img||(Array.isArray(p.images)&&p.images[0])||''; const thumb=img?`<img src="${escapeHTML(img)}" alt="" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><span style="display:none;">${escapeHTML(p.emoji||'🛒')}</span>`:`<span>${escapeHTML(p.emoji||'🛒')}</span>`; return `<div class="featured-card" data-index="${idx}"><div class="featured-thumb">${thumb}</div><div class="featured-body"><small>${escapeHTML(cat)}</small><h3>${escapeHTML(name)}</h3><div class="featured-price"><span>${escapeHTML(pricing.priceText)} ${T[currentLang].currency}</span><button type="button" data-featured-index="${idx}">+</button></div></div></div>`; }).join(''); area.querySelectorAll('[data-featured-index]').forEach(btn=>btn.addEventListener('click',e=>{e.stopPropagation(); const p=items[Number(btn.dataset.featuredIndex)]; if(p) addToCart(p,1);})); area.querySelectorAll('.featured-card').forEach(card=>card.addEventListener('click',()=>{ const original=items[Number(card.dataset.index)]; if(original) openModal(original); })); refreshRevealTargets(); }
-  function setupFeaturedCarouselControls(){ const area=document.getElementById('featuredCarousel'),prev=document.getElementById('featuredPrev'),next=document.getElementById('featuredNext'); if(!area) return; const step=290; if(prev) prev.addEventListener('click',()=>area.scrollBy({left:document.documentElement.dir==='rtl'?step:-step,behavior:'smooth'})); if(next) next.addEventListener('click',()=>area.scrollBy({left:document.documentElement.dir==='rtl'?-step:step,behavior:'smooth'})); }
-  function setupPremiumStoreUI(){ setupScrollProgress(); setupRevealMotion(); setupHeroQuickSearch(); setupOfferSlider(); setupSeasonalCountdown(); setupFeaturedCarouselControls(); }
-
   // ===== PWA =====
   let deferredInstallPrompt = null;
   const installBtn = document.getElementById('installBtn');
@@ -3013,7 +3080,6 @@
   })();
 
   // ===== تهيئة أولية =====
-  setupPremiumStoreUI();
   bindProductCardEvents();
   renderCart();
   renderWishlist();
