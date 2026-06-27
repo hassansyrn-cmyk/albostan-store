@@ -1237,6 +1237,127 @@
     .hero{max-width:1180px!important;padding:58px 28px 70px!important;grid-template-columns:1fr 1fr!important;gap:30px!important;align-items:center!important;text-align:start!important;}.hero-text{min-width:0!important;}.hero-text h1{font-size:2.75rem!important;line-height:1.28!important;}.hero-text p{font-size:1rem!important;line-height:1.85!important;max-width:520px!important;}.hero-text>.cta-row{display:flex!important;justify-content:flex-start!important;}.hero-mobile-cta{display:none!important;}.hero-visual{height:auto!important;margin:0!important;}.hero-banner-img{width:100%!important;max-height:420px!important;object-fit:contain!important;}.section.categories{width:calc(100% - 48px)!important;}.cat-grid{grid-template-columns:repeat(3,1fr)!important;gap:18px!important;}
   }
 
+
+  /* ===== تحسين قسم كيف تطلب: ديسكتوب فيو + موبايل compact ===== */
+  @media(min-width:681px) and (max-width:1100px){
+    .albostan-how-to-section{
+      padding:54px 24px!important;
+    }
+    .albostan-how-to-box{
+      padding:34px 28px!important;
+    }
+    .albostan-steps-grid{
+      grid-template-columns:repeat(2,minmax(0,1fr))!important;
+      gap:18px!important;
+      align-items:stretch!important;
+    }
+    .albostan-step-card{
+      display:flex!important;
+      flex-direction:column!important;
+      align-items:center!important;
+      justify-content:center!important;
+      min-height:142px!important;
+    }
+    .albostan-step-card:nth-child(5){
+      grid-column:1 / -1!important;
+      width:50%!important;
+      min-width:320px!important;
+      justify-self:center!important;
+    }
+  }
+  @media(max-width:680px){
+    .albostan-how-to-section{
+      padding:42px 14px!important;
+    }
+    .albostan-how-to-box{
+      padding:24px 14px!important;
+      border-radius:24px!important;
+    }
+    .albostan-how-to-box .section-head{
+      margin-bottom:0!important;
+    }
+    .albostan-how-to-box .section-head h2{
+      font-size:1.55rem!important;
+      line-height:1.35!important;
+    }
+    .albostan-steps-grid{
+      grid-template-columns:repeat(2,minmax(0,1fr))!important;
+      gap:10px!important;
+      margin-top:20px!important;
+    }
+    .albostan-step-card{
+      padding:12px 9px!important;
+      border-radius:15px!important;
+      min-height:138px!important;
+      display:flex!important;
+      flex-direction:column!important;
+      align-items:center!important;
+      justify-content:flex-start!important;
+    }
+    .albostan-step-icon{
+      font-size:1.45rem!important;
+      margin-bottom:5px!important;
+      line-height:1!important;
+    }
+    .albostan-step-card h4{
+      font-size:.86rem!important;
+      margin-bottom:4px!important;
+      line-height:1.25!important;
+    }
+    .albostan-step-card p{
+      font-size:.72rem!important;
+      line-height:1.45!important;
+    }
+    .albostan-step-card:nth-child(5){
+      grid-column:1 / -1!important;
+      width:min(74%,280px)!important;
+      justify-self:center!important;
+      min-height:118px!important;
+    }
+    .albostan-cod-note{
+      margin-top:14px!important;
+      padding:10px 12px!important;
+      border-radius:14px!important;
+      font-size:.82rem!important;
+      line-height:1.55!important;
+    }
+  }
+  @media(max-width:390px){
+    .albostan-how-to-section{
+      padding:36px 10px!important;
+    }
+    .albostan-how-to-box{
+      padding:20px 10px!important;
+    }
+    .albostan-steps-grid{
+      gap:8px!important;
+    }
+    .albostan-step-card{
+      min-height:132px!important;
+      padding:10px 7px!important;
+    }
+    .albostan-step-card p{
+      font-size:.68rem!important;
+    }
+    .albostan-step-card:nth-child(5){
+      width:min(78%,260px)!important;
+    }
+  }
+
+
+  /* ===== SVG icons instead of emojis ===== */
+  .svg-inline{width:1.25em;height:1.25em;display:inline-block;vertical-align:-.22em;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+  .albostan-step-icon .svg-inline,.why-icon .svg-inline{width:2rem;height:2rem;color:var(--clay);}
+  .wa-float .svg-inline{width:1.9rem;height:1.9rem;}
+  .empty-svg{display:block;margin:0 auto 10px;color:var(--clay);}.empty-svg .svg-inline{width:2.15rem;height:2.15rem;}
+  .download-app-btn::before{content:"";width:1.15rem;height:1.15rem;display:inline-block;background:currentColor;mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 3v11M8 10l4 4 4-4M5 19h14"/></svg>') center/contain no-repeat;-webkit-mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 3v11M8 10l4 4 4-4M5 19h14"/></svg>') center/contain no-repeat;}
+  .footer-contact-icon{display:inline-flex;width:1.15rem;height:1.15rem;margin-inline-end:6px;color:var(--gold);vertical-align:middle;}
+  .footer-contact-icon .svg-inline{width:100%;height:100%;}
+  .modal-action-btns .svg-inline,.wishlist-actions .svg-inline,.last-order-actions .svg-inline{width:1em;height:1em;margin-inline-end:6px;}
+  .prod-wishlist-btn .svg-inline,.prod-zoom-btn .svg-inline{width:1.05rem;height:1.05rem;}
+  .prod-wishlist-btn.active{color:#e63946;}
+  .modal-emoji .svg-inline,.related-item-thumb .svg-inline,.prod-emoji-fallback .svg-inline,.ci-thumb .svg-inline{width:2.4rem;height:2.4rem;color:var(--clay);}
+
   @media (prefers-reduced-motion:reduce){
     .hero-logo-img{animation:none;}
     .icon-btn, .cat-circle, .prod-thumb, .add-btn, .cat-item, .prod-card, .why-card, .wa-float{transition:none;}
@@ -1291,7 +1412,7 @@
     <button class="cart-close" id="cartClose">×</button>
   </div>
   <div class="cart-items" id="cartItemsList">
-    <p class="cart-empty">السلة فارغة، أضف منتجات أولًا 🛍️</p>
+    <p class="cart-empty"><span class="empty-svg"><svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V6a5 5 0 0 1 10 0v2"></path><path d="M5 8h14l-1 13H6L5 8z"></path></svg></span>السلة فارغة، أضف منتجات أولًا</p>
   </div>
   <div class="cart-foot">
     <div class="cart-total"><span data-ar="الإجمالي" data-en="Total">الإجمالي</span><span id="cartTotal">0 د.إ</span></div>
@@ -1306,7 +1427,7 @@
     <button class="wishlist-close" id="wishlistClose">×</button>
   </div>
   <div class="wishlist-items" id="wishlistItemsList">
-    <p class="wishlist-empty">المفضلة فارغة حاليًا ❤️</p>
+    <p class="wishlist-empty"><span class="empty-svg"><svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 5.6c-1.7-1.9-4.6-2-6.4-.2L12 7.8 9.6 5.4c-1.8-1.8-4.7-1.7-6.4.2-1.7 1.9-1.6 4.8.2 6.6L12 21l8.6-8.8c1.8-1.8 1.9-4.7.2-6.6z"></path></svg></span>المفضلة فارغة حاليًا</p>
   </div>
 </aside>
 
@@ -1333,7 +1454,7 @@
   <div class="download-app-box">
     <h2 class="display" data-ar="حمّل تطبيق متجر البستان" data-en="Download AlBostan Store App">حمّل تطبيق متجر البستان</h2>
     <p class="download-desc" data-ar="ثبّت تطبيق متجر البستان على هاتفك لتجربة أسرع وأسهل في التسوق والطلب عبر واتساب." data-en="Install AlBostan Store app on your phone for a faster and easier shopping experience.">ثبّت تطبيق متجر البستان على هاتفك لتجربة أسرع وأسهل في التسوق والطلب عبر واتساب.</p>
-    <a href="downloads/AlBostanStore-v1.0.apk" download class="download-app-btn" data-ar="🤖 تحميل تطبيق الأندرويد APK" data-en="🤖 Download Android APK">🤖 تحميل تطبيق الأندرويد APK</a>
+    <a href="downloads/AlBostanStore-v1.0.apk" download class="download-app-btn" data-ar="تحميل تطبيق الأندرويد APK" data-en="Download Android APK">تحميل تطبيق الأندرويد APK</a>
     <p class="download-app-note" data-ar="ملاحظة: قد يطلب الهاتف السماح بتثبيت التطبيقات من المتصفح لأن التطبيق غير منشور على Google Play بعد." data-en="Note: Your phone may ask to allow installing apps from the browser because the app is not published on Google Play yet.">ملاحظة: قد يطلب الهاتف السماح بتثبيت التطبيقات من المتصفح لأن التطبيق غير منشور على Google Play بعد.</p>
   </div>
 </section>
@@ -1345,12 +1466,12 @@
     <h2 data-ar="أقسام المتجر" data-en="Store Categories">أقسام المتجر</h2>
   </div>
   <div class="cat-grid">
-    <a href="#products" class="cat-item" onclick="setFilter('Selected Products')"><div class="cat-circle"><img class="cat-img" src="images/category-selected-products.png" alt="" onerror="this.style.display='none';this.parentElement.textContent='🛍️';"></div><span data-ar="منتجات مختارة" data-en="Selected Products">منتجات مختارة</span></a>
-    <a href="#products" class="cat-item" onclick="setFilter('Electronics')"><div class="cat-circle"><img class="cat-img" src="images/category-electronics.png" alt="" onerror="this.style.display='none';this.parentElement.textContent='📱';"></div><span data-ar="إلكترونيات" data-en="Electronics">إلكترونيات</span></a>
-    <a href="#products" class="cat-item" onclick="setFilter('Fashion')"><div class="cat-circle"><img class="cat-img" src="images/category-fashion.png" alt="" onerror="this.style.display='none';this.parentElement.textContent='👕';"></div><span data-ar="أزياء" data-en="Fashion">أزياء</span></a>
-    <a href="#products" class="cat-item" onclick="setFilter('Home & Garden')"><div class="cat-circle"><img class="cat-img" src="images/category-home-garden.png" alt="" onerror="this.style.display='none';this.parentElement.textContent='🏠';"></div><span data-ar="المنزل والحديقة" data-en="Home & Garden">المنزل والحديقة</span></a>
-    <a href="#products" class="cat-item" onclick="setFilter('Kids')"><div class="cat-circle"><img class="cat-img" src="images/category-kids.png" alt="" onerror="this.style.display='none';this.parentElement.textContent='🧸';"></div><span data-ar="أطفال" data-en="Kids">أطفال</span></a>
-    <a href="#products" class="cat-item" onclick="setFilter('Sports')"><div class="cat-circle"><img class="cat-img" src="images/category-sports.png" alt="" onerror="this.style.display='none';this.parentElement.textContent='🏋️';"></div><span data-ar="رياضة" data-en="Sports">رياضة</span></a>
+    <a href="#products" class="cat-item" onclick="setFilter('Selected Products')"><div class="cat-circle"><img class="cat-img" src="images/category-selected-products.png" alt="" onerror="this.style.display='none';this.parentElement.classList.add('cat-fallback-icon');"></div><span data-ar="منتجات مختارة" data-en="Selected Products">منتجات مختارة</span></a>
+    <a href="#products" class="cat-item" onclick="setFilter('Electronics')"><div class="cat-circle"><img class="cat-img" src="images/category-electronics.png" alt="" onerror="this.style.display='none';this.parentElement.classList.add('cat-fallback-icon');"></div><span data-ar="إلكترونيات" data-en="Electronics">إلكترونيات</span></a>
+    <a href="#products" class="cat-item" onclick="setFilter('Fashion')"><div class="cat-circle"><img class="cat-img" src="images/category-fashion.png" alt="" onerror="this.style.display='none';this.parentElement.classList.add('cat-fallback-icon');"></div><span data-ar="أزياء" data-en="Fashion">أزياء</span></a>
+    <a href="#products" class="cat-item" onclick="setFilter('Home & Garden')"><div class="cat-circle"><img class="cat-img" src="images/category-home-garden.png" alt="" onerror="this.style.display='none';this.parentElement.classList.add('cat-fallback-icon');"></div><span data-ar="المنزل والحديقة" data-en="Home & Garden">المنزل والحديقة</span></a>
+    <a href="#products" class="cat-item" onclick="setFilter('Kids')"><div class="cat-circle"><img class="cat-img" src="images/category-kids.png" alt="" onerror="this.style.display='none';this.parentElement.classList.add('cat-fallback-icon');"></div><span data-ar="أطفال" data-en="Kids">أطفال</span></a>
+    <a href="#products" class="cat-item" onclick="setFilter('Sports')"><div class="cat-circle"><img class="cat-img" src="images/category-sports.png" alt="" onerror="this.style.display='none';this.parentElement.classList.add('cat-fallback-icon');"></div><span data-ar="رياضة" data-en="Sports">رياضة</span></a>
   </div>
 </section>
 
@@ -1363,27 +1484,27 @@
     </div>
     <div class="albostan-steps-grid">
       <div class="albostan-step-card">
-        <div class="albostan-step-icon">🛍️</div>
+        <div class="albostan-step-icon"><svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V6a5 5 0 0 1 10 0v2"></path><path d="M5 8h14l-1 13H6L5 8z"></path></svg></div>
         <h4 data-ar="اختر المنتجات" data-en="Choose products">اختر المنتجات</h4>
         <p data-ar="تصفح الأقسام واختر المنتجات المناسبة لك ولعائلتك." data-en="Browse categories and choose the products that suit you and your family.">تصفح الأقسام واختر المنتجات المناسبة لك ولعائلتك.</p>
       </div>
       <div class="albostan-step-card">
-        <div class="albostan-step-icon">🛒</div>
+        <div class="albostan-step-icon"><svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h2l2.2 10.2a2 2 0 0 0 2 1.6h6.9a2 2 0 0 0 1.9-1.4L21 8H7"></path><circle cx="10" cy="20" r="1.4"></circle><circle cx="18" cy="20" r="1.4"></circle></svg></div>
         <h4 data-ar="أضف للسلة" data-en="Add to cart">أضف للسلة</h4>
         <p data-ar="أضف المنتجات للسلة وحدد الكمية المطلوبة بسهولة." data-en="Add products to the cart and select the required quantity easily.">أضف المنتجات للسلة وحدد الكمية المطلوبة بسهولة.</p>
       </div>
       <div class="albostan-step-card">
-        <div class="albostan-step-icon">📍</div>
+        <div class="albostan-step-icon"><svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.2 7-12a7 7 0 0 0-14 0c0 6.8 7 12 7 12z"></path><circle cx="12" cy="9" r="2.3"></circle></svg></div>
         <h4 data-ar="أدخل بيانات التوصيل" data-en="Enter delivery details">أدخل بيانات التوصيل</h4>
         <p data-ar="اكتب الاسم والهاتف والإمارة والعنوان التفصيلي." data-en="Enter your name, phone, emirate, and detailed address.">اكتب الاسم والهاتف والإمارة والعنوان التفصيلي.</p>
       </div>
       <div class="albostan-step-card">
-        <div class="albostan-step-icon">💬</div>
+        <div class="albostan-step-icon"><svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 18l-2 4 4-2a9 9 0 1 0-2-2z"></path><path d="M8 11h.01M12 11h.01M16 11h.01"></path></svg></div>
         <h4 data-ar="أرسل عبر واتساب" data-en="Send via WhatsApp">أرسل عبر واتساب</h4>
         <p data-ar="سيتم تجهيز رسالة الطلب تلقائيًا مع رقم الطلب والتاريخ." data-en="Your order message will be prepared automatically with order ID and date.">سيتم تجهيز رسالة الطلب تلقائيًا مع رقم الطلب والتاريخ.</p>
       </div>
       <div class="albostan-step-card">
-        <div class="albostan-step-icon">💵</div>
+        <div class="albostan-step-icon"><svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"></rect><circle cx="12" cy="12" r="3"></circle><path d="M6 9v.01M18 15v.01"></path></svg></div>
         <h4 data-ar="الدفع عند الاستلام" data-en="Cash on Delivery">الدفع عند الاستلام</h4>
         <p data-ar="ادفع نقدًا عند استلام الطلب بعد تأكيده عبر واتساب." data-en="Pay cash when receiving the order after confirming it via WhatsApp.">ادفع نقدًا عند استلام الطلب بعد تأكيده عبر واتساب.</p>
       </div>
@@ -1462,7 +1583,7 @@
     <p data-ar="أدخل رقم الهاتف أو رقم طلبك للاستفسار عن حالة شحنتك مباشرة" data-en="Enter your phone or order number to inquire about your shipment status directly">أدخل رقم الهاتف أو رقم طلبك للاستفسار عن حالة شحنتك مباشرة</p>
     <form class="track-form" id="trackOrderForm" onsubmit="return false;">
       <input type="text" id="trackInput" required data-ar-placeholder="رقم الهاتف أو رقم الطلب..." data-en-placeholder="Phone or Order number...">
-      <button type="submit" id="trackSubmitBtn" data-ar="تتبع عبر واتساب 💬" data-en="Track via WhatsApp 💬">تتبع عبر واتساب 💬</button>
+      <button type="submit" id="trackSubmitBtn" data-ar="تتبع عبر واتساب" data-en="Track via WhatsApp">تتبع عبر واتساب</button>
     </form>
     <!-- آخر طلب من هذا الجهاز -->
     <div id="albostanLastOrderBox" class="last-order-box">
@@ -1552,22 +1673,22 @@
   </div>
   <div class="why-grid">
     <div class="why-card">
-      <div class="why-icon">🚚</div>
+      <div class="why-icon"><svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v10H3z"></path><path d="M14 11h4l3 3v3h-7z"></path><circle cx="7" cy="19" r="2"></circle><circle cx="18" cy="19" r="2"></circle></svg></div>
       <h4 data-ar="توصيل سريع" data-en="Fast Delivery">توصيل سريع</h4>
       <p data-ar="نوفر خدمة التوصيل لجميع إمارات الدولة، ويتم احتساب رسوم التوصيل تلقائيًا بناءً على إمارتك في صفحة الدفع." data-en="We deliver across all UAE emirates. Delivery fees are automatically calculated based on your emirate during checkout.">نوفر خدمة التوصيل لجميع إمارات الدولة، ويتم احتساب رسوم التوصيل تلقائيًا بناءً على إمارتك في صفحة الدفع.</p>
     </div>
     <div class="why-card">
-      <div class="why-icon">✅</div>
+      <div class="why-icon"><svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg></div>
       <h4 data-ar="جودة موثوقة" data-en="Trusted Quality">جودة موثوقة</h4>
       <p data-ar="نختار منتجاتنا بعناية لضمان جودة تدوم وتلبي توقعاتك." data-en="We carefully select our products to ensure lasting quality that meets your expectations.">نختار منتجاتنا بعناية لضمان جودة تدوم وتلبي توقعاتك.</p>
     </div>
     <div class="why-card">
-      <div class="why-icon">💰</div>
+      <div class="why-icon"><svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M12 7v10M9 10c0-1.2 1.2-2 3-2s3 .8 3 2-1.2 2-3 2-3 .8-3 2 1.2 2 3 2 3-.8 3-2"></path></svg></div>
       <h4 data-ar="أسعار مناسبة" data-en="Fair Prices">أسعار مناسبة</h4>
       <p data-ar="أسعار تنافسية تناسب جميع العائلات دون أي مقابل للجودة." data-en="Competitive prices that suit every family without compromising on quality.">أسعار تنافسية تناسب جميع العائلات دون أي مقابل للجودة.</p>
     </div>
     <div class="why-card">
-      <div class="why-icon">📲</div>
+      <div class="why-icon"><svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11"></path><path d="M8 10l4 4 4-4"></path><path d="M5 19h14"></path></svg></div>
       <h4 data-ar="طلب سهل عبر واتساب" data-en="Easy WhatsApp Ordering">طلب سهل عبر واتساب</h4>
       <p data-ar="أكمل طلبك بضغطة واحدة عبر واتساب دون أي تعقيد." data-en="Complete your order with one click via WhatsApp, with no complications.">أكمل طلبك بضغطة واحدة عبر واتساب دون أي تعقيد.</p>
     </div>
@@ -1616,20 +1737,20 @@
     <div>
       <h5 data-ar="تواصل معنا" data-en="Contact Us">تواصل معنا</h5>
       <ul>
-        <li>📞 <a href="https://wa.me/971501554132" target="_blank" style="direction:ltr; display:inline-block;">+971 50 155 4132</a></li>
-        <li>📧 support@albostanstore.online</li>
-        <li data-ar="📍 الإمارات العربية المتحدة" data-en="📍 United Arab Emirates">📍 الإمارات العربية المتحدة</li>
-        <li data-ar="🕒 يوميًا من 9 صباحًا إلى 10 مساءً" data-en="🕒 Daily: 9 AM to 10 PM">🕒 يوميًا من 9 صباحًا إلى 10 مساءً</li>
+        <li><span class="footer-contact-icon"><svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"></path></svg></span><a href="https://wa.me/971501554132" target="_blank" style="direction:ltr; display:inline-block;">+971 50 155 4132</a></li>
+        <li><span class="footer-contact-icon"><svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg></span>support@albostanstore.online</li>
+        <li><span class="footer-contact-icon"><svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.2 7-12a7 7 0 0 0-14 0c0 6.8 7 12 7 12z"></path><circle cx="12" cy="9" r="2.3"></circle></svg></span><span data-ar="الإمارات العربية المتحدة" data-en="United Arab Emirates">الإمارات العربية المتحدة</span></li>
+        <li><span class="footer-contact-icon"><svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></span><span data-ar="يوميًا من 9 صباحًا إلى 10 مساءً" data-en="Daily: 9 AM to 10 PM">يوميًا من 9 صباحًا إلى 10 مساءً</span></li>
       </ul>
     </div>
   </div>
   <div class="copyright" data-ar="© 2026 AlBostan Store. جميع الحقوق محفوظة." data-en="© 2026 AlBostan Store. All rights reserved.">© 2026 AlBostan Store. جميع الحقوق محفوظة.</div>
 </footer>
 
-<a href="#" class="wa-float" id="waFloatBtn" aria-label="تواصل عبر واتساب">💬</a>
+<a href="#" class="wa-float" id="waFloatBtn" aria-label="تواصل عبر واتساب"><svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 18l-2 4 4-2a9 9 0 1 0-2-2z"></path><path d="M8 11h.01M12 11h.01M16 11h.01"></path></svg></a>
 <button class="back-to-top" id="backToTopBtn" aria-label="الرجوع للأعلى" data-ar-aria-label="الرجوع للأعلى" data-en-aria-label="Back to top">↑</button>
 
-<div class="toast" id="toast">تمت الإضافة للسلة ✅</div>
+<div class="toast" id="toast">تمت الإضافة للسلة</div>
 <div class="image-lightbox-overlay" id="imageLightbox" aria-hidden="true"><div class="image-lightbox-box"><button type="button" class="image-lightbox-close" id="imageLightboxClose">×</button><button type="button" class="image-lightbox-prev" id="imageLightboxPrev">‹</button><img id="imageLightboxImg" src="" alt=""><button type="button" class="image-lightbox-next" id="imageLightboxNext">›</button><div class="image-lightbox-counter" id="imageLightboxCounter">1 / 1</div></div></div>
 
 <!-- Modal تفاصيل المنتج -->
@@ -1638,7 +1759,7 @@
     <button class="modal-close" id="modalClose">×</button>
     <div style="position:relative; display:flex; align-items:center; justify-content:center; margin-bottom:16px;">
       <img class="modal-img" id="mImg" src="" alt="" style="max-height:300px; object-fit:contain;">
-      <div class="modal-emoji" id="mEmoji" style="font-size:4rem;">🛒</div>
+      <div class="modal-emoji" id="mEmoji" style="font-size:4rem;"><svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V6a5 5 0 0 1 10 0v2"></path><path d="M5 8h14l-1 13H6L5 8z"></path></svg></div>
       <button id="mImgPrev" style="position:absolute; left:10px; background:rgba(0,0,0,0.5); color:#fff; border:none; width:30px; height:30px; border-radius:50%; cursor:pointer; font-size:1.2rem; display:none;">‹</button>
       <button id="mImgNext" style="position:absolute; right:10px; background:rgba(0,0,0,0.5); color:#fff; border:none; width:30px; height:30px; border-radius:50%; cursor:pointer; font-size:1.2rem; display:none;">›</button>
       <div id="mImgCounter" style="position:absolute; bottom:10px; background:rgba(0,0,0,0.6); color:#fff; padding:4px 8px; border-radius:50px; font-size:0.8rem; display:none;"></div>
@@ -1659,13 +1780,13 @@
     <div class="modal-action-btns">
       <button class="btn-primary modal-add-btn" id="mAddBtn">
         <span data-ar="إضافة للسلة" data-en="Add to Cart">إضافة للسلة</span>
-        <span>🛒</span>
+        <span><svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h2l2.2 10.2a2 2 0 0 0 2 1.6h6.9a2 2 0 0 0 1.9-1.4L21 8H7"></path><circle cx="10" cy="20" r="1.4"></circle><circle cx="18" cy="20" r="1.4"></circle></svg></span>
       </button>
       <button class="btn-primary modal-add-btn modal-direct-wa" id="mDirectWaBtn">
         <span data-ar="اطلب هذا المنتج عبر واتساب" data-en="Order this item via WhatsApp">اطلب هذا المنتج عبر واتساب</span>
-        <span>💬</span>
+        <span><svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 18l-2 4 4-2a9 9 0 1 0-2-2z"></path><path d="M8 11h.01M12 11h.01M16 11h.01"></path></svg></span>
       </button>
-      <button class="btn-primary modal-action-btns modal-share-btn" id="mShareBtn" data-ar="مشاركة المنتج 🔗" data-en="Share Product 🔗">مشاركة المنتج 🔗</button>
+      <button class="btn-primary modal-action-btns modal-share-btn" id="mShareBtn" data-ar="مشاركة المنتج" data-en="Share Product">مشاركة المنتج</button>
     </div>
     <div class="related-products-section" id="relatedProductsSection" style="display:none;">
       <h4 data-ar="منتجات مشابهة" data-en="Related Products">منتجات مشابهة</h4>
@@ -1754,7 +1875,7 @@
           <span id="summaryGrandTotal">0 AED</span>
         </div>
       </div>
-      <button type="submit" class="btn-primary" style="width:100%; text-align:center;" data-ar="إرسال الطلب عبر واتساب 💬" data-en="Send Order via WhatsApp 💬">إرسال الطلب عبر واتساب 💬</button>
+      <button type="submit" class="btn-primary" style="width:100%; text-align:center;" data-ar="إرسال الطلب عبر واتساب" data-en="Send Order via WhatsApp">إرسال الطلب عبر واتساب</button>
     </form>
   </div>
 </div>
@@ -1777,41 +1898,41 @@
   let currentLang = 'ar';
   const T = {
     ar: {
-      emptyCart: 'السلة فارغة، أضف منتجات أولًا 🛍️',
+      emptyCart: 'السلة فارغة، أضف منتجات أولًا',
       currency: 'د.إ',
-      added: 'تمت الإضافة للسلة ✅',
+      added: 'تمت الإضافة للسلة',
       removed: 'تم حذف المنتج من السلة',
-      emptyCartCheckout: 'السلة فارغة، أضف منتجات أولًا 🛍️',
+      emptyCartCheckout: 'السلة فارغة، أضف منتجات أولًا',
       noResults: 'لا توجد منتجات مطابقة',
       waInquiry: 'مرحبًا، أريد الاستفسار عن متجر البستان',
       outOfStock: 'غير متوفر',
       directWaMsg: 'مرحبًا متجر البستان، أريد طلب هذا المنتج بشكل مباشر:\n',
-      wishlistEmpty: 'المفضلة فارغة حاليًا ❤️',
-      wishlistAdded: 'تمت الإضافة للمفضلة ❤️',
-      wishlistRemoved: 'تمت الإزالة من المفضلة 🤍',
-      couponInvalid: 'الكوبون المدخل غير صحيح ❌',
-      couponSuccess: 'تم تطبيق الكوبون بنجاح 🎉',
+      wishlistEmpty: 'المفضلة فارغة حاليًا',
+      wishlistAdded: 'تمت الإضافة للمفضلة',
+      wishlistRemoved: 'تمت الإزالة من المفضلة',
+      couponInvalid: 'الكوبون المدخل غير صحيح',
+      couponSuccess: 'تم تطبيق الكوبون بنجاح',
       minOrderToast: 'الحد الأدنى للطلب هو 30 د.إ',
-      copied: 'تم نسخ الرابط ومعلومات المنتج بنجاح! 🔗',
+      copied: 'تم نسخ الرابط ومعلومات المنتج بنجاح!',
       trackMsg: 'مرحبًا، أريد تتبع طلبي. رقم الهاتف/الطلب: '
     },
     en: {
-      emptyCart: 'Your cart is empty, please add products first 🛍️',
+      emptyCart: 'Your cart is empty, please add products first',
       currency: 'AED',
-      added: 'Added to cart ✅',
+      added: 'Added to cart',
       removed: 'Item removed from cart',
-      emptyCartCheckout: 'Your cart is empty, please add products first 🛍️',
+      emptyCartCheckout: 'Your cart is empty, please add products first',
       noResults: 'No matching products found',
       waInquiry: 'Hello, I would like to ask about AlBostan Store',
       outOfStock: 'Out of Stock',
       directWaMsg: 'Hello AlBostan Store, I would like to order this item directly:\n',
-      wishlistEmpty: 'Your wishlist is empty ❤️',
-      wishlistAdded: 'Added to wishlist ❤️',
-      wishlistRemoved: 'Removed from wishlist 🤍',
-      couponInvalid: 'The entered coupon is invalid ❌',
-      couponSuccess: 'Coupon applied successfully 🎉',
+      wishlistEmpty: 'Your wishlist is empty',
+      wishlistAdded: 'Added to wishlist',
+      wishlistRemoved: 'Removed from wishlist',
+      couponInvalid: 'The entered coupon is invalid',
+      couponSuccess: 'Coupon applied successfully',
       minOrderToast: 'Minimum order amount is 30 AED',
-      copied: 'Product link and info copied successfully! 🔗',
+      copied: 'Product link and info copied successfully!',
       trackMsg: 'Hello, I would like to track my order. Phone/Order number: '
     }
   };
@@ -1824,6 +1945,19 @@
   const LAST_ORDER_DETAILS_KEY = 'albostan_last_order_details';
 
   // ===== دوال مساعدة =====
+
+  function svgIcon(name){
+    const icons = {
+      bag:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V6a5 5 0 0 1 10 0v2"></path><path d="M5 8h14l-1 13H6L5 8z"></path></svg>',
+      cart:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h2l2.2 10.2a2 2 0 0 0 2 1.6h6.9a2 2 0 0 0 1.9-1.4L21 8H7"></path><circle cx="10" cy="20" r="1.4"></circle><circle cx="18" cy="20" r="1.4"></circle></svg>',
+      heart:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 5.6c-1.7-1.9-4.6-2-6.4-.2L12 7.8 9.6 5.4c-1.8-1.8-4.7-1.7-6.4.2-1.7 1.9-1.6 4.8.2 6.6L12 21l8.6-8.8c1.8-1.8 1.9-4.7.2-6.6z"></path></svg>',
+      chat:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 18l-2 4 4-2a9 9 0 1 0-2-2z"></path><path d="M8 11h.01M12 11h.01M16 11h.01"></path></svg>',
+      link:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.1 0l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"></path><path d="M14 11a5 5 0 0 0-7.1 0l-2 2A5 5 0 0 0 12 20.1l1.1-1.1"></path></svg>',
+      search:'<svg class="svg-inline" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>'
+    };
+    return icons[name] || icons.bag;
+  }
+
   function escapeHTML(str) {
     if (!str) return '';
     return str.toString()
@@ -2094,8 +2228,8 @@
         <p><strong>الإجمالي:</strong> ${formatMoney(order.grandTotal)} ${cur}</p>
         <p><strong>طريقة الدفع:</strong> نقدًا عند الاستلام فقط</p>
         <div class="last-order-actions">
-          <button type="button" class="last-order-track-btn" id="trackLastOrderBtn">تتبع آخر طلب عبر واتساب 💬</button>
-          <button type="button" class="last-order-repeat-btn" id="repeatLastOrderBtn">إعادة طلب آخر طلب 🛒</button>
+          <button type="button" class="last-order-track-btn" id="trackLastOrderBtn">تتبع آخر طلب عبر واتساب</button>
+          <button type="button" class="last-order-repeat-btn" id="repeatLastOrderBtn">إعادة طلب آخر طلب</button>
         </div>`;
     } else {
       box.innerHTML = `
@@ -2106,8 +2240,8 @@
         <p><strong>Total:</strong> ${formatMoney(order.grandTotal)} ${cur}</p>
         <p><strong>Payment:</strong> Cash on Delivery only</p>
         <div class="last-order-actions">
-          <button type="button" class="last-order-track-btn" id="trackLastOrderBtn">Track last order via WhatsApp 💬</button>
-          <button type="button" class="last-order-repeat-btn" id="repeatLastOrderBtn">Repeat last order 🛒</button>
+          <button type="button" class="last-order-track-btn" id="trackLastOrderBtn">Track last order via WhatsApp</button>
+          <button type="button" class="last-order-repeat-btn" id="repeatLastOrderBtn">Repeat last order</button>
         </div>`;
     }
 
@@ -2133,11 +2267,11 @@
         order.items.forEach(savedItem => {
           const existing = cart.find(item => item.nameAr === savedItem.nameAr);
           if(existing){ existing.quantity += Number(savedItem.quantity || 1); }
-          else { cart.push({ nameAr: savedItem.nameAr, nameEn: savedItem.nameEn || savedItem.nameAr, price: Number(savedItem.price || 0), emoji: savedItem.emoji || '🛒', quantity: Number(savedItem.quantity || 1) }); }
+          else { cart.push({ nameAr: savedItem.nameAr, nameEn: savedItem.nameEn || savedItem.nameAr, price: Number(savedItem.price || 0), emoji: '', quantity: Number(savedItem.quantity || 1) }); }
         });
         renderCart();
         openCart();
-        showToast(currentLang === 'ar' ? 'تمت إضافة آخر طلب إلى السلة 🛒' : 'Last order has been added to the cart 🛒');
+        showToast(currentLang === 'ar' ? 'تمت إضافة آخر طلب إلى السلة' : 'Last order has been added to the cart');
       });
     }
   }
@@ -2187,7 +2321,7 @@
       const itemTotal = Number(item.price) * item.quantity;
       const name = currentLang === 'ar' ? item.nameAr : item.nameEn;
       const img = getProductPrimaryImage(item);
-      const thumbHtml = img ? `<div class="ci-thumb"><img src="${escapeHTML(img)}" alt="" onerror="this.parentElement.innerHTML='&lt;span&gt;${escapeHTML(item.emoji || '🛒')}&lt;/span&gt;'"></div>` : `<div class="ci-thumb"><span>${escapeHTML(item.emoji || '🛒')}</span></div>`;
+      const thumbHtml = img ? `<div class="ci-thumb"><img src="${escapeHTML(img)}" alt="" onerror="this.parentElement.innerHTML='&lt;span&gt;${svgIcon('bag')}&lt;/span&gt;'"></div>` : `<div class="ci-thumb"><span>${svgIcon('bag')}</span></div>`;
       return `<div class="cart-line">
         ${thumbHtml}
         <div class="ci-info"><h5>${escapeHTML(name)}</h5><span>${itemTotal} ${cur}</span></div>
@@ -2229,7 +2363,7 @@
         nameAr: productData.nameAr,
         nameEn: productData.nameEn,
         price: effectivePrice,
-        emoji: productData.emoji || '🛒',
+        emoji: '',
         img: getProductPrimaryImage(productData),
         images: normalizeProductImages(productData),
         quantity: customQty,
@@ -2268,7 +2402,7 @@
   function toggleWishlist(productData){
     const index = wishlist.findIndex(item => item.nameAr === productData.nameAr);
     if(index > -1){ wishlist.splice(index, 1); showToast(T[currentLang].wishlistRemoved); }
-    else { const pricing = getEffectiveProductPricing(productData); wishlist.push({ nameAr: productData.nameAr, nameEn: productData.nameEn, price: pricing.priceText, oldPrice: pricing.oldPriceText, discount: pricing.discount, discountEndDate: productData.discountEndDate || '', originalPriceBeforeDiscount: productData.originalPriceBeforeDiscount || productData.oldPrice || '', emoji: productData.emoji || '🛒', img: productData.img || '', categoryAr: productData.categoryAr || '', categoryEn: productData.categoryEn || '', descAr: productData.descAr || '', descEn: productData.descEn || '', available: productData.available || 'yes' }); showToast(T[currentLang].wishlistAdded); }
+    else { const pricing = getEffectiveProductPricing(productData); wishlist.push({ nameAr: productData.nameAr, nameEn: productData.nameEn, price: pricing.priceText, oldPrice: pricing.oldPriceText, discount: pricing.discount, discountEndDate: productData.discountEndDate || '', originalPriceBeforeDiscount: productData.originalPriceBeforeDiscount || productData.oldPrice || '', emoji: '', img: productData.img || '', categoryAr: productData.categoryAr || '', categoryEn: productData.categoryEn || '', descAr: productData.descAr || '', descEn: productData.descEn || '', available: productData.available || 'yes' }); showToast(T[currentLang].wishlistAdded); }
     saveWishlist();
     renderWishlist();
     syncWishlistHearts();
@@ -2279,7 +2413,7 @@
       const nameAr = card.dataset.nameAr;
       const isFav = wishlist.some(item => item.nameAr === nameAr);
       const heartBtn = card.querySelector('.prod-wishlist-btn');
-      if(heartBtn){ heartBtn.textContent = isFav ? '❤️' : '🤍'; isFav ? heartBtn.classList.add('active') : heartBtn.classList.remove('active'); }
+      if(heartBtn){ heartBtn.innerHTML = svgIcon('heart'); isFav ? heartBtn.classList.add('active') : heartBtn.classList.remove('active'); }
     });
   }
 
@@ -2298,8 +2432,8 @@
           <button class="ci-remove wl-remove-btn" data-index="${index}">×</button>
         </div>
         <div class="wishlist-actions">
-          <button class="wl-add-cart" data-index="${index}">${btnAddCartText} 🛒</button>
-          <button class="wl-wa-order" data-index="${index}">${btnOrderText} 💬</button>
+          <button class="wl-add-cart" data-index="${index}">${svgIcon('cart')} ${btnAddCartText}</button>
+          <button class="wl-wa-order" data-index="${index}">${svgIcon('chat')} ${btnOrderText}</button>
         </div>
       </div>`;
     }).join('');
@@ -2444,49 +2578,49 @@
     // بناء رسالة واتساب المحسّنة
     const cartItems = cart.map(item => ({
       nameAr: item.nameAr, nameEn: item.nameEn,
-      price: item.price, quantity: item.quantity, emoji: item.emoji || '🛒'
+      price: item.price, quantity: item.quantity, emoji: ''
     }));
 
     let msg = '';
     if(currentLang === 'ar'){
-      msg += `طلب جديد من متجر البستان 🧾\n`;
+      msg += `طلب جديد من متجر البستان \n`;
       msg += `رقم الطلب: ${meta.orderId}\n`;
       msg += `تاريخ الطلب: ${dateText}\n\n`;
-      msg += `👤 بيانات العميل:\n`;
+      msg += ` بيانات العميل:\n`;
       msg += `- الاسم: ${name}\n- الهاتف: ${phone}\n- الإمارة: ${emirate}\n- العنوان: ${address}\n`;
       if(notes) msg += `- ملاحظات: ${notes}\n`;
-      msg += `\n💳 طريقة الدفع:\n- نقدًا عند الاستلام فقط (COD)\n- سيتم تأكيد الطلب عبر واتساب قبل التجهيز والتوصيل.\n\n`;
-      msg += `📦 المنتجات المطلوبة:\n`;
+      msg += `\n طريقة الدفع:\n- نقدًا عند الاستلام فقط (COD)\n- سيتم تأكيد الطلب عبر واتساب قبل التجهيز والتوصيل.\n\n`;
+      msg += ` المنتجات المطلوبة:\n`;
       cartItems.forEach((item, idx) => { msg += `${idx+1}. ${item.nameAr} - الكمية: ${item.quantity} - السعر: ${item.price} د.إ\n`; });
-      msg += `\n💵 تفاصيل الحساب:\n`;
+      msg += `\n تفاصيل الحساب:\n`;
       msg += `- قيمة المنتجات قبل الخصم: ${formatMoney(subtotal)} د.إ\n`;
       if(discount > 0) msg += `- الكوبون المستخدم: ${couponEntered}\n- قيمة الخصم: ${formatMoney(discount)} د.إ\n`;
       msg += `- رسوم التوصيل: ${formatMoney(fee)} د.إ\n`;
       msg += `- الإجمالي النهائي: ${formatMoney(grandTotal)} د.إ\n\n`;
-      msg += `✅ تأكيد مهم:\nالدفع نقدًا عند الاستلام فقط، وسيتم التواصل مع العميل لتأكيد الطلب قبل التوصيل.`;
+      msg += ` تأكيد مهم:\nالدفع نقدًا عند الاستلام فقط، وسيتم التواصل مع العميل لتأكيد الطلب قبل التوصيل.`;
     } else {
-      msg += `New Order from AlBostan Store 🧾\n`;
+      msg += `New Order from AlBostan Store \n`;
       msg += `Order ID: ${meta.orderId}\n`;
       msg += `Order Date: ${dateText}\n\n`;
-      msg += `👤 Customer Details:\n`;
+      msg += ` Customer Details:\n`;
       msg += `- Name: ${name}\n- Phone: ${phone}\n- Emirate: ${emirate}\n- Address: ${address}\n`;
       if(notes) msg += `- Notes: ${notes}\n`;
-      msg += `\n💳 Payment Method:\n- Cash on Delivery only (COD)\n- The order will be confirmed via WhatsApp before preparation and delivery.\n\n`;
-      msg += `📦 Items Ordered:\n`;
+      msg += `\n Payment Method:\n- Cash on Delivery only (COD)\n- The order will be confirmed via WhatsApp before preparation and delivery.\n\n`;
+      msg += ` Items Ordered:\n`;
       cartItems.forEach((item, idx) => { msg += `${idx+1}. ${item.nameEn} - Qty: ${item.quantity} - Price: ${item.price} AED\n`; });
-      msg += `\n💵 Summary:\n`;
+      msg += `\n Summary:\n`;
       msg += `- Items total before discount: ${formatMoney(subtotal)} AED\n`;
       if(discount > 0) msg += `- Coupon used: ${couponEntered}\n- Discount: ${formatMoney(discount)} AED\n`;
       msg += `- Delivery fee: ${formatMoney(fee)} AED\n`;
       msg += `- Grand total: ${formatMoney(grandTotal)} AED\n\n`;
-      msg += `✅ Important Confirmation:\nPayment is Cash on Delivery only, and the order will be confirmed with the customer before delivery.`;
+      msg += ` Important Confirmation:\nPayment is Cash on Delivery only, and the order will be confirmed with the customer before delivery.`;
     }
 
     // حفظ آخر طلب
     saveLastOrderDetails(meta, { name, phone, emirate, address, coupon: couponEntered, subtotal, discount, deliveryFee: fee, grandTotal }, cartItems);
 
     trackGAEvent('whatsapp_checkout', { value: grandTotal });
-    showToast(currentLang === 'ar' ? 'تم تجهيز طلبك، سيتم فتح واتساب الآن 💬' : 'Your order is ready, WhatsApp will open now 💬');
+    showToast(currentLang === 'ar' ? 'تم تجهيز طلبك، سيتم فتح واتساب الآن' : 'Your order is ready, WhatsApp will open now');
     window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
     checkoutModal.classList.remove('open');
     resetPendingOrderMeta();
@@ -2669,12 +2803,12 @@
       mImg.onerror = function(){
         mImg.style.display = 'none';
         mEmoji.style.display = 'inline-block';
-        mEmoji.textContent = data.emoji || '🛒';
+        mEmoji.innerHTML = svgIcon('bag');
       };
     } else {
       mImg.style.display = 'none';
       mEmoji.style.display = 'inline-block';
-      mEmoji.textContent = data.emoji || '🛒';
+      mEmoji.innerHTML = svgIcon('bag');
     }
     renderRelatedProducts(data);
   }
@@ -2687,7 +2821,7 @@
     relatedProductsArea.innerHTML = filtered.map((p, idx) => {
       const pName = currentLang === 'ar' ? p.nameAr : p.nameEn;
       const mediaHtml = p.img ? `<img src="${p.img}" class="related-item-thumb" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">` : '';
-      return `<div class="related-item" data-idx="${idx}">${mediaHtml}<div class="related-item-thumb" style="${p.img ? 'display:none;' : 'display:flex;'}">${escapeHTML(p.emoji||'🛒')}</div><div class="related-item-info"><h5>${escapeHTML(pName)}</h5><span>${escapeHTML(getEffectiveProductPricing(p).priceText)} ${T[currentLang].currency}</span></div></div>`;
+      return `<div class="related-item" data-idx="${idx}">${mediaHtml}<div class="related-item-thumb" style="${p.img ? 'display:none;' : 'display:flex;'}">${svgIcon('bag')}</div><div class="related-item-info"><h5>${escapeHTML(pName)}</h5><span>${escapeHTML(getEffectiveProductPricing(p).priceText)} ${T[currentLang].currency}</span></div></div>`;
     }).join('');
     relatedProductsArea.querySelectorAll('.related-item').forEach((item, index) => {
       item.addEventListener('click', () => {
@@ -2839,9 +2973,9 @@
   const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1kdO5E6o8FW3X2qHQefOa9tlH0Qdnoqzuwx7UvPyyqTU/gviz/tq?tqx=out:csv&sheet=Products';
 
   const fallbackProducts = [
-    { nameAr: 'عسل سدر طبيعي', nameEn: 'Natural Sidr Honey', price: '150', emoji: '🍯', categoryAr: 'بقالة', categoryEn: 'Grocery', descAr: 'عسل سدر جبلي طبيعي 100% غني بالفوائد.', descEn: '100% natural mountain Sidr honey rich in benefits.', available: 'yes', rating: '5' },
-    { nameAr: 'تمر خلاص فاخر', nameEn: 'Premium Khalas Dates', price: '45', emoji: '🌴', categoryAr: 'بقالة', categoryEn: 'Grocery', descAr: 'تمر خلاص فاخر من مزارعنا، جودة عالية وطعم رائع.', descEn: 'Premium Khalas dates from our farms, high quality and great taste.', available: 'yes', rating: '5' },
-    { nameAr: 'زيت زيتون بكر', nameEn: 'Virgin Olive Oil', price: '65', emoji: '🫒', categoryAr: 'بقالة', categoryEn: 'Grocery', descAr: 'زيت زيتون بكر ممتاز عصرة أولى على البارد.', descEn: 'Extra virgin olive oil, first cold press.', available: 'yes', rating: '4' }
+    { nameAr: 'عسل سدر طبيعي', nameEn: 'Natural Sidr Honey', price: '150', emoji: '', categoryAr: 'بقالة', categoryEn: 'Grocery', descAr: 'عسل سدر جبلي طبيعي 100% غني بالفوائد.', descEn: '100% natural mountain Sidr honey rich in benefits.', available: 'yes', rating: '5' },
+    { nameAr: 'تمر خلاص فاخر', nameEn: 'Premium Khalas Dates', price: '45', emoji: '', categoryAr: 'بقالة', categoryEn: 'Grocery', descAr: 'تمر خلاص فاخر من مزارعنا، جودة عالية وطعم رائع.', descEn: 'Premium Khalas dates from our farms, high quality and great taste.', available: 'yes', rating: '5' },
+    { nameAr: 'زيت زيتون بكر', nameEn: 'Virgin Olive Oil', price: '65', emoji: '', categoryAr: 'بقالة', categoryEn: 'Grocery', descAr: 'زيت زيتون بكر ممتاز عصرة أولى على البارد.', descEn: 'Extra virgin olive oil, first cold press.', available: 'yes', rating: '4' }
   ];
 
   function parseCSV(text){
@@ -2883,7 +3017,7 @@
       const discount = escapeHTML(pricing.discount);
       const discountEndDate = escapeHTML(p.discountEndDate || '');
       const originalPriceBeforeDiscount = escapeHTML(p.originalPriceBeforeDiscount || p.oldPrice || '');
-      const emoji = escapeHTML(p.emoji || '🛒');
+      const emoji = svgIcon('bag');
       const img = escapeHTML(p.img), categoryAr = escapeHTML(p.categoryAr), categoryEn = escapeHTML(p.categoryEn);
       const descAr = escapeHTML(p.descAr), descEn = escapeHTML(p.descEn);
       const available = escapeHTML(p.available || 'yes').toLowerCase();
@@ -2948,11 +3082,11 @@
 
       card.innerHTML = `
         ${badgeHtml}${stockOverlayHtml}${quantityBadgeHtml}
-        <button class="prod-wishlist-btn" aria-label="أضف للمفضلة">🤍</button>
+        <button class="prod-wishlist-btn" aria-label="أضف للمفضلة">${svgIcon('heart')}</button>
         <div class="prod-thumb" style="background:var(--sand);">
           <img src="${img}" alt="" class="prod-img" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
           <span class="prod-emoji-fallback">${emoji}</span>
-          <button type="button" class="prod-zoom-btn" aria-label="تكبير صورة المنتج">🔍</button>
+          <button type="button" class="prod-zoom-btn" aria-label="تكبير صورة المنتج">${svgIcon('search')}</button>
         </div>
         <div class="prod-body">
           <p class="prod-cat" data-ar="${categoryAr}" data-en="${categoryEn}">${currentLang === 'ar' ? categoryAr : categoryEn}</p>
