@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-
     <item>
-        <color android:color="#F5E8D2" />
+        <color android:color="#FAF3E7" />
     </item>
-
     <item
         android:gravity="center"
         android:width="200dp"
         android:height="200dp">
-        @mipmap/ic_launcher
+        <bitmap
+            android:src="@mipmap/ic_launcher"
+            android:gravity="center" />
     </item>
-
 </layer-list>
