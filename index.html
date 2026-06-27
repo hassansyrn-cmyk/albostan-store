@@ -59,7 +59,9 @@
 
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1F5E3B">
-<link rel="apple-touch-icon" href="108579.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AlBostan Store">
@@ -1799,7 +1801,6 @@
 
 
   // ===== نظام تاريخ نهاية التخفيض =====
-  // يعتمد على الحقول القادمة من لوحة التحكم:
   // price = السعر الحالي/المخفض، oldPrice = السعر الأصلي قبل التخفيض، discountEndDate = آخر يوم للتخفيض.
   // إذا انتهى التاريخ، يعرض الموقع السعر الأصلي تلقائيًا ويستخدمه في السلة والطلب.
   function parseDiscountEndDate(value){
