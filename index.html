@@ -477,6 +477,72 @@
     cursor:not-allowed;
     transform:none !important;
   }
+
+  /* --- أزرار الكمية مباشرة على بطاقة المنتج --- */
+  .prod-card-cart-control{
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:6px;
+    flex-shrink:0;
+  }
+  .prod-card-minus,
+  .prod-card-qty{
+    display:none;
+  }
+  .prod-card-cart-control.active{
+    background:var(--sand);
+    padding:4px 6px;
+    border-radius:50px;
+  }
+  .prod-card-cart-control.active .prod-card-minus,
+  .prod-card-cart-control.active .prod-card-qty{
+    display:flex;
+  }
+  .prod-card-minus,
+  .prod-card-plus{
+    width:32px;
+    height:32px;
+    border-radius:50%;
+    align-items:center;
+    justify-content:center;
+    font-weight:800;
+    line-height:1;
+    box-shadow:none;
+  }
+  .prod-card-minus{
+    background:var(--white);
+    color:var(--clay);
+    border:1px solid rgba(31,94,59,.14);
+    font-size:1.15rem;
+  }
+  .prod-card-plus{
+    width:32px;
+    height:32px;
+    font-size:1.15rem;
+  }
+  .prod-card-qty{
+    min-width:20px;
+    align-items:center;
+    justify-content:center;
+    font-weight:800;
+    color:var(--clay);
+    font-size:.95rem;
+  }
+  .prod-card-cart-control.active .prod-card-plus:hover{
+    transform:scale(1.08);
+  }
+  .prod-card-minus:hover{
+    background:#f8faf8;
+    transform:scale(1.08);
+  }
+  .prod-card-minus:disabled,
+  .prod-card-plus:disabled{
+    background:#ccc;
+    color:#fff;
+    cursor:not-allowed;
+    transform:none !important;
+  }
   
   .prod-wishlist-btn{
     position:absolute;
@@ -2125,6 +2191,7 @@
       cartItemsList.innerHTML = `<p class="cart-empty">${T[currentLang].emptyCart}</p>`;
       cartTotalEl.textContent = `0 ${cur}`;
       saveCart();
+      syncProductQtyControls();
       return;
     }
     let total = getCartSubtotal();
@@ -2154,6 +2221,7 @@
     cartItemsList.querySelectorAll('.ci-remove').forEach(btn => {
       btn.addEventListener('click', () => { const idx = Number(btn.dataset.index); trackGAEvent('remove_from_cart', { item_name: cart[idx].nameEn, value: cart[idx].price }); cart.splice(idx, 1); renderCart(); showToast(T[currentLang].removed); });
     });
+    syncProductQtyControls();
   }
 
   function addToCart(productData, customQty = 1){
@@ -2774,9 +2842,55 @@
     return rows;
   }
 
+  function getCartItemQuantityByName(nameAr){
+    const item = cart.find(cartItem => cartItem.nameAr === nameAr);
+    return item ? Number(item.quantity || 0) : 0;
+  }
+
+  function updateProductCardQtyControl(card){
+    if(!card) return;
+    const control = card.querySelector('.prod-card-cart-control');
+    const qtyText = card.querySelector('.prod-card-qty');
+    if(!control || !qtyText) return;
+    const qty = getCartItemQuantityByName(card.dataset.nameAr);
+    qtyText.textContent = qty;
+    control.classList.toggle('active', qty > 0);
+  }
+
+  function syncProductQtyControls(){
+    document.querySelectorAll('.prod-card').forEach(card => updateProductCardQtyControl(card));
+  }
+
+  function decreaseProductFromCard(productData){
+    const idx = cart.findIndex(item => item.nameAr === productData.nameAr);
+    if(idx === -1) return;
+    trackGAEvent('remove_from_cart', { item_name: cart[idx].nameEn, value: cart[idx].price });
+    cart[idx].quantity--;
+    if(cart[idx].quantity <= 0){
+      cart.splice(idx, 1);
+      showToast(T[currentLang].removed);
+    }
+    renderCart();
+  }
+
   function bindProductCardEvents(){
-    document.querySelectorAll('.prod-card .add-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => { e.stopPropagation(); const card = btn.closest('.prod-card'); if(card.dataset.available === 'no') return; addToCart(card.dataset, 1); btn.style.transform = 'scale(1.3) rotate(90deg)'; setTimeout(() => btn.style.transform = '', 150); });
+    document.querySelectorAll('.prod-card .prod-card-plus').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const card = btn.closest('.prod-card');
+        if(!card || card.dataset.available === 'no') return;
+        addToCart(card.dataset, 1);
+        btn.style.transform = 'scale(1.18)';
+        setTimeout(() => btn.style.transform = '', 150);
+      });
+    });
+    document.querySelectorAll('.prod-card .prod-card-minus').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const card = btn.closest('.prod-card');
+        if(!card) return;
+        decreaseProductFromCard(card.dataset);
+      });
     });
     document.querySelectorAll('.prod-card .prod-wishlist-btn').forEach(btn => {
       btn.addEventListener('click', (e) => { e.stopPropagation(); toggleWishlist(btn.closest('.prod-card').dataset); });
@@ -2784,6 +2898,7 @@
     document.querySelectorAll('.prod-card').forEach(card => {
       card.addEventListener('click', () => openModal(card.dataset));
     });
+    syncProductQtyControls();
   }
 
   function renderProductsFromSheet(products){
@@ -2874,7 +2989,14 @@
           <p class="prod-cat" data-ar="${categoryAr}" data-en="${categoryEn}">${currentLang === 'ar' ? categoryAr : categoryEn}</p>
           <h4 data-ar="${nameAr}" data-en="${nameEn}">${currentLang === 'ar' ? nameAr : nameEn}</h4>
           ${ratingStarsHtml}
-          <div class="prod-foot">${priceDisplayHtml}<button class="add-btn" aria-label="أضف للسلة" ${available === 'no' ? 'disabled' : ''}>+</button></div>
+          <div class="prod-foot">
+            ${priceDisplayHtml}
+            <div class="prod-card-cart-control" aria-label="التحكم بكمية المنتج">
+              <button class="prod-card-minus" type="button" aria-label="إنقاص الكمية">−</button>
+              <span class="prod-card-qty">0</span>
+              <button class="add-btn prod-card-plus" type="button" aria-label="أضف للسلة" ${available === 'no' ? 'disabled' : ''}>+</button>
+            </div>
+          </div>
         </div>
       `;
       grid.appendChild(card);
