@@ -1355,6 +1355,77 @@
     .cat-item span{font-size:.88rem!important;}
   }
 
+
+  /* ===== نقل أزرار الهيرو داخل الصورة على الموبايل ===== */
+  .hero-mobile-cta{
+    display:none;
+  }
+  @media(max-width:680px){
+    .hero-text > .cta-row{
+      display:none!important;
+    }
+    .hero-visual{
+      position:relative!important;
+      overflow:visible!important;
+    }
+    .hero-mobile-cta{
+      position:absolute;
+      top:50%;
+      right:55%;
+      transform:translateY(-50%);
+      z-index:8;
+      display:flex!important;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      width:42%;
+      max-width:190px;
+      pointer-events:auto;
+    }
+    html[dir="ltr"] .hero-mobile-cta{
+      right:auto;
+      left:55%;
+    }
+    .hero-mobile-cta .btn-primary,
+    .hero-mobile-cta .btn-ghost{
+      width:100%;
+      min-height:44px;
+      padding:11px 12px!important;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      border-radius:999px;
+      font-size:.92rem!important;
+      line-height:1.25;
+      box-shadow:0 14px 24px -18px rgba(24,26,25,.55);
+      white-space:normal;
+    }
+    .hero-mobile-cta .btn-ghost{
+      background:rgba(255,255,255,.74);
+      backdrop-filter:blur(8px);
+    }
+  }
+  @media(max-width:420px){
+    .hero-mobile-cta{
+      right:53%;
+      width:43%;
+      max-width:170px;
+      gap:9px;
+    }
+    html[dir="ltr"] .hero-mobile-cta{
+      right:auto;
+      left:53%;
+    }
+    .hero-mobile-cta .btn-primary,
+    .hero-mobile-cta .btn-ghost{
+      min-height:40px;
+      padding:9px 10px!important;
+      font-size:.82rem!important;
+    }
+  }
+
   @media (prefers-reduced-motion:reduce){
     .hero-logo-img{animation:none;}
     .icon-btn, .cat-circle, .prod-thumb, .add-btn, .cat-item, .prod-card, .why-card, .wa-float{transition:none;}
@@ -1439,7 +1510,7 @@
       <a href="#categories" class="btn-ghost" data-ar="استعرض الأقسام" data-en="Browse Categories">استعرض الأقسام</a>
     </div>
   </div>
-  <div class="hero-visual"><img class="hero-banner-img" src="images/hero-luxury.png" alt="AlBostan Store" loading="lazy"></div>
+  <div class="hero-visual"><img class="hero-banner-img" src="images/hero-luxury.png" alt="AlBostan Store" loading="lazy"><div class="hero-mobile-cta"><a href="#products" class="btn-primary" data-ar="تسوّق الآن" data-en="Shop Now">تسوّق الآن</a><a href="#categories" class="btn-ghost" data-ar="استعرض الأقسام" data-en="Browse Categories">استعرض الأقسام</a></div></div>
 </section>
 
 <svg class="wave-divider" viewBox="0 0 1440 60" preserveAspectRatio="none">
