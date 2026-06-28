@@ -1,1 +1,41 @@
-[]
+[
+  {
+    "id": "ABS-20260629-0006-6289",
+    "createdAt": "2026-06-28T20:06:28.263Z",
+    "updatedAt": "2026-06-28T20:06:28.263Z",
+    "status": "pending",
+    "paymentStatus": "cod_pending",
+    "paymentMethod": "COD",
+    "source": "website",
+    "whatsappSent": false,
+    "customer": {
+      "name": "حسن",
+      "phone": "0561602612",
+      "emirate": "Abu Dhabi",
+      "address": "الشهامة",
+      "notes": ""
+    },
+    "items": [
+      {
+        "id": "",
+        "nameAr": "عسل",
+        "nameEn": "Honey",
+        "categoryAr": "",
+        "categoryEn": "",
+        "price": 23.75,
+        "qty": 2,
+        "total": 47.5,
+        "img": "images/1782387063608-108951.jpg",
+        "emoji": ""
+      }
+    ],
+    "coupon": {
+      "code": "",
+      "discount": 0
+    },
+    "subtotal": 47.5,
+    "deliveryFee": 15,
+    "discountAmount": 0,
+    "grandTotal": 62.5
+  }
+]
