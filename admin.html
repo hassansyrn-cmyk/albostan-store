@@ -2380,66 +2380,56 @@ function generateOrderInvoicePDF(orderId){
     const total = Number(item.total || (price * qty));
     return `
       <tr>
-        <td style="padding:7px;border-bottom:1px solid #e8ece9;text-align:center;color:#181A19;font-weight:700;">${idx + 1}</td>
-        <td style="padding:7px;border-bottom:1px solid #e8ece9;text-align:right;color:#181A19;font-weight:700;">
-          <div style="direction:rtl;text-align:right;font-weight:800;color:#181A19;line-height:1.35;">${esc(item.nameAr || item.nameEn || 'منتج')}</div>
-          <div style="direction:ltr;text-align:left;font-weight:700;color:#181A19;line-height:1.35;font-size:10.5px;margin-top:2px;">${esc(item.nameEn || item.nameAr || 'Product')}</div>
+        <td style="padding:7px;border-bottom:1px solid #E8ECE9;text-align:center;color:#181A19;font-weight:800;">${idx + 1}</td>
+        <td style="padding:7px;border-bottom:1px solid #E8ECE9;color:#181A19;">
+          <div style="direction:rtl;text-align:right;font-weight:900;color:#181A19;line-height:1.35;">${esc(item.nameAr || item.nameEn || 'منتج')}</div>
+          <div style="direction:ltr;text-align:left;font-weight:800;color:#181A19;font-size:10.5px;line-height:1.35;margin-top:2px;">${esc(item.nameEn || item.nameAr || 'Product')}</div>
         </td>
-        <td style="padding:7px;border-bottom:1px solid #e8ece9;text-align:center;color:#181A19;font-weight:700;">${qty}</td>
-        <td style="padding:7px;border-bottom:1px solid #e8ece9;text-align:center;color:#181A19;font-weight:700;">${formatAdminMoney(price)}</td>
-        <td style="padding:7px;border-bottom:1px solid #e8ece9;text-align:center;color:#181A19;font-weight:800;">${formatAdminMoney(total)}</td>
+        <td style="padding:7px;border-bottom:1px solid #E8ECE9;text-align:center;color:#181A19;font-weight:800;">${qty}</td>
+        <td style="padding:7px;border-bottom:1px solid #E8ECE9;text-align:center;color:#181A19;font-weight:800;">${formatAdminMoney(price)}</td>
+        <td style="padding:7px;border-bottom:1px solid #E8ECE9;text-align:center;color:#181A19;font-weight:900;">${formatAdminMoney(total)}</td>
       </tr>
     `;
   }).join('');
 
   const element = document.createElement('div');
   element.dir = 'ltr';
-  element.style.position = 'fixed';
-  element.style.left = '0';
-  element.style.top = '0';
-  element.style.right = 'auto';
-  element.style.bottom = 'auto';
-  element.style.width = '760px';
-  element.style.maxWidth = '760px';
-  element.style.minWidth = '760px';
-  element.style.margin = '0';
-  element.style.padding = '0';
+  element.style.width = '720px';
+  element.style.maxWidth = '720px';
   element.style.background = '#ffffff';
   element.style.color = '#181A19';
   element.style.fontFamily = 'Tajawal, Arial, sans-serif';
-  element.style.direction = 'ltr';
-  element.style.textAlign = 'initial';
-  element.style.zIndex = '2147483647';
-  element.style.transform = 'none';
+  element.style.padding = '0';
+  element.style.margin = '0';
   element.style.boxSizing = 'border-box';
 
   element.innerHTML = `
-    <div style="width:760px;max-width:760px;min-width:760px;background:#fff;border:2px solid #1F5E3B;border-radius:14px;padding:18px;box-sizing:border-box;color:#181A19;margin:0;direction:ltr;">
-      <table style="width:100%;border-collapse:collapse;margin:0 0 12px 0;">
+    <div style="width:720px;background:#fff;border:2px solid #1F5E3B;border-radius:16px;padding:18px;box-sizing:border-box;color:#181A19;margin:0;">
+      <table style="width:100%;border-collapse:collapse;margin:0 0 12px 0;table-layout:fixed;">
         <tr>
-          <td style="width:50%;vertical-align:top;text-align:left;direction:ltr;padding:0 10px 10px 0;border-bottom:1px solid #e8ece9;">
-            <div style="font-family:Arial,sans-serif;font-size:18px;font-weight:900;color:#15452A;line-height:1.2;white-space:nowrap;">AlBostan Store</div>
-            <div style="font-family:Arial,sans-serif;font-size:14px;font-weight:900;color:#C9A227;line-height:1.35;margin-top:5px;">${documentTitleEn}</div>
-            <div style="font-size:10.5px;color:#26352d;line-height:1.65;margin-top:6px;">Order ID: ${esc(order.id || '')}</div>
-            <div style="font-size:10.5px;color:#26352d;line-height:1.65;">Date: ${formatAdminDate(order.createdAt)}</div>
-            <div style="font-size:10.5px;color:#26352d;line-height:1.65;">United Arab Emirates</div>
-            <div style="font-size:10.5px;color:#26352d;line-height:1.65;">WhatsApp: +971 50 155 4132</div>
+          <td style="width:50%;vertical-align:top;text-align:left;direction:ltr;padding:0 10px 10px 0;border-bottom:1px solid #E8ECE9;">
+            <div style="font-family:Arial,sans-serif;font-size:17px;font-weight:900;color:#15452A;line-height:1.2;white-space:nowrap;">AlBostan Store</div>
+            <div style="font-family:Arial,sans-serif;font-size:13px;font-weight:900;color:#C9A227;line-height:1.35;margin-top:5px;">${documentTitleEn}</div>
+            <div style="font-size:10.5px;color:#26352D;line-height:1.65;margin-top:6px;">Order ID: ${esc(order.id || '')}</div>
+            <div style="font-size:10.5px;color:#26352D;line-height:1.65;">Date: ${formatAdminDate(order.createdAt)}</div>
+            <div style="font-size:10.5px;color:#26352D;line-height:1.65;">United Arab Emirates</div>
+            <div style="font-size:10.5px;color:#26352D;line-height:1.65;">WhatsApp: +971 50 155 4132</div>
           </td>
-          <td style="width:50%;vertical-align:top;text-align:right;direction:rtl;padding:0 0 10px 10px;border-bottom:1px solid #e8ece9;">
-            <div style="font-family:Tajawal,Arial,sans-serif;font-size:20px;font-weight:900;color:#15452A;line-height:1.25;white-space:nowrap;">متجر البستان</div>
-            <div style="font-family:Tajawal,Arial,sans-serif;font-size:16px;font-weight:900;color:#C9A227;line-height:1.35;margin-top:5px;">${documentTitleAr}</div>
-            <div style="font-size:10.5px;color:#26352d;line-height:1.65;margin-top:6px;">رقم الطلب: <span style="direction:ltr;display:inline-block;">${esc(order.id || '')}</span></div>
-            <div style="font-size:10.5px;color:#26352d;line-height:1.65;">التاريخ: ${formatAdminDate(order.createdAt)}</div>
-            <div style="font-size:10.5px;color:#26352d;line-height:1.65;">الإمارات العربية المتحدة</div>
-            <div style="font-size:10.5px;color:#26352d;line-height:1.65;">واتساب: <span style="direction:ltr;display:inline-block;">+971 50 155 4132</span></div>
+          <td style="width:50%;vertical-align:top;text-align:right;direction:rtl;padding:0 0 10px 10px;border-bottom:1px solid #E8ECE9;">
+            <div style="font-family:Tajawal,Arial,sans-serif;font-size:19px;font-weight:900;color:#15452A;line-height:1.25;white-space:nowrap;">متجر البستان</div>
+            <div style="font-family:Tajawal,Arial,sans-serif;font-size:15px;font-weight:900;color:#C9A227;line-height:1.35;margin-top:5px;">${documentTitleAr}</div>
+            <div style="font-size:10.5px;color:#26352D;line-height:1.65;margin-top:6px;">رقم الطلب: <span style="direction:ltr;display:inline-block;">${esc(order.id || '')}</span></div>
+            <div style="font-size:10.5px;color:#26352D;line-height:1.65;">التاريخ: ${formatAdminDate(order.createdAt)}</div>
+            <div style="font-size:10.5px;color:#26352D;line-height:1.65;">الإمارات العربية المتحدة</div>
+            <div style="font-size:10.5px;color:#26352D;line-height:1.65;">واتساب: <span style="direction:ltr;display:inline-block;">+971 50 155 4132</span></div>
           </td>
         </tr>
       </table>
 
-      <table style="width:100%;border-collapse:separate;border-spacing:0 10px;margin:0;">
+      <table style="width:100%;border-collapse:separate;border-spacing:0 10px;margin:0;table-layout:fixed;">
         <tr>
           <td style="width:50%;vertical-align:top;padding:0 6px 0 0;">
-            <div style="background:#F9FAF8;border:1px solid #E8ECE9;border-radius:12px;padding:10px;min-height:95px;box-sizing:border-box;direction:ltr;text-align:left;">
+            <div style="background:#F9FAF8;border:1px solid #E8ECE9;border-radius:12px;padding:10px;min-height:94px;box-sizing:border-box;direction:ltr;text-align:left;">
               <div style="font-size:13px;font-weight:900;color:#15452A;margin-bottom:7px;">Customer Details</div>
               <div style="font-size:11px;color:#181A19;line-height:1.65;"><b style="color:#15452A;">Name:</b> ${esc(enName)}</div>
               <div style="font-size:11px;color:#181A19;line-height:1.65;"><b style="color:#15452A;">Phone:</b> ${esc(customer.phone || '-')}</div>
@@ -2448,7 +2438,7 @@ function generateOrderInvoicePDF(orderId){
             </div>
           </td>
           <td style="width:50%;vertical-align:top;padding:0 0 0 6px;">
-            <div style="background:#F9FAF8;border:1px solid #E8ECE9;border-radius:12px;padding:10px;min-height:95px;box-sizing:border-box;direction:rtl;text-align:right;">
+            <div style="background:#F9FAF8;border:1px solid #E8ECE9;border-radius:12px;padding:10px;min-height:94px;box-sizing:border-box;direction:rtl;text-align:right;">
               <div style="font-size:13px;font-weight:900;color:#15452A;margin-bottom:7px;">بيانات العميل</div>
               <div style="font-size:11px;color:#181A19;line-height:1.65;"><b style="color:#15452A;">الاسم:</b> ${esc(arName)}</div>
               <div style="font-size:11px;color:#181A19;line-height:1.65;"><b style="color:#15452A;">الهاتف:</b> <span style="direction:ltr;display:inline-block;">${esc(customer.phone || '-')}</span></div>
@@ -2459,7 +2449,7 @@ function generateOrderInvoicePDF(orderId){
         </tr>
         <tr>
           <td style="width:50%;vertical-align:top;padding:0 6px 0 0;">
-            <div style="background:#F9FAF8;border:1px solid #E8ECE9;border-radius:12px;padding:10px;min-height:90px;box-sizing:border-box;direction:ltr;text-align:left;">
+            <div style="background:#F9FAF8;border:1px solid #E8ECE9;border-radius:12px;padding:10px;min-height:88px;box-sizing:border-box;direction:ltr;text-align:left;">
               <div style="font-size:13px;font-weight:900;color:#15452A;margin-bottom:7px;">Order & Payment</div>
               <div style="font-size:11px;color:#181A19;line-height:1.65;"><b style="color:#15452A;">Order status:</b> ${esc(orderStatusLabelEn(order.status))}</div>
               <div style="font-size:11px;color:#181A19;line-height:1.65;"><b style="color:#15452A;">Payment method:</b> Cash on Delivery (COD)</div>
@@ -2468,7 +2458,7 @@ function generateOrderInvoicePDF(orderId){
             </div>
           </td>
           <td style="width:50%;vertical-align:top;padding:0 0 0 6px;">
-            <div style="background:#F9FAF8;border:1px solid #E8ECE9;border-radius:12px;padding:10px;min-height:90px;box-sizing:border-box;direction:rtl;text-align:right;">
+            <div style="background:#F9FAF8;border:1px solid #E8ECE9;border-radius:12px;padding:10px;min-height:88px;box-sizing:border-box;direction:rtl;text-align:right;">
               <div style="font-size:13px;font-weight:900;color:#15452A;margin-bottom:7px;">بيانات الطلب والدفع</div>
               <div style="font-size:11px;color:#181A19;line-height:1.65;"><b style="color:#15452A;">حالة الطلب:</b> ${esc(orderStatusLabel(order.status))}</div>
               <div style="font-size:11px;color:#181A19;line-height:1.65;"><b style="color:#15452A;">طريقة الدفع:</b> نقداً عند الاستلام COD</div>
@@ -2479,14 +2469,14 @@ function generateOrderInvoicePDF(orderId){
         </tr>
       </table>
 
-      <table style="width:100%;border-collapse:collapse;margin-top:10px;font-size:11px;">
+      <table style="width:100%;border-collapse:collapse;margin-top:10px;font-size:11px;table-layout:fixed;">
         <thead>
           <tr>
-            <th style="background:#15452A;color:#fff;padding:8px;border:1px solid rgba(255,255,255,.16);font-weight:900;text-align:center;">#</th>
-            <th style="background:#15452A;color:#fff;padding:8px;border:1px solid rgba(255,255,255,.16);font-weight:900;text-align:center;">المنتج<br><span style="color:#fff;font-weight:900;">Product</span></th>
-            <th style="background:#15452A;color:#fff;padding:8px;border:1px solid rgba(255,255,255,.16);font-weight:900;text-align:center;">الكمية<br><span style="color:#fff;font-weight:900;">Qty</span></th>
-            <th style="background:#15452A;color:#fff;padding:8px;border:1px solid rgba(255,255,255,.16);font-weight:900;text-align:center;">سعر الوحدة<br><span style="color:#fff;font-weight:900;">Unit Price</span></th>
-            <th style="background:#15452A;color:#fff;padding:8px;border:1px solid rgba(255,255,255,.16);font-weight:900;text-align:center;">الإجمالي<br><span style="color:#fff;font-weight:900;">Total</span></th>
+            <th style="width:7%;background:#15452A;color:#fff;padding:8px;border:1px solid rgba(255,255,255,.16);font-weight:900;text-align:center;">#</th>
+            <th style="width:39%;background:#15452A;color:#fff;padding:8px;border:1px solid rgba(255,255,255,.16);font-weight:900;text-align:center;">المنتج<br><span style="color:#fff;font-weight:900;">Product</span></th>
+            <th style="width:12%;background:#15452A;color:#fff;padding:8px;border:1px solid rgba(255,255,255,.16);font-weight:900;text-align:center;">الكمية<br><span style="color:#fff;font-weight:900;">Qty</span></th>
+            <th style="width:20%;background:#15452A;color:#fff;padding:8px;border:1px solid rgba(255,255,255,.16);font-weight:900;text-align:center;">سعر الوحدة<br><span style="color:#fff;font-weight:900;">Unit Price</span></th>
+            <th style="width:22%;background:#15452A;color:#fff;padding:8px;border:1px solid rgba(255,255,255,.16);font-weight:900;text-align:center;">الإجمالي<br><span style="color:#fff;font-weight:900;">Total</span></th>
           </tr>
         </thead>
         <tbody>${rows}</tbody>
@@ -2506,24 +2496,13 @@ function generateOrderInvoicePDF(orderId){
     </div>
   `;
 
-  document.body.appendChild(element);
-
-  setTimeout(function(){
-    html2pdf().set({
-      margin:[8,8,8,8],
-      filename:filePrefix + '_' + String(order.id || Date.now()) + '.pdf',
-      image:{type:'jpeg',quality:.98},
-      html2canvas:{scale:2,useCORS:true,scrollX:0,scrollY:0,windowWidth:760,windowHeight:1100},
-      jsPDF:{orientation:'portrait',unit:'mm',format:'a4'},
-      pagebreak:{mode:['avoid-all','css','legacy']}
-    }).from(element).save().then(function(){
-      try{ document.body.removeChild(element); }catch(e){}
-    }).catch(function(error){
-      try{ document.body.removeChild(element); }catch(e){}
-      console.error(error);
-      showStatus('تعذر إنشاء الإيصال PDF: ' + error.message,'err');
-    });
-  },80);
+  html2pdf().set({
+    margin:8,
+    filename:filePrefix + '_' + String(order.id || Date.now()) + '.pdf',
+    image:{type:'jpeg',quality:.98},
+    html2canvas:{scale:2,useCORS:true},
+    jsPDF:{orientation:'portrait',unit:'mm',format:'a4'}
+  }).from(element).save();
 
   logActivity('فاتورة','تم إنشاء PDF للطلب ' + (order.id || ''),'success');
 }
