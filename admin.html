@@ -2355,7 +2355,163 @@ function renderOrdersList(){const countEl=$('ordersCountLabel');const area=$('or
 async function refreshOrdersList(){try{showStatus('جاري تحديث الطلبات...','loading');await loadOrders();renderOrdersList();showStatus('تم تحديث الطلبات','ok');}catch(e){showStatus('تعذر تحديث الطلبات: '+e.message,'err');}}
 async function changeOrderStatus(orderId,status){const order=getOrderById(orderId);if(!order){showStatus('لم يتم العثور على الطلب','err');return;}order.status=status;order.updatedAt=new Date().toISOString();try{showStatus('جاري حفظ حالة الطلب...','loading');await saveOrdersFile('Update order status '+orderId);renderOrdersList();logActivity('تحديث طلب','تم تغيير حالة الطلب '+orderId+' إلى '+orderStatusLabel(status),'success');showStatus('تم حفظ حالة الطلب','ok');}catch(e){showStatus('فشل حفظ حالة الطلب: '+e.message,'err');}}
 async function changeOrderPaymentStatus(orderId,paymentStatus){const order=getOrderById(orderId);if(!order){showStatus('لم يتم العثور على الطلب','err');return;}const alreadyPaid=order.paymentStatus==='cod_paid'||order.paymentStatus==='paid';const shouldRecordSale=paymentStatus==='cod_paid'&&!order.salesRecorded;order.paymentStatus=paymentStatus;if(paymentStatus==='cod_paid'){if(!order.paidAt){order.paidAt=new Date().toISOString();}if(order.status!=='cancelled'){order.status='delivered';}}order.updatedAt=new Date().toISOString();try{showStatus('جاري ربط الطلب بالمبيعات والإحصائيات...','loading');if(shouldRecordSale){const entries=buildSalesEntriesFromOrder(order);entries.forEach(entry=>salesData.push(entry));reduceProductsStockFromOrder(order);order.salesRecorded=true;order.salesRecordedAt=new Date().toISOString();order.salesEntriesCount=entries.length;await saveProductsFile('Reduce stock for paid order '+orderId);await saveSalesFile('Record paid order sales '+orderId);}else if(alreadyPaid&&order.salesRecorded){showStatus('الطلب مدفوع ومُسجل سابقاً، لن يتم تكرار تسجيل المبيعات','warning');}await saveOrdersFile('Update order payment status '+orderId);renderOrdersList();renderProductsList();updateStats();displayLowStockAlert();if(document.getElementById('analytics')&&document.getElementById('analytics').classList.contains('active')){initializeCharts();}logActivity('تحديث دفع','تم تغيير دفع الطلب '+orderId+' إلى '+paymentStatusLabel(paymentStatus),'success');showStatus('تم ربط الطلب بالمبيعات وتحديث الإحصائيات ✅','ok');}catch(e){console.error(e);showStatus('فشل حفظ حالة الدفع: '+e.message,'err');}}
-function generateOrderInvoicePDF(orderId){const order=getOrderById(orderId);if(!order){showStatus('لم يتم العثور على الطلب','err');return;}const customer=order.customer||{};const items=Array.isArray(order.items)?order.items:[];const isPaid=order.paymentStatus==='cod_paid'||order.paymentStatus==='paid';const documentTitleAr=isPaid?'فاتورة / إيصال دفع':'ملخص طلب غير مدفوع';const documentTitleEn=isPaid?'Invoice / Payment Receipt':'Unpaid Order Summary';const filePrefix=isPaid?'invoice':'order-summary';const paymentAr=isPaid?'تم الدفع نقداً عند الاستلام':'غير مدفوع - الدفع نقداً عند الاستلام';const paymentEn=isPaid?'Paid cash on delivery':'Unpaid - Cash on delivery';const rows=items.map(function(item,idx){const qty=Number(item.qty||item.quantity||1);const price=Number(item.price||0);const total=Number(item.total||(price*qty));return `<tr><td>${idx+1}</td><td><div class="ar" style="font-weight:800;color:#181A19;">${esc(item.nameAr||item.nameEn||'منتج')}</div><div class="en" style="font-weight:700;color:#181A19;">${esc(item.nameEn||item.nameAr||'Product')}</div></td><td>${qty}</td><td>${formatAdminMoney(price)}</td><td>${formatAdminMoney(total)}</td></tr>`;}).join('');const element=document.createElement('div');element.style.fontFamily='Tajawal, Arial, sans-serif';element.style.padding='16px';element.style.color='#181A19';const enName=displayForEnglish(customer.name);const enAddress=displayForEnglish(customer.address);const enEmirate=displayForEnglish(customer.emirate,'emirate');const arName=displayForArabic(customer.name);const arAddress=displayForArabic(customer.address);const arEmirate=displayForArabic(customer.emirate,'emirate');element.innerHTML=`<style>.receipt{border:2px solid #1F5E3B;border-radius:16px;padding:18px;background:#fff}.top{display:grid;grid-template-columns:1fr 1fr;gap:18px;border-bottom:1px solid #E8ECE9;padding-bottom:14px;margin-bottom:14px}.brand-en{font-family:Arial,sans-serif;font-size:20px;font-weight:900;color:#15452A;direction:ltr;text-align:left;white-space:nowrap}.brand-ar{font-family:Tajawal,Arial,sans-serif;font-size:21px;font-weight:900;color:#15452A;direction:rtl;text-align:right;white-space:nowrap}.title-en{font-family:Arial,sans-serif;font-size:15px;color:#C9A227;font-weight:900;direction:ltr;text-align:left;margin-top:6px}.title-ar{font-family:Tajawal,Arial,sans-serif;font-size:18px;color:#C9A227;font-weight:900;direction:rtl;text-align:right;margin-bottom:6px}.meta{font-size:11px;color:#26352d;line-height:1.65}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}.panel{background:#F9FAF8;border:1px solid #E8ECE9;border-radius:14px;padding:12px;min-height:106px}.panel h3{margin:0 0 8px;color:#15452A;font-size:14px;font-weight:900}.line{font-size:12px;color:#181A19;line-height:1.7;margin:2px 0}.ar{direction:rtl;text-align:right;font-family:Tajawal,Arial,sans-serif}.en{direction:ltr;text-align:left;font-family:Arial,sans-serif}.label{font-weight:900;color:#15452A}.receipt-table{width:100%;border-collapse:collapse;margin-top:10px;text-align:center;font-size:12px}.receipt-table th{background:#15452A;color:#fff;padding:8px;border:1px solid rgba(255,255,255,.18);font-weight:900}.receipt-table th span{display:block;color:#fff!important;opacity:1!important;font-weight:900}.receipt-table td{padding:9px;border-bottom:1px solid #E8ECE9;color:#181A19;vertical-align:top;font-weight:700}.summary{margin-top:14px;margin-left:auto;width:300px;background:#F5F7F5;border-radius:12px;padding:12px;font-size:12px}.sum-row{display:flex;justify-content:space-between;gap:12px;margin-bottom:7px;color:#181A19}.sum-row span{font-weight:800;color:#15452A}.sum-total{border-top:1px dashed #C9A227;padding-top:9px;margin-top:9px;color:#15452A;font-weight:900;font-size:14px}.notice{margin-top:17px;padding:11px;border-radius:12px;background:#fff7e6;color:#4b3600;line-height:1.7;font-size:12px}</style><div class="receipt"><div class="top"><div><div class="brand-en">AlBostan Store</div><div class="title-en">${documentTitleEn}</div><div class="meta en">Order ID: ${esc(order.id||'')}</div><div class="meta en">Date: ${formatAdminDate(order.createdAt)}</div><div class="meta en">United Arab Emirates</div><div class="meta en">WhatsApp: +971 50 155 4132</div></div><div><div class="brand-ar">متجر البستان</div><div class="title-ar">${documentTitleAr}</div><div class="meta ar">رقم الطلب: ${esc(order.id||'')}</div><div class="meta ar">التاريخ: ${formatAdminDate(order.createdAt)}</div><div class="meta ar">الإمارات العربية المتحدة</div><div class="meta ar">واتساب: <span style="direction:ltr;display:inline-block;">+971 50 155 4132</span></div></div></div><div class="grid2"><div class="panel"><h3 class="en">Customer Details</h3><div class="line en"><span class="label">Name:</span> ${esc(enName)}</div><div class="line en"><span class="label">Phone:</span> ${esc(customer.phone||'-')}</div><div class="line en"><span class="label">Emirate:</span> ${esc(enEmirate)}</div><div class="line en"><span class="label">Address:</span> ${esc(enAddress)}</div></div><div class="panel"><h3 class="ar">بيانات العميل</h3><div class="line ar"><span class="label">الاسم:</span> ${esc(arName)}</div><div class="line ar"><span class="label">الهاتف:</span> <span style="direction:ltr;display:inline-block;">${esc(customer.phone||'-')}</span></div><div class="line ar"><span class="label">الإمارة:</span> ${esc(arEmirate)}</div><div class="line ar"><span class="label">العنوان:</span> ${esc(arAddress)}</div></div></div><div class="grid2"><div class="panel"><h3 class="en">Order & Payment</h3><div class="line en"><span class="label">Order status:</span> ${esc(orderStatusLabelEn(order.status))}</div><div class="line en"><span class="label">Payment method:</span> Cash on Delivery (COD)</div><div class="line en"><span class="label">Payment status:</span> ${esc(paymentStatusLabelEn(order.paymentStatus))}</div>${order.paidAt?'<div class="line en"><span class="label">Paid at:</span> '+formatAdminDate(order.paidAt)+'</div>':''}</div><div class="panel"><h3 class="ar">بيانات الطلب والدفع</h3><div class="line ar"><span class="label">حالة الطلب:</span> ${esc(orderStatusLabel(order.status))}</div><div class="line ar"><span class="label">طريقة الدفع:</span> نقداً عند الاستلام COD</div><div class="line ar"><span class="label">حالة الدفع:</span> ${esc(paymentAr)}</div>${order.paidAt?'<div class="line ar"><span class="label">تاريخ الدفع:</span> '+formatAdminDate(order.paidAt)+'</div>':''}</div></div><table class="receipt-table"><thead><tr><th>#</th><th><span>المنتج</span><span>Product</span></th><th><span>الكمية</span><span>Qty</span></th><th><span>سعر الوحدة</span><span>Unit Price</span></th><th><span>الإجمالي</span><span>Total</span></th></tr></thead><tbody>${rows}</tbody></table><div class="summary"><div class="sum-row"><span>Items / المنتجات</span><strong>${formatAdminMoney(order.subtotal)}</strong></div><div class="sum-row"><span>Discount / الخصم</span><strong>${formatAdminMoney(order.discountAmount)}</strong></div><div class="sum-row"><span>Delivery / التوصيل</span><strong>${formatAdminMoney(order.deliveryFee)}</strong></div><div class="sum-row sum-total"><span>Total / الإجمالي</span><strong>${formatAdminMoney(order.grandTotal)}</strong></div></div><div class="notice"><div class="ar">${isPaid?'هذا المستند يؤكد أن حالة الدفع مسجلة كمدفوعة نقداً عند الاستلام في لوحة تحكم متجر البستان.':'هذا المستند ليس إيصال دفع. حالة الدفع الحالية غير مدفوعة، والدفع يتم نقداً عند الاستلام فقط.'}</div><div class="en">${isPaid?'This document confirms that the payment status is marked as paid cash on delivery in AlBostan Store admin panel.':'This document is not a payment receipt. The current payment status is unpaid, and payment is cash on delivery only.'}</div></div></div>`;html2pdf().set({margin:8,filename:filePrefix+'_'+String(order.id||Date.now())+'.pdf',image:{type:'jpeg',quality:.98},html2canvas:{scale:2},jsPDF:{orientation:'portrait',unit:'mm',format:'a4'}}).from(element).save();logActivity('فاتورة','تم إنشاء PDF للطلب '+(order.id||''),'success');}
+function generateOrderInvoicePDF(orderId){
+  const order = getOrderById(orderId);
+  if(!order){ showStatus('لم يتم العثور على الطلب','err'); return; }
+
+  const customer = order.customer || {};
+  const items = Array.isArray(order.items) ? order.items : [];
+  const isPaid = order.paymentStatus === 'cod_paid' || order.paymentStatus === 'paid';
+  const documentTitleAr = isPaid ? 'فاتورة / إيصال دفع' : 'ملخص طلب غير مدفوع';
+  const documentTitleEn = isPaid ? 'Invoice / Payment Receipt' : 'Unpaid Order Summary';
+  const filePrefix = isPaid ? 'invoice' : 'order-summary';
+  const paymentAr = isPaid ? 'تم الدفع نقداً عند الاستلام' : 'غير مدفوع - الدفع نقداً عند الاستلام';
+  const paymentEn = isPaid ? 'Paid cash on delivery' : 'Unpaid - Cash on delivery';
+  const enName = displayForEnglish(customer.name);
+  const enAddress = displayForEnglish(customer.address);
+  const enEmirate = displayForEnglish(customer.emirate,'emirate');
+  const arName = displayForArabic(customer.name);
+  const arAddress = displayForArabic(customer.address);
+  const arEmirate = displayForArabic(customer.emirate,'emirate');
+
+  const rows = items.map(function(item,idx){
+    const qty = Number(item.qty || item.quantity || 1);
+    const price = Number(item.price || 0);
+    const total = Number(item.total || (price * qty));
+    return `
+      <tr>
+        <td style="padding:7px;border-bottom:1px solid #e8ece9;text-align:center;color:#181A19;font-weight:700;">${idx + 1}</td>
+        <td style="padding:7px;border-bottom:1px solid #e8ece9;text-align:right;color:#181A19;font-weight:700;">
+          <div style="direction:rtl;text-align:right;font-weight:800;color:#181A19;line-height:1.35;">${esc(item.nameAr || item.nameEn || 'منتج')}</div>
+          <div style="direction:ltr;text-align:left;font-weight:700;color:#181A19;line-height:1.35;font-size:10.5px;margin-top:2px;">${esc(item.nameEn || item.nameAr || 'Product')}</div>
+        </td>
+        <td style="padding:7px;border-bottom:1px solid #e8ece9;text-align:center;color:#181A19;font-weight:700;">${qty}</td>
+        <td style="padding:7px;border-bottom:1px solid #e8ece9;text-align:center;color:#181A19;font-weight:700;">${formatAdminMoney(price)}</td>
+        <td style="padding:7px;border-bottom:1px solid #e8ece9;text-align:center;color:#181A19;font-weight:800;">${formatAdminMoney(total)}</td>
+      </tr>
+    `;
+  }).join('');
+
+  const element = document.createElement('div');
+  element.style.width = '760px';
+  element.style.background = '#ffffff';
+  element.style.color = '#181A19';
+  element.style.fontFamily = 'Tajawal, Arial, sans-serif';
+  element.style.padding = '0';
+
+  element.innerHTML = `
+    <div style="width:760px;background:#fff;border:2px solid #1F5E3B;border-radius:14px;padding:18px;box-sizing:border-box;color:#181A19;">
+      <table style="width:100%;border-collapse:collapse;margin:0 0 12px 0;">
+        <tr>
+          <td style="width:50%;vertical-align:top;text-align:left;direction:ltr;padding:0 10px 10px 0;border-bottom:1px solid #e8ece9;">
+            <div style="font-family:Arial,sans-serif;font-size:18px;font-weight:900;color:#15452A;line-height:1.2;white-space:nowrap;">AlBostan Store</div>
+            <div style="font-family:Arial,sans-serif;font-size:14px;font-weight:900;color:#C9A227;line-height:1.35;margin-top:5px;">${documentTitleEn}</div>
+            <div style="font-size:10.5px;color:#26352d;line-height:1.65;margin-top:6px;">Order ID: ${esc(order.id || '')}</div>
+            <div style="font-size:10.5px;color:#26352d;line-height:1.65;">Date: ${formatAdminDate(order.createdAt)}</div>
+            <div style="font-size:10.5px;color:#26352d;line-height:1.65;">United Arab Emirates</div>
+            <div style="font-size:10.5px;color:#26352d;line-height:1.65;">WhatsApp: +971 50 155 4132</div>
+          </td>
+          <td style="width:50%;vertical-align:top;text-align:right;direction:rtl;padding:0 0 10px 10px;border-bottom:1px solid #e8ece9;">
+            <div style="font-family:Tajawal,Arial,sans-serif;font-size:20px;font-weight:900;color:#15452A;line-height:1.25;white-space:nowrap;">متجر البستان</div>
+            <div style="font-family:Tajawal,Arial,sans-serif;font-size:16px;font-weight:900;color:#C9A227;line-height:1.35;margin-top:5px;">${documentTitleAr}</div>
+            <div style="font-size:10.5px;color:#26352d;line-height:1.65;margin-top:6px;">رقم الطلب: <span style="direction:ltr;display:inline-block;">${esc(order.id || '')}</span></div>
+            <div style="font-size:10.5px;color:#26352d;line-height:1.65;">التاريخ: ${formatAdminDate(order.createdAt)}</div>
+            <div style="font-size:10.5px;color:#26352d;line-height:1.65;">الإمارات العربية المتحدة</div>
+            <div style="font-size:10.5px;color:#26352d;line-height:1.65;">واتساب: <span style="direction:ltr;display:inline-block;">+971 50 155 4132</span></div>
+          </td>
+        </tr>
+      </table>
+
+      <table style="width:100%;border-collapse:separate;border-spacing:0 10px;margin:0;">
+        <tr>
+          <td style="width:50%;vertical-align:top;padding:0 6px 0 0;">
+            <div style="background:#F9FAF8;border:1px solid #E8ECE9;border-radius:12px;padding:10px;min-height:95px;box-sizing:border-box;direction:ltr;text-align:left;">
+              <div style="font-size:13px;font-weight:900;color:#15452A;margin-bottom:7px;">Customer Details</div>
+              <div style="font-size:11px;color:#181A19;line-height:1.65;"><b style="color:#15452A;">Name:</b> ${esc(enName)}</div>
+              <div style="font-size:11px;color:#181A19;line-height:1.65;"><b style="color:#15452A;">Phone:</b> ${esc(customer.phone || '-')}</div>
+              <div style="font-size:11px;color:#181A19;line-height:1.65;"><b style="color:#15452A;">Emirate:</b> ${esc(enEmirate)}</div>
+              <div style="font-size:11px;color:#181A19;line-height:1.65;"><b style="color:#15452A;">Address:</b> ${esc(enAddress)}</div>
+            </div>
+          </td>
+          <td style="width:50%;vertical-align:top;padding:0 0 0 6px;">
+            <div style="background:#F9FAF8;border:1px solid #E8ECE9;border-radius:12px;padding:10px;min-height:95px;box-sizing:border-box;direction:rtl;text-align:right;">
+              <div style="font-size:13px;font-weight:900;color:#15452A;margin-bottom:7px;">بيانات العميل</div>
+              <div style="font-size:11px;color:#181A19;line-height:1.65;"><b style="color:#15452A;">الاسم:</b> ${esc(arName)}</div>
+              <div style="font-size:11px;color:#181A19;line-height:1.65;"><b style="color:#15452A;">الهاتف:</b> <span style="direction:ltr;display:inline-block;">${esc(customer.phone || '-')}</span></div>
+              <div style="font-size:11px;color:#181A19;line-height:1.65;"><b style="color:#15452A;">الإمارة:</b> ${esc(arEmirate)}</div>
+              <div style="font-size:11px;color:#181A19;line-height:1.65;"><b style="color:#15452A;">العنوان:</b> ${esc(arAddress)}</div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td style="width:50%;vertical-align:top;padding:0 6px 0 0;">
+            <div style="background:#F9FAF8;border:1px solid #E8ECE9;border-radius:12px;padding:10px;min-height:90px;box-sizing:border-box;direction:ltr;text-align:left;">
+              <div style="font-size:13px;font-weight:900;color:#15452A;margin-bottom:7px;">Order & Payment</div>
+              <div style="font-size:11px;color:#181A19;line-height:1.65;"><b style="color:#15452A;">Order status:</b> ${esc(orderStatusLabelEn(order.status))}</div>
+              <div style="font-size:11px;color:#181A19;line-height:1.65;"><b style="color:#15452A;">Payment method:</b> Cash on Delivery (COD)</div>
+              <div style="font-size:11px;color:#181A19;line-height:1.65;"><b style="color:#15452A;">Payment status:</b> ${esc(paymentStatusLabelEn(order.paymentStatus))}</div>
+              ${order.paidAt ? '<div style="font-size:11px;color:#181A19;line-height:1.65;"><b style="color:#15452A;">Paid at:</b> ' + formatAdminDate(order.paidAt) + '</div>' : ''}
+            </div>
+          </td>
+          <td style="width:50%;vertical-align:top;padding:0 0 0 6px;">
+            <div style="background:#F9FAF8;border:1px solid #E8ECE9;border-radius:12px;padding:10px;min-height:90px;box-sizing:border-box;direction:rtl;text-align:right;">
+              <div style="font-size:13px;font-weight:900;color:#15452A;margin-bottom:7px;">بيانات الطلب والدفع</div>
+              <div style="font-size:11px;color:#181A19;line-height:1.65;"><b style="color:#15452A;">حالة الطلب:</b> ${esc(orderStatusLabel(order.status))}</div>
+              <div style="font-size:11px;color:#181A19;line-height:1.65;"><b style="color:#15452A;">طريقة الدفع:</b> نقداً عند الاستلام COD</div>
+              <div style="font-size:11px;color:#181A19;line-height:1.65;"><b style="color:#15452A;">حالة الدفع:</b> ${esc(paymentAr)}</div>
+              ${order.paidAt ? '<div style="font-size:11px;color:#181A19;line-height:1.65;"><b style="color:#15452A;">تاريخ الدفع:</b> ' + formatAdminDate(order.paidAt) + '</div>' : ''}
+            </div>
+          </td>
+        </tr>
+      </table>
+
+      <table style="width:100%;border-collapse:collapse;margin-top:10px;font-size:11px;">
+        <thead>
+          <tr>
+            <th style="background:#15452A;color:#fff;padding:8px;border:1px solid rgba(255,255,255,.16);font-weight:900;text-align:center;">#</th>
+            <th style="background:#15452A;color:#fff;padding:8px;border:1px solid rgba(255,255,255,.16);font-weight:900;text-align:center;">المنتج<br><span style="color:#fff;font-weight:900;">Product</span></th>
+            <th style="background:#15452A;color:#fff;padding:8px;border:1px solid rgba(255,255,255,.16);font-weight:900;text-align:center;">الكمية<br><span style="color:#fff;font-weight:900;">Qty</span></th>
+            <th style="background:#15452A;color:#fff;padding:8px;border:1px solid rgba(255,255,255,.16);font-weight:900;text-align:center;">سعر الوحدة<br><span style="color:#fff;font-weight:900;">Unit Price</span></th>
+            <th style="background:#15452A;color:#fff;padding:8px;border:1px solid rgba(255,255,255,.16);font-weight:900;text-align:center;">الإجمالي<br><span style="color:#fff;font-weight:900;">Total</span></th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+
+      <table style="width:300px;margin-top:14px;margin-left:auto;border-collapse:collapse;background:#F5F7F5;border-radius:12px;overflow:hidden;font-size:11px;">
+        <tr><td style="padding:8px;color:#15452A;font-weight:900;">Items / المنتجات</td><td style="padding:8px;text-align:left;font-weight:800;color:#181A19;">${formatAdminMoney(order.subtotal)}</td></tr>
+        <tr><td style="padding:8px;color:#15452A;font-weight:900;">Discount / الخصم</td><td style="padding:8px;text-align:left;font-weight:800;color:#181A19;">${formatAdminMoney(order.discountAmount)}</td></tr>
+        <tr><td style="padding:8px;color:#15452A;font-weight:900;">Delivery / التوصيل</td><td style="padding:8px;text-align:left;font-weight:800;color:#181A19;">${formatAdminMoney(order.deliveryFee)}</td></tr>
+        <tr><td style="padding:9px;color:#15452A;font-weight:900;border-top:1px dashed #C9A227;">Total / الإجمالي</td><td style="padding:9px;text-align:left;font-weight:900;color:#15452A;border-top:1px dashed #C9A227;">${formatAdminMoney(order.grandTotal)}</td></tr>
+      </table>
+
+      <div style="margin-top:14px;background:#fff7e6;border-radius:12px;padding:10px;color:#4b3600;font-size:11px;line-height:1.65;">
+        <div style="direction:rtl;text-align:right;">${isPaid ? 'هذا المستند يؤكد أن حالة الدفع مسجلة كمدفوعة نقداً عند الاستلام في لوحة تحكم متجر البستان.' : 'هذا المستند ليس إيصال دفع. حالة الدفع الحالية غير مدفوعة، والدفع يتم نقداً عند الاستلام فقط.'}</div>
+        <div style="direction:ltr;text-align:left;margin-top:4px;">${isPaid ? 'This document confirms that the payment status is marked as paid cash on delivery in AlBostan Store admin panel.' : 'This document is not a payment receipt. The current payment status is unpaid, and payment is cash on delivery only.'}</div>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(element);
+
+  html2pdf().set({
+    margin:[8,8,8,8],
+    filename:filePrefix + '_' + String(order.id || Date.now()) + '.pdf',
+    image:{type:'jpeg',quality:.98},
+    html2canvas:{scale:2,useCORS:true,scrollX:0,scrollY:0,windowWidth:820},
+    jsPDF:{orientation:'portrait',unit:'mm',format:'a4'},
+    pagebreak:{mode:['css']}
+  }).from(element).save().then(function(){
+    try{ document.body.removeChild(element); }catch(e){}
+  }).catch(function(error){
+    try{ document.body.removeChild(element); }catch(e){}
+    console.error(error);
+    showStatus('تعذر إنشاء الإيصال PDF: ' + error.message,'err');
+  });
+
+  logActivity('فاتورة','تم إنشاء PDF للطلب ' + (order.id || ''),'success');
+}
+
 function openOrderWhatsapp(orderId){const order=getOrderById(orderId);if(!order){showStatus('لم يتم العثور على الطلب','err');return;}const customer=order.customer||{};const phone=String(customer.phone||'').replace(/\D/g,'');const phoneForWa=phone.startsWith('971')?phone:(phone.startsWith('0')?'971'+phone.slice(1):phone);const msg='مرحباً، بخصوص طلبك من متجر البستان رقم: '+(order.id||'')+'\n'+'حالة الطلب الحالية: '+orderStatusLabel(order.status)+'\n'+'الإجمالي: '+formatAdminMoney(order.grandTotal)+'\n'+'طريقة الدفع: نقداً عند الاستلام COD';if(!phoneForWa){showStatus('رقم هاتف العميل غير متوفر','warning');return;}window.open('https://wa.me/'+phoneForWa+'?text='+encodeURIComponent(msg),'_blank');}
 
 function renderProductsList(){
