@@ -2358,108 +2358,73 @@ async function changeOrderPaymentStatus(orderId,paymentStatus){const order=getOr
 function generateOrderInvoicePDF(orderId){
   const order=getOrderById(orderId);
   if(!order){showStatus('لم يتم العثور على الطلب','err');return;}
-  if(typeof html2pdf==='undefined'){
-    showStatus('مكتبة PDF لم يتم تحميلها','err');
-    return;
-  }
   const customer=order.customer||{};
   const items=Array.isArray(order.items)?order.items:[];
   const isPaid=order.paymentStatus==='cod_paid'||order.paymentStatus==='paid';
   const documentTitleAr=isPaid?'فاتورة / إيصال دفع':'ملخص طلب غير مدفوع';
   const documentTitleEn=isPaid?'Invoice / Payment Receipt':'Unpaid Order Summary';
-  const filePrefix=isPaid?'invoice':'order-summary';
   const paymentAr=isPaid?'تم الدفع نقداً عند الاستلام':'غير مدفوع - الدفع نقداً عند الاستلام';
-  const paymentEn=isPaid?'Paid cash on delivery':'Unpaid - Cash on delivery';
-  const safeOrderId=String(order.id||Date.now()).replace(/[^a-zA-Z0-9\-_ء-ي]/g,'_');
-  const rows=items.map(function(item,idx){
+  const fileLabel=(isPaid?'invoice':'order-summary')+'_'+String(order.id||Date.now()).replace(/[^a-zA-Z0-9\-_ء-ي]/g,'_');
+  const rows=items.length?items.map(function(item,idx){
     const qty=Number(item.qty||item.quantity||1);
     const price=Number(item.price||0);
     const total=Number(item.total||(price*qty));
     return `<tr><td>${idx+1}</td><td><div class="ar product-name-ar">${esc(item.nameAr||item.nameEn||'منتج')}</div><div class="en product-name-en">${esc(item.nameEn||item.nameAr||'Product')}</div></td><td>${qty}</td><td>${formatAdminMoney(price)}</td><td>${formatAdminMoney(total)}</td></tr>`;
-  }).join('');
-  const element=document.createElement('div');
-  element.className='albostan-pdf-render-host';
-  element.setAttribute('aria-hidden','true');
-  element.style.position='fixed';
-  element.style.left='-12000px';
-  element.style.top='0';
-  element.style.width='794px';
-  element.style.minHeight='1123px';
-  element.style.background='#ffffff';
-  element.style.overflow='visible';
-  element.style.zIndex='-1';
-  element.style.opacity='1';
-  element.style.pointerEvents='none';
-  element.style.transform='none';
-  element.style.maxWidth='none';
-  element.style.fontFamily='Tajawal, Arial, sans-serif';
-  element.style.color='#181A19';
+  }).join(''):`<tr><td colspan="5" class="empty-row">لا توجد منتجات داخل هذا الطلب<br><span>No products in this order</span></td></tr>`;
   const enName=displayForEnglish(customer.name);
   const enAddress=displayForEnglish(customer.address);
   const enEmirate=displayForEnglish(customer.emirate,'emirate');
   const arName=displayForArabic(customer.name);
   const arAddress=displayForArabic(customer.address);
   const arEmirate=displayForArabic(customer.emirate,'emirate');
-  element.innerHTML=`<style>
-    .albostan-invoice-page,.albostan-invoice-page *{box-sizing:border-box!important;max-width:none!important;float:none!important;transform:none!important;filter:none!important;animation:none!important;transition:none!important;}
-    .albostan-invoice-page{width:794px!important;min-height:1123px!important;background:#fff!important;color:#181A19!important;padding:28px!important;margin:0!important;overflow:visible!important;font-family:Tajawal,Arial,sans-serif!important;direction:rtl!important;line-height:1.45!important;}
-    .albostan-invoice-page .receipt{width:738px!important;border:2px solid #1F5E3B!important;border-radius:16px!important;padding:20px!important;background:#fff!important;overflow:visible!important;}
-    .albostan-invoice-page .top{display:grid!important;grid-template-columns:1fr 1fr!important;gap:18px!important;border-bottom:1px solid #E8ECE9!important;padding-bottom:14px!important;margin-bottom:14px!important;page-break-inside:avoid!important;break-inside:avoid!important;}
-    .albostan-invoice-page .brand-en{font-family:Arial,sans-serif!important;font-size:20px!important;font-weight:900!important;color:#15452A!important;direction:ltr!important;text-align:left!important;white-space:nowrap!important;}
-    .albostan-invoice-page .brand-ar{font-family:Tajawal,Arial,sans-serif!important;font-size:21px!important;font-weight:900!important;color:#15452A!important;direction:rtl!important;text-align:right!important;white-space:nowrap!important;}
-    .albostan-invoice-page .title-en{font-family:Arial,sans-serif!important;font-size:15px!important;color:#C9A227!important;font-weight:900!important;direction:ltr!important;text-align:left!important;margin-top:6px!important;}
-    .albostan-invoice-page .title-ar{font-family:Tajawal,Arial,sans-serif!important;font-size:18px!important;color:#C9A227!important;font-weight:900!important;direction:rtl!important;text-align:right!important;margin-bottom:6px!important;}
-    .albostan-invoice-page .meta{font-size:11px!important;color:#26352d!important;line-height:1.65!important;}
-    .albostan-invoice-page .grid2{display:grid!important;grid-template-columns:1fr 1fr!important;gap:12px!important;margin:12px 0!important;page-break-inside:avoid!important;break-inside:avoid!important;}
-    .albostan-invoice-page .panel{background:#F9FAF8!important;border:1px solid #E8ECE9!important;border-radius:14px!important;padding:12px!important;min-height:106px!important;overflow:visible!important;}
-    .albostan-invoice-page .panel h3{margin:0 0 8px!important;color:#15452A!important;font-size:14px!important;font-weight:900!important;}
-    .albostan-invoice-page .line{font-size:12px!important;color:#181A19!important;line-height:1.7!important;margin:2px 0!important;white-space:normal!important;overflow-wrap:anywhere!important;}
-    .albostan-invoice-page .ar{direction:rtl!important;text-align:right!important;font-family:Tajawal,Arial,sans-serif!important;}
-    .albostan-invoice-page .en{direction:ltr!important;text-align:left!important;font-family:Arial,sans-serif!important;}
-    .albostan-invoice-page .label{font-weight:900!important;color:#15452A!important;}
-    .albostan-invoice-page .receipt-table{width:100%!important;border-collapse:collapse!important;margin-top:10px!important;text-align:center!important;font-size:12px!important;table-layout:fixed!important;page-break-inside:auto!important;}
-    .albostan-invoice-page .receipt-table thead{display:table-header-group!important;}
-    .albostan-invoice-page .receipt-table tr{page-break-inside:avoid!important;break-inside:avoid!important;}
-    .albostan-invoice-page .receipt-table th{background:#15452A!important;color:#fff!important;padding:8px 6px!important;border:1px solid rgba(255,255,255,.18)!important;font-weight:900!important;line-height:1.35!important;}
-    .albostan-invoice-page .receipt-table th:nth-child(1){width:42px!important;}
-    .albostan-invoice-page .receipt-table th:nth-child(2){width:296px!important;}
-    .albostan-invoice-page .receipt-table th:nth-child(3){width:70px!important;}
-    .albostan-invoice-page .receipt-table th:nth-child(4){width:132px!important;}
-    .albostan-invoice-page .receipt-table th:nth-child(5){width:132px!important;}
-    .albostan-invoice-page .receipt-table th span{display:block!important;color:#fff!important;opacity:1!important;font-weight:900!important;}
-    .albostan-invoice-page .receipt-table td{padding:9px 6px!important;border-bottom:1px solid #E8ECE9!important;color:#181A19!important;vertical-align:top!important;font-weight:700!important;line-height:1.45!important;overflow-wrap:anywhere!important;white-space:normal!important;}
-    .albostan-invoice-page .product-name-ar{font-weight:800!important;color:#181A19!important;margin-bottom:3px!important;}
-    .albostan-invoice-page .product-name-en{font-weight:700!important;color:#181A19!important;font-size:11px!important;}
-    .albostan-invoice-page .summary{margin-top:14px!important;margin-left:0!important;margin-right:auto!important;width:300px!important;background:#F5F7F5!important;border-radius:12px!important;padding:12px!important;font-size:12px!important;page-break-inside:avoid!important;break-inside:avoid!important;}
-    .albostan-invoice-page .sum-row{display:flex!important;justify-content:space-between!important;gap:12px!important;margin-bottom:7px!important;color:#181A19!important;}
-    .albostan-invoice-page .sum-row span{font-weight:800!important;color:#15452A!important;}
-    .albostan-invoice-page .sum-total{border-top:1px dashed #C9A227!important;padding-top:9px!important;margin-top:9px!important;color:#15452A!important;font-weight:900!important;font-size:14px!important;}
-    .albostan-invoice-page .notice{margin-top:17px!important;padding:11px!important;border-radius:12px!important;background:#fff7e6!important;color:#4b3600!important;line-height:1.7!important;font-size:12px!important;page-break-inside:avoid!important;break-inside:avoid!important;}
-  </style><div class="albostan-invoice-page"><div class="receipt"><div class="top"><div><div class="brand-en">AlBostan Store</div><div class="title-en">${documentTitleEn}</div><div class="meta en">Order ID: ${esc(order.id||'')}</div><div class="meta en">Date: ${formatAdminDate(order.createdAt)}</div><div class="meta en">United Arab Emirates</div><div class="meta en">WhatsApp: +971 50 155 4132</div></div><div><div class="brand-ar">متجر البستان</div><div class="title-ar">${documentTitleAr}</div><div class="meta ar">رقم الطلب: ${esc(order.id||'')}</div><div class="meta ar">التاريخ: ${formatAdminDate(order.createdAt)}</div><div class="meta ar">الإمارات العربية المتحدة</div><div class="meta ar">واتساب: <span style="direction:ltr;display:inline-block;">+971 50 155 4132</span></div></div></div><div class="grid2"><div class="panel"><h3 class="en">Customer Details</h3><div class="line en"><span class="label">Name:</span> ${esc(enName)}</div><div class="line en"><span class="label">Phone:</span> ${esc(customer.phone||'-')}</div><div class="line en"><span class="label">Emirate:</span> ${esc(enEmirate)}</div><div class="line en"><span class="label">Address:</span> ${esc(enAddress)}</div></div><div class="panel"><h3 class="ar">بيانات العميل</h3><div class="line ar"><span class="label">الاسم:</span> ${esc(arName)}</div><div class="line ar"><span class="label">الهاتف:</span> <span style="direction:ltr;display:inline-block;">${esc(customer.phone||'-')}</span></div><div class="line ar"><span class="label">الإمارة:</span> ${esc(arEmirate)}</div><div class="line ar"><span class="label">العنوان:</span> ${esc(arAddress)}</div></div></div><div class="grid2"><div class="panel"><h3 class="en">Order & Payment</h3><div class="line en"><span class="label">Order status:</span> ${esc(orderStatusLabelEn(order.status))}</div><div class="line en"><span class="label">Payment method:</span> Cash on Delivery (COD)</div><div class="line en"><span class="label">Payment status:</span> ${esc(paymentStatusLabelEn(order.paymentStatus))}</div>${order.paidAt?'<div class="line en"><span class="label">Paid at:</span> '+formatAdminDate(order.paidAt)+'</div>':''}</div><div class="panel"><h3 class="ar">بيانات الطلب والدفع</h3><div class="line ar"><span class="label">حالة الطلب:</span> ${esc(orderStatusLabel(order.status))}</div><div class="line ar"><span class="label">طريقة الدفع:</span> نقداً عند الاستلام COD</div><div class="line ar"><span class="label">حالة الدفع:</span> ${esc(paymentAr)}</div>${order.paidAt?'<div class="line ar"><span class="label">تاريخ الدفع:</span> '+formatAdminDate(order.paidAt)+'</div>':''}</div></div><table class="receipt-table"><thead><tr><th>#</th><th><span>المنتج</span><span>Product</span></th><th><span>الكمية</span><span>Qty</span></th><th><span>سعر الوحدة</span><span>Unit Price</span></th><th><span>الإجمالي</span><span>Total</span></th></tr></thead><tbody>${rows}</tbody></table><div class="summary"><div class="sum-row"><span>Items / المنتجات</span><strong>${formatAdminMoney(order.subtotal)}</strong></div><div class="sum-row"><span>Discount / الخصم</span><strong>${formatAdminMoney(order.discountAmount)}</strong></div><div class="sum-row"><span>Delivery / التوصيل</span><strong>${formatAdminMoney(order.deliveryFee)}</strong></div><div class="sum-row sum-total"><span>Total / الإجمالي</span><strong>${formatAdminMoney(order.grandTotal)}</strong></div></div><div class="notice"><div class="ar">${isPaid?'هذا المستند يؤكد أن حالة الدفع مسجلة كمدفوعة نقداً عند الاستلام في لوحة تحكم متجر البستان.':'هذا المستند ليس إيصال دفع. حالة الدفع الحالية غير مدفوعة، والدفع يتم نقداً عند الاستلام فقط.'}</div><div class="en">${isPaid?'This document confirms that the payment status is marked as paid cash on delivery in AlBostan Store admin panel.':'This document is not a payment receipt. The current payment status is unpaid, and payment is cash on delivery only.'}</div></div></div></div>`;
-  document.body.appendChild(element);
-  const invoicePage=element.querySelector('.albostan-invoice-page');
-  const cleanup=function(){if(element&&element.parentNode){element.parentNode.removeChild(element);}};
-  const finalize=function(){
-    return html2pdf().set({
-      margin:[8,8,8,8],
-      filename:filePrefix+'_'+safeOrderId+'.pdf',
-      image:{type:'jpeg',quality:.98},
-      pagebreak:{mode:['css','legacy'],avoid:['.top','.grid2','.panel','.summary','.notice','tr']},
-      html2canvas:{scale:2,useCORS:true,backgroundColor:'#ffffff',width:794,windowWidth:794,scrollX:0,scrollY:0},
-      jsPDF:{orientation:'portrait',unit:'mm',format:'a4'}
-    }).from(invoicePage).save();
-  };
-  showStatus('جاري تجهيز الإيصال PDF...','loading');
-  const fontReady=document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve();
-  fontReady.then(function(){return new Promise(function(resolve){requestAnimationFrame(function(){setTimeout(resolve,180);});});}).then(finalize).then(function(){
-    cleanup();
-    showStatus('تم إنشاء الإيصال PDF بنجاح','ok');
-    logActivity('فاتورة','تم إنشاء PDF للطلب '+(order.id||''),'success');
-  }).catch(function(err){
-    cleanup();
-    console.error(err);
-    showStatus('تعذر إنشاء الإيصال PDF','err');
-  });
+  const receiptHtml=`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${esc(fileLabel)}</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=El+Messiri:wght@600;700&display=swap" rel="stylesheet"><style>
+    :root{--clay:#1F5E3B;--clay-dark:#15452A;--gold:#C9A227;--cream:#F5F7F5;--sand:#E8ECE9;--soil:#181A19;}
+    *{box-sizing:border-box!important;}
+    html,body{margin:0!important;padding:0!important;background:#eef2ef!important;color:var(--soil)!important;font-family:Tajawal,Arial,sans-serif!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+    .screen-toolbar{position:sticky;top:0;z-index:10;display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;padding:12px;background:rgba(255,255,255,.94);border-bottom:1px solid rgba(31,94,59,.12);box-shadow:0 8px 24px rgba(24,26,25,.08);}
+    .screen-toolbar button{border:none;border-radius:999px;padding:11px 18px;font-weight:800;font-family:Tajawal,Arial,sans-serif;cursor:pointer;}
+    .print-btn{background:linear-gradient(135deg,var(--clay),var(--clay-dark));color:#fff;}.close-btn{background:#fff;color:var(--clay-dark);border:1px solid rgba(31,94,59,.16)!important;}
+    .screen-hint{width:100%;text-align:center;font-size:12px;color:#53655b;line-height:1.6;}
+    .page-wrap{width:100%;padding:18px 10px 30px;overflow:visible!important;}
+    .invoice-page{width:794px;min-height:1123px;margin:0 auto;background:#fff;color:#181A19;padding:28px;overflow:visible;font-family:Tajawal,Arial,sans-serif;direction:rtl;line-height:1.45;box-shadow:0 24px 70px -46px rgba(24,26,25,.55);}
+    .receipt{width:100%;border:2px solid var(--clay);border-radius:16px;padding:20px;background:#fff;overflow:visible;}
+    .top{display:grid;grid-template-columns:1fr 1fr;gap:18px;border-bottom:1px solid var(--sand);padding-bottom:14px;margin-bottom:14px;break-inside:avoid;page-break-inside:avoid;}
+    .brand-en{font-family:Arial,sans-serif;font-size:20px;font-weight:900;color:var(--clay-dark);direction:ltr;text-align:left;white-space:nowrap;}
+    .brand-ar{font-family:Tajawal,Arial,sans-serif;font-size:21px;font-weight:900;color:var(--clay-dark);direction:rtl;text-align:right;white-space:nowrap;}
+    .title-en{font-family:Arial,sans-serif;font-size:15px;color:var(--gold);font-weight:900;direction:ltr;text-align:left;margin-top:6px;}
+    .title-ar{font-family:Tajawal,Arial,sans-serif;font-size:18px;color:var(--gold);font-weight:900;direction:rtl;text-align:right;margin-bottom:6px;}
+    .meta{font-size:11px;color:#26352d;line-height:1.65;}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0;break-inside:avoid;page-break-inside:avoid;}
+    .panel{background:#F9FAF8;border:1px solid var(--sand);border-radius:14px;padding:12px;min-height:106px;overflow:visible;}
+    .panel h3{margin:0 0 8px;color:var(--clay-dark);font-size:14px;font-weight:900;}
+    .line{font-size:12px;color:#181A19;line-height:1.7;margin:2px 0;white-space:normal;overflow-wrap:anywhere;}
+    .ar{direction:rtl;text-align:right;font-family:Tajawal,Arial,sans-serif;}.en{direction:ltr;text-align:left;font-family:Arial,sans-serif;}.label{font-weight:900;color:var(--clay-dark);}
+    .receipt-table{width:100%;border-collapse:collapse;margin-top:10px;text-align:center;font-size:12px;table-layout:fixed;page-break-inside:auto;}
+    .receipt-table thead{display:table-header-group;}.receipt-table tr{break-inside:avoid;page-break-inside:avoid;}
+    .receipt-table th{background:var(--clay-dark);color:#fff;padding:8px 6px;border:1px solid rgba(255,255,255,.18);font-weight:900;line-height:1.35;}
+    .receipt-table th:nth-child(1){width:42px}.receipt-table th:nth-child(2){width:296px}.receipt-table th:nth-child(3){width:70px}.receipt-table th:nth-child(4){width:132px}.receipt-table th:nth-child(5){width:132px}
+    .receipt-table th span{display:block;color:#fff;font-weight:900;}.receipt-table td{padding:9px 6px;border-bottom:1px solid var(--sand);color:#181A19;vertical-align:top;font-weight:700;line-height:1.45;overflow-wrap:anywhere;white-space:normal;}
+    .product-name-ar{font-weight:800;color:#181A19;margin-bottom:3px;}.product-name-en{font-weight:700;color:#181A19;font-size:11px;}.empty-row{padding:18px!important;color:#777!important;}.empty-row span{font-family:Arial,sans-serif;direction:ltr;display:block;margin-top:3px;}
+    .summary{margin-top:14px;margin-left:0;margin-right:auto;width:300px;background:var(--cream);border-radius:12px;padding:12px;font-size:12px;break-inside:avoid;page-break-inside:avoid;}
+    .sum-row{display:flex;justify-content:space-between;gap:12px;margin-bottom:7px;color:#181A19;}.sum-row span{font-weight:800;color:var(--clay-dark);}.sum-total{border-top:1px dashed var(--gold);padding-top:9px;margin-top:9px;color:var(--clay-dark);font-weight:900;font-size:14px;}
+    .notice{margin-top:17px;padding:11px;border-radius:12px;background:#fff7e6;color:#4b3600;line-height:1.7;font-size:12px;break-inside:avoid;page-break-inside:avoid;}
+    @media(max-width:840px){.page-wrap{padding:10px 0 24px;overflow:auto!important;}.invoice-page{width:794px;min-width:794px;margin:0 10px;box-shadow:none;}.screen-toolbar{justify-content:stretch;}.screen-toolbar button{flex:1;}.screen-hint{font-size:11px;}}
+    @page{size:A4 portrait;margin:8mm;}
+    @media print{html,body{background:#fff!important;width:210mm!important;min-height:297mm!important;overflow:visible!important;}.screen-toolbar{display:none!important;}.page-wrap{padding:0!important;overflow:visible!important;width:auto!important;}.invoice-page{width:194mm!important;min-height:auto!important;margin:0!important;padding:0!important;box-shadow:none!important;background:#fff!important;}.receipt{border-radius:12px!important;padding:5mm!important;}a[href]:after{content:""!important;}}
+  </style></head><body><div class="screen-toolbar"><button class="print-btn" onclick="window.print()">طباعة / حفظ PDF</button><button class="close-btn" onclick="window.close()">إغلاق</button><div class="screen-hint">إذا كنت على الجوال: اضغط زر طباعة / حفظ PDF ثم اختر Save as PDF أو حفظ كملف PDF. هذه الصفحة مستقلة حتى لا تتأثر بعرض الموبايل في لوحة التحكم.</div></div><div class="page-wrap"><div class="invoice-page"><div class="receipt"><div class="top"><div><div class="brand-en">AlBostan Store</div><div class="title-en">${documentTitleEn}</div><div class="meta en">Order ID: ${esc(order.id||'')}</div><div class="meta en">Date: ${formatAdminDate(order.createdAt)}</div><div class="meta en">United Arab Emirates</div><div class="meta en">WhatsApp: +971 50 155 4132</div></div><div><div class="brand-ar">متجر البستان</div><div class="title-ar">${documentTitleAr}</div><div class="meta ar">رقم الطلب: ${esc(order.id||'')}</div><div class="meta ar">التاريخ: ${formatAdminDate(order.createdAt)}</div><div class="meta ar">الإمارات العربية المتحدة</div><div class="meta ar">واتساب: <span style="direction:ltr;display:inline-block;">+971 50 155 4132</span></div></div></div><div class="grid2"><div class="panel"><h3 class="en">Customer Details</h3><div class="line en"><span class="label">Name:</span> ${esc(enName)}</div><div class="line en"><span class="label">Phone:</span> ${esc(customer.phone||'-')}</div><div class="line en"><span class="label">Emirate:</span> ${esc(enEmirate)}</div><div class="line en"><span class="label">Address:</span> ${esc(enAddress)}</div></div><div class="panel"><h3 class="ar">بيانات العميل</h3><div class="line ar"><span class="label">الاسم:</span> ${esc(arName)}</div><div class="line ar"><span class="label">الهاتف:</span> <span style="direction:ltr;display:inline-block;">${esc(customer.phone||'-')}</span></div><div class="line ar"><span class="label">الإمارة:</span> ${esc(arEmirate)}</div><div class="line ar"><span class="label">العنوان:</span> ${esc(arAddress)}</div></div></div><div class="grid2"><div class="panel"><h3 class="en">Order & Payment</h3><div class="line en"><span class="label">Order status:</span> ${esc(orderStatusLabelEn(order.status))}</div><div class="line en"><span class="label">Payment method:</span> Cash on Delivery (COD)</div><div class="line en"><span class="label">Payment status:</span> ${esc(paymentStatusLabelEn(order.paymentStatus))}</div>${order.paidAt?'<div class="line en"><span class="label">Paid at:</span> '+formatAdminDate(order.paidAt)+'</div>':''}</div><div class="panel"><h3 class="ar">بيانات الطلب والدفع</h3><div class="line ar"><span class="label">حالة الطلب:</span> ${esc(orderStatusLabel(order.status))}</div><div class="line ar"><span class="label">طريقة الدفع:</span> نقداً عند الاستلام COD</div><div class="line ar"><span class="label">حالة الدفع:</span> ${esc(paymentAr)}</div>${order.paidAt?'<div class="line ar"><span class="label">تاريخ الدفع:</span> '+formatAdminDate(order.paidAt)+'</div>':''}</div></div><table class="receipt-table"><thead><tr><th>#</th><th><span>المنتج</span><span>Product</span></th><th><span>الكمية</span><span>Qty</span></th><th><span>سعر الوحدة</span><span>Unit Price</span></th><th><span>الإجمالي</span><span>Total</span></th></tr></thead><tbody>${rows}</tbody></table><div class="summary"><div class="sum-row"><span>Items / المنتجات</span><strong>${formatAdminMoney(order.subtotal)}</strong></div><div class="sum-row"><span>Discount / الخصم</span><strong>${formatAdminMoney(order.discountAmount)}</strong></div><div class="sum-row"><span>Delivery / التوصيل</span><strong>${formatAdminMoney(order.deliveryFee)}</strong></div><div class="sum-row sum-total"><span>Total / الإجمالي</span><strong>${formatAdminMoney(order.grandTotal)}</strong></div></div><div class="notice"><div class="ar">${isPaid?'هذا المستند يؤكد أن حالة الدفع مسجلة كمدفوعة نقداً عند الاستلام في لوحة تحكم متجر البستان.':'هذا المستند ليس إيصال دفع. حالة الدفع الحالية غير مدفوعة، والدفع يتم نقداً عند الاستلام فقط.'}</div><div class="en">${isPaid?'This document confirms that the payment status is marked as paid cash on delivery in AlBostan Store admin panel.':'This document is not a payment receipt. The current payment status is unpaid, and payment is cash on delivery only.'}</div></div></div></div></div></body></html>`;
+  const receiptWindow=window.open('','_blank');
+  if(!receiptWindow){
+    showStatus('المتصفح منع فتح نافذة الإيصال. اسمح بالنوافذ المنبثقة ثم حاول مرة أخرى.','err');
+    return;
+  }
+  receiptWindow.document.open();
+  receiptWindow.document.write(receiptHtml);
+  receiptWindow.document.close();
+  showStatus('تم فتح الإيصال في صفحة مستقلة','ok');
+  logActivity('فاتورة','تم فتح صفحة إيصال مستقلة للطلب '+(order.id||''),'success');
+  setTimeout(function(){
+    try{receiptWindow.focus();receiptWindow.print();}catch(e){}
+  },700);
 }
 function openOrderWhatsapp(orderId){const order=getOrderById(orderId);if(!order){showStatus('لم يتم العثور على الطلب','err');return;}const customer=order.customer||{};const phone=String(customer.phone||'').replace(/\D/g,'');const phoneForWa=phone.startsWith('971')?phone:(phone.startsWith('0')?'971'+phone.slice(1):phone);const msg='مرحباً، بخصوص طلبك من متجر البستان رقم: '+(order.id||'')+'\n'+'حالة الطلب الحالية: '+orderStatusLabel(order.status)+'\n'+'الإجمالي: '+formatAdminMoney(order.grandTotal)+'\n'+'طريقة الدفع: نقداً عند الاستلام COD';if(!phoneForWa){showStatus('رقم هاتف العميل غير متوفر','warning');return;}window.open('https://wa.me/'+phoneForWa+'?text='+encodeURIComponent(msg),'_blank');}
 
