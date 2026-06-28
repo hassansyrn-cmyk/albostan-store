@@ -2532,6 +2532,7 @@ function renderOrdersList(){
           <button class="small secondary" onclick="changeOrderStatus('${esc(order.id)}','out_for_delivery')">جاري التوصيل</button>
           <button class="small secondary" onclick="changeOrderStatus('${esc(order.id)}','delivered')">تم التوصيل</button>
           <button class="small success" onclick="changeOrderPaymentStatus('${esc(order.id)}','cod_paid')">تم الدفع</button>
+          <button class="small" onclick="generateOrderInvoicePDF('${esc(order.id)}')">إيصال PDF</button>
           <button class="small danger" onclick="changeOrderStatus('${esc(order.id)}','cancelled')">إلغاء</button>
         </div>
       </div>
@@ -2559,31 +2560,208 @@ async function changeOrderStatus(orderId,status){
     showStatus('جاري حفظ حالة الطلب...','loading');
     await saveOrdersFile('Update order status ' + orderId);
     renderOrdersList();
-    addActivityLog('تحديث طلب','تم تغيير حالة الطلب ' + orderId + ' إلى ' + orderStatusLabel(status),'success');
+    logActivity('تحديث طلب','تم تغيير حالة الطلب ' + orderId + ' إلى ' + orderStatusLabel(status),'success');
     showStatus('تم حفظ حالة الطلب','ok');
   }catch(e){
     showStatus('فشل حفظ حالة الطلب: ' + e.message,'err');
   }
 }
 
+function findProductForOrderItem(item){
+  const itemNameAr = String(item.nameAr || '').trim();
+  const itemNameEn = String(item.nameEn || '').trim();
+  return products.find(function(product){
+    return String(product.nameAr || '').trim() === itemNameAr ||
+           String(product.nameEn || '').trim() === itemNameEn;
+  });
+}
+
+function buildSalesEntriesFromOrder(order){
+  const items = Array.isArray(order.items) ? order.items : [];
+  const now = new Date();
+  return items.map(function(item,idx){
+    const qty = Math.max(1, parseInt(item.qty || item.quantity || 1) || 1);
+    const price = parseFloat(item.price) || 0;
+    const product = findProductForOrderItem(item);
+    const cost = product ? (parseFloat(product.cost) || 0) : 0;
+    const total = parseFloat(item.total) || (price * qty);
+    const profit = (price - cost) * qty;
+    return {
+      id: Date.now() + idx,
+      orderId: order.id || '',
+      productName: item.nameAr || item.nameEn || 'منتج بدون اسم',
+      productNameEn: item.nameEn || item.nameAr || '',
+      customerName: order.customer && order.customer.name ? order.customer.name : '',
+      customerPhone: order.customer && order.customer.phone ? order.customer.phone : '',
+      qty: qty,
+      total: Number(total).toFixed(2),
+      profit: Number(profit).toFixed(2),
+      date: now.toLocaleString('ar-EG'),
+      dateISO: now.toISOString(),
+      source: 'orders.json'
+    };
+  });
+}
+
+function reduceProductsStockFromOrder(order){
+  const items = Array.isArray(order.items) ? order.items : [];
+  items.forEach(function(item){
+    const product = findProductForOrderItem(item);
+    if(!product) return;
+    const qty = Math.max(1, parseInt(item.qty || item.quantity || 1) || 1);
+    const currentQty = parseInt(product.quantity) || 0;
+    product.quantity = currentQty - qty;
+    if(product.quantity < 0) product.quantity = 0;
+  });
+}
+
 async function changeOrderPaymentStatus(orderId,paymentStatus){
   const order = getOrderById(orderId);
   if(!order){ showStatus('لم يتم العثور على الطلب','err'); return; }
+
+  const alreadyPaid = order.paymentStatus === 'cod_paid' || order.paymentStatus === 'paid';
+  const shouldRecordSale = paymentStatus === 'cod_paid' && !order.salesRecorded;
+
   order.paymentStatus = paymentStatus;
-  if(paymentStatus === 'cod_paid' && !order.paidAt){
-    order.paidAt = new Date().toISOString();
+  if(paymentStatus === 'cod_paid'){
+    if(!order.paidAt){ order.paidAt = new Date().toISOString(); }
+    if(order.status !== 'cancelled'){
+      order.status = 'delivered';
+    }
   }
   order.updatedAt = new Date().toISOString();
+
   try{
-    showStatus('جاري حفظ حالة الدفع...','loading');
+    showStatus('جاري ربط الطلب بالمبيعات والإحصائيات...','loading');
+
+    if(shouldRecordSale){
+      const entries = buildSalesEntriesFromOrder(order);
+      entries.forEach(function(entry){ salesData.push(entry); });
+      reduceProductsStockFromOrder(order);
+      order.salesRecorded = true;
+      order.salesRecordedAt = new Date().toISOString();
+      order.salesEntriesCount = entries.length;
+      await saveProductsFile('Reduce stock for paid order ' + orderId);
+      await saveSalesFile('Record paid order sales ' + orderId);
+    }else if(alreadyPaid && order.salesRecorded){
+      showStatus('الطلب مدفوع ومُسجل سابقاً، لن يتم تكرار تسجيل المبيعات','warning');
+    }
+
     await saveOrdersFile('Update order payment status ' + orderId);
     renderOrdersList();
-    addActivityLog('تحديث دفع','تم تغيير دفع الطلب ' + orderId + ' إلى ' + paymentStatusLabel(paymentStatus),'success');
-    showStatus('تم حفظ حالة الدفع','ok');
+    renderProductsList();
+    updateStats();
+    displayLowStockAlert();
+    if(document.getElementById('analytics') && document.getElementById('analytics').classList.contains('active')){
+      initializeCharts();
+    }
+    logActivity('تحديث دفع','تم تغيير دفع الطلب ' + orderId + ' إلى ' + paymentStatusLabel(paymentStatus),'success');
+    showStatus('تم ربط الطلب بالمبيعات وتحديث الإحصائيات ✅','ok');
   }catch(e){
+    console.error(e);
     showStatus('فشل حفظ حالة الدفع: ' + e.message,'err');
   }
 }
+
+function generateOrderInvoicePDF(orderId){
+  const order = getOrderById(orderId);
+  if(!order){ showStatus('لم يتم العثور على الطلب','err'); return; }
+
+  const customer = order.customer || {};
+  const items = Array.isArray(order.items) ? order.items : [];
+  const isPaid = order.paymentStatus === 'cod_paid' || order.paymentStatus === 'paid';
+  const documentTitle = isPaid ? 'فاتورة / إيصال دفع' : 'ملخص طلب غير مدفوع';
+  const filePrefix = isPaid ? 'invoice' : 'order-summary';
+  const paymentText = isPaid ? 'تم الدفع نقداً عند الاستلام' : 'غير مدفوع - الدفع نقداً عند الاستلام';
+  const itemsRows = items.map(function(item,idx){
+    const qty = Number(item.qty || item.quantity || 1);
+    const price = Number(item.price || 0);
+    const total = Number(item.total || (price * qty));
+    return `
+      <tr>
+        <td>${idx + 1}</td>
+        <td>${esc(item.nameAr || item.nameEn || 'منتج')}</td>
+        <td>${qty}</td>
+        <td>${formatAdminMoney(price)}</td>
+        <td>${formatAdminMoney(total)}</td>
+      </tr>
+    `;
+  }).join('');
+
+  const element = document.createElement('div');
+  element.dir = 'rtl';
+  element.style.fontFamily = 'Tajawal, Arial, sans-serif';
+  element.style.padding = '24px';
+  element.style.color = '#181A19';
+  element.innerHTML = `
+    <div style="border:2px solid #1F5E3B;border-radius:18px;padding:22px;">
+      <div style="display:flex;justify-content:space-between;gap:20px;align-items:flex-start;border-bottom:1px solid #E8ECE9;padding-bottom:16px;margin-bottom:18px;">
+        <div>
+          <h1 style="margin:0;color:#15452A;font-family:El Messiri, Tajawal, Arial, sans-serif;">AlBostan Store | متجر البستان</h1>
+          <p style="margin:6px 0 0;color:#555;">الإمارات العربية المتحدة</p>
+          <p style="margin:4px 0 0;color:#555;direction:ltr;text-align:right;">WhatsApp: +971 50 155 4132</p>
+        </div>
+        <div style="text-align:left;min-width:190px;">
+          <h2 style="margin:0;color:#C9A227;">${documentTitle}</h2>
+          <p style="margin:8px 0 0;direction:ltr;">${esc(order.id || '')}</p>
+          <p style="margin:4px 0 0;">${formatAdminDate(order.createdAt)}</p>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;">
+        <div style="background:#F5F7F5;border-radius:12px;padding:12px;">
+          <strong style="color:#15452A;">بيانات العميل</strong>
+          <p style="margin:8px 0 0;">الاسم: ${esc(customer.name || '-')}</p>
+          <p style="margin:4px 0 0;">الهاتف: <span style="direction:ltr;display:inline-block;">${esc(customer.phone || '-')}</span></p>
+          <p style="margin:4px 0 0;">الإمارة: ${esc(customer.emirate || '-')}</p>
+          <p style="margin:4px 0 0;">العنوان: ${esc(customer.address || '-')}</p>
+        </div>
+        <div style="background:#F5F7F5;border-radius:12px;padding:12px;">
+          <strong style="color:#15452A;">بيانات الطلب والدفع</strong>
+          <p style="margin:8px 0 0;">حالة الطلب: ${esc(orderStatusLabel(order.status))}</p>
+          <p style="margin:4px 0 0;">طريقة الدفع: نقداً عند الاستلام COD</p>
+          <p style="margin:4px 0 0;">حالة الدفع: ${paymentText}</p>
+          ${order.paidAt ? '<p style="margin:4px 0 0;">تاريخ الدفع: ' + formatAdminDate(order.paidAt) + '</p>' : ''}
+        </div>
+      </div>
+
+      <table style="width:100%;border-collapse:collapse;margin-top:10px;text-align:right;">
+        <thead>
+          <tr style="background:#15452A;color:#fff;">
+            <th style="padding:10px;border:1px solid #ddd;">#</th>
+            <th style="padding:10px;border:1px solid #ddd;">المنتج</th>
+            <th style="padding:10px;border:1px solid #ddd;">الكمية</th>
+            <th style="padding:10px;border:1px solid #ddd;">سعر الوحدة</th>
+            <th style="padding:10px;border:1px solid #ddd;">الإجمالي</th>
+          </tr>
+        </thead>
+        <tbody>${itemsRows}</tbody>
+      </table>
+
+      <div style="margin-top:16px;margin-right:auto;width:280px;background:#F5F7F5;border-radius:12px;padding:14px;">
+        <p style="display:flex;justify-content:space-between;margin:0 0 6px;"><span>قيمة المنتجات:</span><strong>${formatAdminMoney(order.subtotal)}</strong></p>
+        <p style="display:flex;justify-content:space-between;margin:0 0 6px;"><span>الخصم:</span><strong>${formatAdminMoney(order.discountAmount)}</strong></p>
+        <p style="display:flex;justify-content:space-between;margin:0 0 6px;"><span>التوصيل:</span><strong>${formatAdminMoney(order.deliveryFee)}</strong></p>
+        <p style="display:flex;justify-content:space-between;margin:10px 0 0;padding-top:10px;border-top:1px dashed #C9A227;color:#15452A;font-size:1.08rem;"><span>الإجمالي النهائي:</span><strong>${formatAdminMoney(order.grandTotal)}</strong></p>
+      </div>
+
+      <div style="margin-top:22px;padding:12px;border-radius:12px;background:#fff7e6;color:#6b4a00;line-height:1.8;">
+        ${isPaid ? 'هذا المستند يؤكد أن حالة الدفع مسجلة كمدفوعة نقداً عند الاستلام في لوحة تحكم متجر البستان.' : 'هذا المستند ليس إيصال دفع. حالة الدفع الحالية غير مدفوعة، والدفع يتم نقداً عند الاستلام فقط.'}
+      </div>
+    </div>
+  `;
+
+  html2pdf().set({
+    margin:8,
+    filename:filePrefix + '_' + String(order.id || Date.now()) + '.pdf',
+    image:{type:'jpeg',quality:.98},
+    html2canvas:{scale:2},
+    jsPDF:{orientation:'portrait',unit:'mm',format:'a4'}
+  }).from(element).save();
+
+  logActivity('فاتورة','تم إنشاء PDF للطلب ' + (order.id || ''),'success');
+}
+
 
 function openOrderWhatsapp(orderId){
   const order = getOrderById(orderId);
