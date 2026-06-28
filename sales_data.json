@@ -12,5 +12,19 @@
     "date": "٢٩‏/٦‏/٢٠٢٦، ١٢:٠٧:٠٩ ص",
     "dateISO": "2026-06-28T20:07:09.117Z",
     "source": "orders.json"
+  },
+  {
+    "id": 1782683384758,
+    "orderId": "ABS-20260629-0148-6074",
+    "productName": "كاميرا كانون 250D مستعملة مع 3 عدسات وحقيبة وكرت ذاكرة",
+    "productNameEn": "Used Canon 250D Camera with 3 lenses, bag, and memory card",
+    "customerName": "حسن",
+    "customerPhone": "0561602612",
+    "qty": 1,
+    "total": "722.75",
+    "profit": "722.75",
+    "date": "٢٩‏/٦‏/٢٠٢٦، ١:٤٩:٤٤ ص",
+    "dateISO": "2026-06-28T21:49:44.757Z",
+    "source": "orders.json"
   }
 ]
