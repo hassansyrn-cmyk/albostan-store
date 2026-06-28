@@ -1,2 +1,41 @@
-[]
-
+[
+  {
+    "id": "ABS-20260628-105455-5135",
+    "createdAt": "2026-06-28T10:54:55.955Z",
+    "updatedAt": "2026-06-28T10:54:55.955Z",
+    "status": "pending",
+    "paymentStatus": "cod_pending",
+    "paymentMethod": "COD",
+    "source": "website",
+    "whatsappSent": false,
+    "customer": {
+      "name": "Test Customer",
+      "phone": "0500000000",
+      "emirate": "Abu Dhabi",
+      "address": "Test Address",
+      "notes": "Test order from API"
+    },
+    "items": [
+      {
+        "id": "test-product-1",
+        "nameAr": "منتج تجريبي",
+        "nameEn": "Test Product",
+        "categoryAr": "منتجات مختارة",
+        "categoryEn": "Selected Products",
+        "price": 10,
+        "qty": 2,
+        "total": 20,
+        "img": "",
+        "emoji": "test"
+      }
+    ],
+    "coupon": {
+      "code": "",
+      "discount": 0
+    },
+    "subtotal": 20,
+    "deliveryFee": 15,
+    "discountAmount": 0,
+    "grandTotal": 35
+  }
+]
