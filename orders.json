@@ -1,5 +1,44 @@
 [
   {
+    "id": "ABS-20260628-1520-3751",
+    "createdAt": "2026-06-28T11:20:22.721Z",
+    "updatedAt": "2026-06-28T11:20:22.721Z",
+    "status": "pending",
+    "paymentStatus": "cod_pending",
+    "paymentMethod": "COD",
+    "source": "website",
+    "whatsappSent": false,
+    "customer": {
+      "name": "حسن",
+      "phone": "0561602612",
+      "emirate": "Abu Dhabi",
+      "address": "الشهامة",
+      "notes": ""
+    },
+    "items": [
+      {
+        "id": "",
+        "nameAr": "سماعات الأذن",
+        "nameEn": "Earbuds",
+        "categoryAr": "",
+        "categoryEn": "",
+        "price": 45,
+        "qty": 2,
+        "total": 90,
+        "img": "images/1782636508011-1z5e7nhib-110327.jpg",
+        "emoji": ""
+      }
+    ],
+    "coupon": {
+      "code": "NEW10",
+      "discount": 9
+    },
+    "subtotal": 90,
+    "deliveryFee": 15,
+    "discountAmount": 9,
+    "grandTotal": 96
+  },
+  {
     "id": "ABS-20260628-1510-9970",
     "createdAt": "2026-06-28T11:10:32.179Z",
     "updatedAt": "2026-06-28T11:18:16.568Z",
