@@ -1,5 +1,44 @@
 [
   {
+    "id": "ABS-20260628-1826-6694",
+    "createdAt": "2026-06-28T14:26:29.798Z",
+    "updatedAt": "2026-06-28T14:26:29.798Z",
+    "status": "pending",
+    "paymentStatus": "cod_pending",
+    "paymentMethod": "COD",
+    "source": "website",
+    "whatsappSent": false,
+    "customer": {
+      "name": "حسن",
+      "phone": "0561602612",
+      "emirate": "Abu Dhabi",
+      "address": "الشهامة",
+      "notes": ""
+    },
+    "items": [
+      {
+        "id": "",
+        "nameAr": "سماعات جي بي ال",
+        "nameEn": "JBL Headphones",
+        "categoryAr": "",
+        "categoryEn": "",
+        "price": 30.11,
+        "qty": 1,
+        "total": 30.11,
+        "img": "images/1782401642481-103652.jpg",
+        "emoji": ""
+      }
+    ],
+    "coupon": {
+      "code": "",
+      "discount": 0
+    },
+    "subtotal": 30.11,
+    "deliveryFee": 15,
+    "discountAmount": 0,
+    "grandTotal": 45.11
+  },
+  {
     "id": "ABS-20260628-1616-8526",
     "createdAt": "2026-06-28T12:16:33.497Z",
     "updatedAt": "2026-06-28T12:16:58.354Z",
