@@ -1981,6 +1981,18 @@ tbody td:last-child{border-start-end-radius:14px;border-end-end-radius:14px;}
 
           <button onclick="applyBulkPriceChange()">✅ تطبيق التغيير</button>
         </div>
+
+        <div class="box" style="border:2px solid rgba(230,57,70,.18);background:linear-gradient(135deg,#fff,#fff7f8)!important;">
+          <h3 style="margin-bottom:12px;color:var(--danger);">إعادة ضبط المبيعات والإحصائيات</h3>
+          <p style="color:#5f3338;line-height:1.8;margin-bottom:14px;font-weight:700;">
+            هذا الزر يستخدم بعد التجارب فقط. سيحذف كل عمليات البيع من ملف sales_data.json، ويعيد حالات الدفع للطلبات المدفوعة إلى غير مدفوعة، ويحذف علامة تسجيل البيع من الطلبات.
+          </p>
+          <p style="color:#8a4b00;background:#fff7e6;border:1px solid rgba(243,156,18,.25);border-radius:12px;padding:10px 12px;line-height:1.7;margin-bottom:14px;">
+            تنبيه: هذا الإجراء لا يرجع كميات المخزون تلقائياً، لأنه لا يمكن معرفة الكميات الأصلية قبل التجارب. إذا كانت تجارب الشراء نقصت المخزون، عدّل الكميات يدوياً من إدارة المنتجات.
+          </p>
+          <button class="danger" onclick="resetSalesFactory()">إعادة ضبط المبيعات والإحصائيات</button>
+          <small style="display:block;color:#777;margin-top:10px;line-height:1.6;">سيطلب النظام تأكيداً ثم رمز PIN للحماية. رمز PIN الحالي: 3258</small>
+        </div>
       </div>
 
       <div id="activity-log" class="tab-content">
@@ -2023,6 +2035,7 @@ const PRODUCTS_PATH = 'products.json';
 const SALES_PATH = 'sales_data.json';
 const COUPONS_PATH = 'coupons.json';
 const ORDERS_PATH = 'orders.json';
+const RESET_SALES_PIN = '3258';
 
 let accessToken = null;
 let products = [];
@@ -2772,6 +2785,59 @@ async function handleRecordSale(){
     showStatus('تم تسجيل البيعة بنجاح ✅','ok');
   }catch(e){
     showStatus('خطأ في تسجيل البيعة: ' + e.message,'err');
+  }
+}
+
+async function resetSalesFactory(){
+  const salesCountBefore=Array.isArray(salesData)?salesData.length:0;
+  const paidOrdersBefore=orders.filter(function(order){return order.paymentStatus==='cod_paid'||order.paymentStatus==='paid'||order.salesRecorded;}).length;
+  const warningMsg='تحذير مهم:\n\nسيتم حذف كل عمليات البيع من ملف sales_data.json.\nوسيتم تصفير الإحصائيات والأرباح.\nوسيتم تحويل الطلبات المدفوعة إلى غير مدفوعة وإزالة علامة تسجيل البيع منها.\n\nلن يتم حذف الطلبات نفسها، ولن يتم حذف المنتجات أو الكوبونات.\nولن يتم إرجاع كميات المخزون تلقائياً.\n\nهل أنت متأكد أنك تريد المتابعة؟';
+  if(!confirm(warningMsg)){
+    showStatus('تم إلغاء إعادة الضبط','warning');
+    return;
+  }
+  const enteredPin=prompt('لإتمام إعادة ضبط المبيعات، أدخل رمز PIN:');
+  if(enteredPin===null){
+    showStatus('تم إلغاء العملية','warning');
+    return;
+  }
+  if(String(enteredPin).trim()!==RESET_SALES_PIN){
+    showStatus('رمز PIN غير صحيح، لم يتم تنفيذ أي تغيير','err');
+    logActivity('حماية','محاولة إعادة ضبط المبيعات برمز PIN غير صحيح','error');
+    return;
+  }
+  try{
+    showStatus('جاري إعادة ضبط المبيعات والإحصائيات...','loading');
+    salesData=[];
+    let changedOrders=0;
+    orders.forEach(function(order){
+      const wasPaid=order.paymentStatus==='cod_paid'||order.paymentStatus==='paid'||order.salesRecorded;
+      if(wasPaid){
+        order.paymentStatus='cod_pending';
+        order.updatedAt=new Date().toISOString();
+        delete order.paidAt;
+        delete order.salesRecorded;
+        delete order.salesRecordedAt;
+        delete order.salesEntriesCount;
+        changedOrders++;
+      }
+    });
+    await saveSalesFile('Factory reset sales data');
+    if(changedOrders>0){
+      await saveOrdersFile('Reset paid order markers after sales reset');
+    }
+    updateStats();
+    renderSalesTables();
+    renderOrdersList();
+    if(document.getElementById('analytics')&&document.getElementById('analytics').classList.contains('active')){
+      initializeCharts();
+    }
+    logActivity('إعادة ضبط','تم حذف '+salesCountBefore+' عملية بيع وإرجاع '+changedOrders+' طلب مدفوع إلى غير مدفوع','success');
+    showStatus('تمت إعادة ضبط المبيعات والإحصائيات بنجاح','ok');
+  }catch(e){
+    console.error(e);
+    showStatus('فشلت إعادة الضبط: '+e.message,'err');
+    logActivity('إعادة ضبط','فشل إعادة ضبط المبيعات: '+e.message,'error');
   }
 }
 
