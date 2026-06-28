@@ -1924,6 +1924,70 @@
       border-radius: 20px;
     }
   }
+
+
+  /* ===== Fix: available-only filter layout on mobile ===== */
+  @media(max-width:680px){
+    .advanced-filters{
+      display:grid!important;
+      grid-template-columns:1fr!important;
+      gap:12px!important;
+      justify-items:center!important;
+      width:100%!important;
+      max-width:100%!important;
+    }
+    .advanced-filters input:not([type="checkbox"]),
+    .advanced-filters select{
+      width:100%!important;
+      max-width:100%!important;
+      min-width:0!important;
+      flex:none!important;
+    }
+    .available-filter-label{
+      width:100%!important;
+      max-width:420px!important;
+      min-height:54px!important;
+      margin:0 auto!important;
+      display:flex!important;
+      flex-direction:row!important;
+      align-items:center!important;
+      justify-content:center!important;
+      gap:12px!important;
+      padding:12px 18px!important;
+      line-height:1!important;
+      white-space:nowrap!important;
+      box-sizing:border-box!important;
+    }
+    html[dir="rtl"] .available-filter-label{
+      direction:rtl!important;
+    }
+    .available-filter-label input[type="checkbox"]{
+      width:20px!important;
+      height:20px!important;
+      min-width:20px!important;
+      flex:0 0 20px!important;
+      margin:0!important;
+      accent-color:var(--clay);
+    }
+    .available-filter-label span{
+      display:inline-flex!important;
+      align-items:center!important;
+      justify-content:center!important;
+      white-space:nowrap!important;
+      line-height:1!important;
+      margin:0!important;
+    }
+  }
+  @media(min-width:681px) and (max-width:1100px){
+    .available-filter-label{
+      white-space:nowrap!important;
+      flex:0 0 auto!important;
+    }
+    .available-filter-label span{
+      white-space:nowrap!important;
+    }
+  }
+
 </style>
 </head>
 <body>
