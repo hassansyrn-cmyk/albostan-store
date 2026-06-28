@@ -1,1 +1,41 @@
-[]
+[
+  {
+    "id": "ABS-20260628-1510-9970",
+    "createdAt": "2026-06-28T11:10:32.179Z",
+    "updatedAt": "2026-06-28T11:10:32.179Z",
+    "status": "pending",
+    "paymentStatus": "cod_pending",
+    "paymentMethod": "COD",
+    "source": "website",
+    "whatsappSent": false,
+    "customer": {
+      "name": "حسن",
+      "phone": "0561602612",
+      "emirate": "Abu Dhabi",
+      "address": "الشهامة",
+      "notes": ""
+    },
+    "items": [
+      {
+        "id": "",
+        "nameAr": "فيتامينات متعددة",
+        "nameEn": "Multivitamins",
+        "categoryAr": "",
+        "categoryEn": "",
+        "price": 200,
+        "qty": 1,
+        "total": 200,
+        "img": "images/1782411571710-7t937qeje-83940.jpg",
+        "emoji": ""
+      }
+    ],
+    "coupon": {
+      "code": "",
+      "discount": 0
+    },
+    "subtotal": 200,
+    "deliveryFee": 15,
+    "discountAmount": 0,
+    "grandTotal": 215
+  }
+]
