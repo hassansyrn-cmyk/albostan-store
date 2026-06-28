@@ -194,5 +194,29 @@
     "images": [
       "images/1782504210157-1ug39hi44-1901.jpg"
     ]
+  },
+  {
+    "nameAr": "سماعات الأذن",
+    "nameEn": "Earbuds",
+    "price": "50",
+    "categoryAr": "إلكترونيات",
+    "categoryEn": "Electronics",
+    "quantity": 10,
+    "cost": "30",
+    "oldPrice": "100",
+    "discount": "خصم 50%",
+    "discountEndDate": "",
+    "originalPriceBeforeDiscount": "100",
+    "descAr": "سماعات هواوي",
+    "descEn": "Huawei earbuds",
+    "emoji": "📱",
+    "rating": "",
+    "badgeAr": "عرض خاص",
+    "badgeEn": "Special Offer",
+    "available": "yes",
+    "img": "images/1782636508011-1z5e7nhib-110327.jpg",
+    "images": [
+      "images/1782636508011-1z5e7nhib-110327.jpg"
+    ]
   }
 ]
