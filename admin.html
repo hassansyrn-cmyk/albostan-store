@@ -2393,14 +2393,28 @@ function generateOrderInvoicePDF(orderId){
   }).join('');
 
   const element = document.createElement('div');
+  element.dir = 'ltr';
+  element.style.position = 'fixed';
+  element.style.left = '0';
+  element.style.top = '0';
+  element.style.right = 'auto';
+  element.style.bottom = 'auto';
   element.style.width = '760px';
+  element.style.maxWidth = '760px';
+  element.style.minWidth = '760px';
+  element.style.margin = '0';
+  element.style.padding = '0';
   element.style.background = '#ffffff';
   element.style.color = '#181A19';
   element.style.fontFamily = 'Tajawal, Arial, sans-serif';
-  element.style.padding = '0';
+  element.style.direction = 'ltr';
+  element.style.textAlign = 'initial';
+  element.style.zIndex = '2147483647';
+  element.style.transform = 'none';
+  element.style.boxSizing = 'border-box';
 
   element.innerHTML = `
-    <div style="width:760px;background:#fff;border:2px solid #1F5E3B;border-radius:14px;padding:18px;box-sizing:border-box;color:#181A19;">
+    <div style="width:760px;max-width:760px;min-width:760px;background:#fff;border:2px solid #1F5E3B;border-radius:14px;padding:18px;box-sizing:border-box;color:#181A19;margin:0;direction:ltr;">
       <table style="width:100%;border-collapse:collapse;margin:0 0 12px 0;">
         <tr>
           <td style="width:50%;vertical-align:top;text-align:left;direction:ltr;padding:0 10px 10px 0;border-bottom:1px solid #e8ece9;">
@@ -2494,20 +2508,22 @@ function generateOrderInvoicePDF(orderId){
 
   document.body.appendChild(element);
 
-  html2pdf().set({
-    margin:[8,8,8,8],
-    filename:filePrefix + '_' + String(order.id || Date.now()) + '.pdf',
-    image:{type:'jpeg',quality:.98},
-    html2canvas:{scale:2,useCORS:true,scrollX:0,scrollY:0,windowWidth:820},
-    jsPDF:{orientation:'portrait',unit:'mm',format:'a4'},
-    pagebreak:{mode:['css']}
-  }).from(element).save().then(function(){
-    try{ document.body.removeChild(element); }catch(e){}
-  }).catch(function(error){
-    try{ document.body.removeChild(element); }catch(e){}
-    console.error(error);
-    showStatus('تعذر إنشاء الإيصال PDF: ' + error.message,'err');
-  });
+  setTimeout(function(){
+    html2pdf().set({
+      margin:[8,8,8,8],
+      filename:filePrefix + '_' + String(order.id || Date.now()) + '.pdf',
+      image:{type:'jpeg',quality:.98},
+      html2canvas:{scale:2,useCORS:true,scrollX:0,scrollY:0,windowWidth:760,windowHeight:1100},
+      jsPDF:{orientation:'portrait',unit:'mm',format:'a4'},
+      pagebreak:{mode:['avoid-all','css','legacy']}
+    }).from(element).save().then(function(){
+      try{ document.body.removeChild(element); }catch(e){}
+    }).catch(function(error){
+      try{ document.body.removeChild(element); }catch(e){}
+      console.error(error);
+      showStatus('تعذر إنشاء الإيصال PDF: ' + error.message,'err');
+    });
+  },80);
 
   logActivity('فاتورة','تم إنشاء PDF للطلب ' + (order.id || ''),'success');
 }
