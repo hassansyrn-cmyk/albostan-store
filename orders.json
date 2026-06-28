@@ -80,9 +80,9 @@
   {
     "id": "ABS-20260628-1520-3751",
     "createdAt": "2026-06-28T11:20:22.721Z",
-    "updatedAt": "2026-06-28T11:34:42.828Z",
+    "updatedAt": "2026-06-28T19:10:02.654Z",
     "status": "delivered",
-    "paymentStatus": "cod_paid",
+    "paymentStatus": "cod_pending",
     "paymentMethod": "COD",
     "source": "website",
     "whatsappSent": false,
@@ -114,18 +114,14 @@
     "subtotal": 90,
     "deliveryFee": 15,
     "discountAmount": 9,
-    "grandTotal": 96,
-    "paidAt": "2026-06-28T11:21:38.262Z",
-    "salesRecorded": true,
-    "salesRecordedAt": "2026-06-28T11:34:42.831Z",
-    "salesEntriesCount": 1
+    "grandTotal": 96
   },
   {
     "id": "ABS-20260628-1510-9970",
     "createdAt": "2026-06-28T11:10:32.179Z",
-    "updatedAt": "2026-06-28T11:34:48.113Z",
+    "updatedAt": "2026-06-28T19:10:02.654Z",
     "status": "delivered",
-    "paymentStatus": "cod_paid",
+    "paymentStatus": "cod_pending",
     "paymentMethod": "COD",
     "source": "website",
     "whatsappSent": false,
@@ -157,10 +153,6 @@
     "subtotal": 200,
     "deliveryFee": 15,
     "discountAmount": 0,
-    "grandTotal": 215,
-    "paidAt": "2026-06-28T11:18:16.568Z",
-    "salesRecorded": true,
-    "salesRecordedAt": "2026-06-28T11:34:48.114Z",
-    "salesEntriesCount": 1
+    "grandTotal": 215
   }
 ]
