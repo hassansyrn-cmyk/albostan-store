@@ -2,8 +2,8 @@
   {
     "id": "ABS-20260628-1616-8526",
     "createdAt": "2026-06-28T12:16:33.497Z",
-    "updatedAt": "2026-06-28T12:16:33.497Z",
-    "status": "pending",
+    "updatedAt": "2026-06-28T12:16:58.354Z",
+    "status": "confirmed",
     "paymentStatus": "cod_pending",
     "paymentMethod": "COD",
     "source": "website",
