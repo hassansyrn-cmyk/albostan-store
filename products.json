@@ -62,13 +62,13 @@
   {
     "nameAr": "سماعات جي بي ال",
     "nameEn": "JBL Headphones",
-    "price": "33.46",
+    "price": "30.11",
     "categoryAr": "إلكترونيات",
     "categoryEn": "Electronics",
     "quantity": 10,
     "cost": "0",
     "oldPrice": "54.67",
-    "discount": "خصم 20%",
+    "discount": "خصم 10%",
     "descAr": "سماعات جي بي ال ذات جودة صوت ممتازة",
     "descEn": "JBL Headphones with high-quality sound",
     "emoji": "🎧",
@@ -79,16 +79,16 @@
     "img": "images/1782401642481-103652.jpg",
     "images": [],
     "originalPriceBeforeDiscount": "54.67",
-    "discountEndDate": "2026-06-28"
+    "discountEndDate": "2026-06-29"
   },
   {
     "nameAr": "كاميرا كانون 250D مستعملة مع 3 عدسات وحقيبة وكرت ذاكرة",
     "nameEn": "Used Canon 250D Camera with 3 lenses, bag, and memory card",
-    "price": "803.06",
+    "price": "722.75",
     "quantity": 1,
     "cost": "0",
     "oldPrice": "1312.20",
-    "discount": "خصم 20%",
+    "discount": "خصم 10%",
     "categoryAr": "إلكترونيات",
     "categoryEn": "Electronics",
     "descAr": "كاميرا كانون مستعملة مع عدة كاملة، استخدام خفيف",
@@ -103,7 +103,7 @@
       "images/1782409087967-euek4zi13-94700.jpg"
     ],
     "originalPriceBeforeDiscount": "1312.20",
-    "discountEndDate": "2026-06-28"
+    "discountEndDate": "2026-06-29"
   },
   {
     "nameAr": "لوغو",
@@ -198,14 +198,14 @@
   {
     "nameAr": "سماعات الأذن",
     "nameEn": "Earbuds",
-    "price": "50",
+    "price": "45.00",
     "categoryAr": "إلكترونيات",
     "categoryEn": "Electronics",
     "quantity": 10,
     "cost": "30",
     "oldPrice": "100",
-    "discount": "خصم 50%",
-    "discountEndDate": "",
+    "discount": "خصم 10%",
+    "discountEndDate": "2026-06-29",
     "originalPriceBeforeDiscount": "100",
     "descAr": "سماعات هواوي",
     "descEn": "Huawei earbuds",
