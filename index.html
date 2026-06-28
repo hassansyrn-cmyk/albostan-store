@@ -3122,7 +3122,71 @@
     minOrderAlert.style.display = subtotal < 30 ? 'block' : 'none';
   }
 
-  document.getElementById('checkoutForm').addEventListener('submit', (e) => {
+
+  const CREATE_ORDER_API_PATH = '/api/create-order';
+
+  async function createPendingWebsiteOrder(orderPayload){
+    const response = await fetch(CREATE_ORDER_API_PATH, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(orderPayload)
+    });
+
+    let data = null;
+    try{
+      data = await response.json();
+    }catch(error){
+      data = null;
+    }
+
+    if(!response.ok || !data || data.ok !== true){
+      const apiMessage = data && data.message ? data.message : '';
+      throw new Error(apiMessage || 'Order registration failed');
+    }
+
+    return data;
+  }
+
+  function buildOrderPayloadForApi(meta, values, items){
+    return {
+      id: meta.orderId,
+      customer: {
+        name: values.name,
+        phone: values.phone,
+        emirate: values.emirate,
+        address: values.address,
+        notes: values.notes || ''
+      },
+      items: items.map(function(item){
+        const qty = Number(item.quantity || item.qty || 1);
+        const price = Number(item.price || 0);
+        return {
+          id: item.id || '',
+          nameAr: item.nameAr || '',
+          nameEn: item.nameEn || item.nameAr || '',
+          categoryAr: item.categoryAr || '',
+          categoryEn: item.categoryEn || '',
+          price: price,
+          qty: qty,
+          total: Number((price * qty).toFixed(2)),
+          img: item.img || '',
+          emoji: item.emoji || ''
+        };
+      }),
+      coupon: {
+        code: values.discount > 0 ? values.coupon : '',
+        discount: Number(values.discount || 0)
+      },
+      subtotal: Number(values.subtotal || 0),
+      deliveryFee: Number(values.deliveryFee || 0),
+      discountAmount: Number(values.discount || 0),
+      grandTotal: Number(values.grandTotal || 0)
+    };
+  }
+
+  document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const subtotal = getCartSubtotal();
     if(subtotal < 30){ showToast(T[currentLang].minOrderToast); return; }
@@ -3171,8 +3235,15 @@
 
     // بناء رسالة واتساب المحسّنة
     const cartItems = cart.map(item => ({
-      nameAr: item.nameAr, nameEn: item.nameEn,
-      price: item.price, quantity: item.quantity, emoji: ''
+      id: item.id || '',
+      nameAr: item.nameAr,
+      nameEn: item.nameEn,
+      categoryAr: item.categoryAr || '',
+      categoryEn: item.categoryEn || '',
+      price: Number(item.price || 0),
+      quantity: Number(item.quantity || 1),
+      img: item.img || '',
+      emoji: ''
     }));
 
     let msg = '';
@@ -3210,16 +3281,42 @@
       msg += `✅ Important Confirmation:\nPayment is Cash on Delivery only, and the order will be confirmed with the customer before delivery.`;
     }
 
-    // حفظ آخر طلب
-    saveLastOrderDetails(meta, { name, phone, emirate, address, coupon: couponEntered, subtotal, discount, deliveryFee: fee, grandTotal }, cartItems);
+    const submitBtn = e.submitter || document.querySelector('#checkoutForm button[type="submit"]');
+    const oldSubmitText = submitBtn ? submitBtn.textContent : '';
 
-    trackGAEvent('whatsapp_checkout', { value: grandTotal });
-    showToast(currentLang === 'ar' ? 'تم تجهيز طلبك، سيتم فتح واتساب الآن' : 'Your order is ready, WhatsApp will open now');
-    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
-    checkoutModal.classList.remove('open');
-    resetPendingOrderMeta();
-    cart = [];
-    renderCart();
+    try{
+      if(submitBtn){
+        submitBtn.disabled = true;
+        submitBtn.textContent = currentLang === 'ar' ? 'جاري تسجيل الطلب...' : 'Saving order...';
+      }
+
+      const orderPayload = buildOrderPayloadForApi(meta, { name, phone, emirate, address, notes, coupon: couponEntered, subtotal, discount, deliveryFee: fee, grandTotal }, cartItems);
+      const createdOrder = await createPendingWebsiteOrder(orderPayload);
+      if(createdOrder && createdOrder.orderId){
+        pendingOrderMeta.orderId = createdOrder.orderId;
+      }
+
+      // حفظ آخر طلب بعد نجاح تسجيله في orders.json
+      saveLastOrderDetails(meta, { name, phone, emirate, address, coupon: couponEntered, subtotal, discount, deliveryFee: fee, grandTotal }, cartItems);
+
+      trackGAEvent('whatsapp_checkout', { value: grandTotal });
+      showToast(currentLang === 'ar' ? 'تم تسجيل الطلب، سيتم فتح واتساب الآن' : 'Order saved, WhatsApp will open now');
+      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`;
+      const whatsappWindow = window.open(whatsappUrl, '_blank');
+      if(!whatsappWindow){ window.location.href = whatsappUrl; }
+      checkoutModal.classList.remove('open');
+      resetPendingOrderMeta();
+      cart = [];
+      renderCart();
+    }catch(error){
+      console.error('Order registration failed:', error);
+      showToast(currentLang === 'ar' ? 'تعذر تسجيل الطلب حاليًا، يرجى المحاولة مرة أخرى' : 'Could not save the order now. Please try again.');
+    }finally{
+      if(submitBtn){
+        submitBtn.disabled = false;
+        submitBtn.textContent = oldSubmitText;
+      }
+    }
   });
 
   // ===== تتبع الطلب =====
