@@ -690,6 +690,112 @@ button.small{
   color:var(--info);
 }
 
+/* ===== الطلبات والفواتير ===== */
+.orders-toolbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:18px;
+}
+.orders-summary-badges{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.order-card{
+  background:var(--cream);
+  border:1px solid var(--sand);
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow-sm);
+}
+.order-card-head{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  align-items:flex-start;
+  margin-bottom:12px;
+}
+.order-card-title{
+  font-weight:800;
+  color:var(--clay-dark);
+  font-size:1.05rem;
+  direction:ltr;
+  text-align:left;
+}
+.order-meta-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:10px;
+  margin:12px 0;
+}
+.order-meta-item{
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(31,94,59,.08);
+  border-radius:12px;
+  padding:10px 12px;
+  line-height:1.6;
+}
+.order-meta-item strong{
+  color:var(--clay-dark);
+  display:block;
+  font-size:.82rem;
+}
+.order-items-list{
+  background:rgba(255,255,255,.72);
+  border:1px dashed rgba(31,94,59,.16);
+  border-radius:12px;
+  padding:12px;
+  margin-top:10px;
+}
+.order-item-line{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:6px 0;
+  border-bottom:1px solid rgba(31,94,59,.08);
+  font-size:.92rem;
+}
+.order-item-line:last-child{border-bottom:none;}
+.order-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:14px;
+}
+.order-actions button{
+  padding:9px 12px;
+  font-size:.84rem;
+}
+.order-status-pill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  padding:5px 10px;
+  font-size:.78rem;
+  font-weight:800;
+}
+.status-pending{background:#fff7e6;color:#b36b00;}
+.status-confirmed{background:#e3f2fd;color:#1976d2;}
+.status-out_for_delivery{background:#eef2ff;color:#4f46e5;}
+.status-delivered{background:#eaf7ef;color:#1F5E3B;}
+.status-cancelled{background:#ffebef;color:#e63946;}
+.status-cod_pending{background:#fff7e6;color:#b36b00;}
+.status-cod_paid{background:#eaf7ef;color:#1F5E3B;}
+@media(max-width:900px){
+  .orders-toolbar{align-items:stretch;}
+  .orders-toolbar button{width:100%;}
+  .order-card{padding:13px;}
+  .order-card-head{display:block;}
+  .order-actions button{flex:1 1 130px;}
+  .order-item-line{display:block;line-height:1.7;}
+}
+
 /* ===== الجداول ===== */
 table{
   width:100%;
@@ -1427,6 +1533,7 @@ tbody td:last-child{border-start-end-radius:14px;border-end-end-radius:14px;}
         <button class="nav-btn active" data-target="stats"><span class="icon">📊</span><span>لوحة القيادة</span></button>
         <button class="nav-btn" data-target="products"><span class="icon">📦</span><span>إدارة المنتجات</span></button>
         <button class="nav-btn" data-target="sales"><span class="icon">💰</span><span>المبيعات والأرباح</span></button>
+        <button class="nav-btn" data-target="orders"><span class="icon">🧾</span><span>الطلبات والفواتير</span></button>
         <button class="nav-btn" data-target="reports"><span class="icon">📈</span><span>التقارير والتحليلات</span></button>
         <button class="nav-btn" data-target="analytics"><span class="icon">📊</span><span>التحليلات المتقدمة</span></button>
         <button class="nav-btn" data-target="coupons"><span class="icon">🎟️</span><span>إدارة الكوبونات</span></button>
@@ -1749,6 +1856,27 @@ tbody td:last-child{border-start-end-radius:14px;border-end-end-radius:14px;}
         </div>
       </div>
 
+      <div id="orders" class="tab-content">
+        <div class="page-header">
+          <h1>🧾 الطلبات والفواتير</h1>
+          <p>متابعة الطلبات القادمة من واجهة الزبائن عبر orders.json، مع إدارة الحالة وحالة الدفع</p>
+        </div>
+
+        <div class="box">
+          <div class="orders-toolbar">
+            <div>
+              <h3 style="margin-bottom:8px;color:var(--clay);">الطلبات المسجلة (<span id="ordersCountLabel">0</span>)</h3>
+              <p style="color:#666;font-size:.9rem;line-height:1.7;">الطلبات الجديدة تظهر هنا بحالة pending، ولا تُحسب كمبيعات مدفوعة إلا بعد تغيير حالة الدفع إلى تم الدفع.</p>
+            </div>
+            <button class="secondary small" id="refreshOrdersBtn">🔄 تحديث الطلبات</button>
+          </div>
+          <div class="orders-summary-badges" id="ordersSummaryBadges"></div>
+          <div id="ordersListArea">
+            <p style="text-align:center;color:#888;padding:20px;">لا توجد طلبات مسجلة حالياً</p>
+          </div>
+        </div>
+      </div>
+
       <div id="reports" class="tab-content">
         <div class="page-header">
           <h1>📈 التقارير والتحليلات</h1>
@@ -1981,16 +2109,19 @@ const BRANCH = 'main';
 const PRODUCTS_PATH = 'products.json';
 const SALES_PATH = 'sales_data.json';
 const COUPONS_PATH = 'coupons.json';
+const ORDERS_PATH = 'orders.json';
 
 let accessToken = null;
 let products = [];
 let salesData = [];
 let coupons = [];
+let orders = [];
 let activityLog = [];
 
 let productsFileSha = null;
 let salesFileSha = null;
 let couponsFileSha = null;
+let ordersFileSha = null;
 
 let currentSearchQuery = '';
 let selectedImages = [];
@@ -2141,11 +2272,13 @@ async function showAdminPanel(){
     loadUserInfo(),
     loadProducts(),
     loadSales(),
-    loadCoupons()
+    loadCoupons(),
+    loadOrders()
   ]);
 
   renderProductsList();
   renderCouponsList();
+  renderOrdersList();
   updateStats();
   displayLowStockAlert();
   renderActivityLog();
@@ -2261,6 +2394,16 @@ async function loadCoupons(){
   }
 }
 
+async function loadOrders(){
+  try{
+    const result = await loadJsonFile(ORDERS_PATH);
+    orders = result.items;
+    ordersFileSha = result.sha;
+  }catch(e){
+    showStatus('خطأ في تحميل الطلبات: ' + e.message,'err');
+  }
+}
+
 async function saveProductsFile(commitMsg){
   productsFileSha = await saveJsonFile(PRODUCTS_PATH,products,productsFileSha,commitMsg);
 }
@@ -2271,6 +2414,189 @@ async function saveSalesFile(commitMsg){
 
 async function saveCouponsFile(commitMsg){
   couponsFileSha = await saveJsonFile(COUPONS_PATH,coupons,couponsFileSha,commitMsg);
+}
+
+async function saveOrdersFile(commitMsg){
+  ordersFileSha = await saveJsonFile(ORDERS_PATH,orders,ordersFileSha,commitMsg);
+}
+
+
+function orderStatusLabel(status){
+  const map = {
+    pending:'طلب جديد',
+    confirmed:'تم التأكيد',
+    out_for_delivery:'جاري التوصيل',
+    delivered:'تم التوصيل',
+    cancelled:'ملغي'
+  };
+  return map[status] || status || 'غير محدد';
+}
+
+function paymentStatusLabel(status){
+  const map = {
+    cod_pending:'الدفع عند الاستلام - غير مدفوع',
+    cod_paid:'تم الدفع نقداً عند الاستلام',
+    unpaid:'غير مدفوع',
+    paid:'مدفوع'
+  };
+  return map[status] || status || 'غير محدد';
+}
+
+function formatAdminMoney(value){
+  const num = Number(value || 0);
+  return (Number.isFinite(num) ? num.toFixed(2) : '0.00') + ' د.إ';
+}
+
+function formatAdminDate(value){
+  if(!value) return '-';
+  const date = new Date(value);
+  if(isNaN(date.getTime())) return esc(value);
+  return date.toLocaleString('ar-AE',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+}
+
+function getOrderById(orderId){
+  return orders.find(function(order){ return String(order.id) === String(orderId); });
+}
+
+function renderOrdersList(){
+  const countEl = $('ordersCountLabel');
+  const area = $('ordersListArea');
+  const badgesArea = $('ordersSummaryBadges');
+
+  if(countEl) countEl.textContent = orders.length;
+
+  if(badgesArea){
+    const pendingCount = orders.filter(function(o){ return o.status === 'pending'; }).length;
+    const confirmedCount = orders.filter(function(o){ return o.status === 'confirmed'; }).length;
+    const paidCount = orders.filter(function(o){ return o.paymentStatus === 'cod_paid' || o.paymentStatus === 'paid'; }).length;
+    const cancelledCount = orders.filter(function(o){ return o.status === 'cancelled'; }).length;
+    badgesArea.innerHTML =
+      '<span class="order-status-pill status-pending">طلبات جديدة: ' + pendingCount + '</span>' +
+      '<span class="order-status-pill status-confirmed">تم التأكيد: ' + confirmedCount + '</span>' +
+      '<span class="order-status-pill status-cod_paid">مدفوعة: ' + paidCount + '</span>' +
+      '<span class="order-status-pill status-cancelled">ملغية: ' + cancelledCount + '</span>';
+  }
+
+  if(!area) return;
+
+  if(!orders.length){
+    area.innerHTML = '<p style="text-align:center;color:#888;padding:20px;">لا توجد طلبات مسجلة حالياً</p>';
+    return;
+  }
+
+  const sortedOrders = orders.slice().sort(function(a,b){
+    return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+  });
+
+  area.innerHTML = sortedOrders.map(function(order){
+    const customer = order.customer || {};
+    const items = Array.isArray(order.items) ? order.items : [];
+    const statusClass = 'status-' + esc(order.status || 'pending');
+    const payStatusClass = 'status-' + esc(order.paymentStatus || 'cod_pending');
+    const itemsHtml = items.length ? items.map(function(item,idx){
+      const name = item.nameAr || item.nameEn || 'منتج بدون اسم';
+      const qty = Number(item.qty || item.quantity || 1);
+      const price = Number(item.price || 0);
+      const total = Number(item.total || (price * qty));
+      return '<div class="order-item-line"><span>' + (idx + 1) + '. ' + esc(name) + ' × ' + qty + '</span><strong>' + formatAdminMoney(total) + '</strong></div>';
+    }).join('') : '<p style="color:#888;">لا توجد منتجات داخل هذا الطلب</p>';
+
+    return `
+      <div class="order-card">
+        <div class="order-card-head">
+          <div>
+            <div class="order-card-title">${esc(order.id || 'بدون رقم')}</div>
+            <div style="color:#666;font-size:.86rem;margin-top:5px;">${formatAdminDate(order.createdAt)}</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <span class="order-status-pill ${statusClass}">${esc(orderStatusLabel(order.status))}</span>
+            <span class="order-status-pill ${payStatusClass}">${esc(paymentStatusLabel(order.paymentStatus))}</span>
+          </div>
+        </div>
+        <div class="order-meta-grid">
+          <div class="order-meta-item"><strong>اسم العميل</strong>${esc(customer.name || '-')}</div>
+          <div class="order-meta-item"><strong>الهاتف</strong><span style="direction:ltr;display:inline-block;">${esc(customer.phone || '-')}</span></div>
+          <div class="order-meta-item"><strong>الإمارة</strong>${esc(customer.emirate || '-')}</div>
+          <div class="order-meta-item"><strong>العنوان</strong>${esc(customer.address || '-')}</div>
+          <div class="order-meta-item"><strong>الإجمالي النهائي</strong>${formatAdminMoney(order.grandTotal)}</div>
+          <div class="order-meta-item"><strong>طريقة الدفع</strong>نقداً عند الاستلام COD</div>
+        </div>
+        ${customer.notes ? '<div class="order-meta-item"><strong>ملاحظات العميل</strong>' + esc(customer.notes) + '</div>' : ''}
+        <div class="order-items-list">
+          <strong style="color:var(--clay-dark);display:block;margin-bottom:8px;">المنتجات</strong>
+          ${itemsHtml}
+        </div>
+        <div class="order-actions">
+          <button class="small" onclick="openOrderWhatsapp('${esc(order.id)}')">فتح واتساب</button>
+          <button class="small secondary" onclick="changeOrderStatus('${esc(order.id)}','confirmed')">تأكيد</button>
+          <button class="small secondary" onclick="changeOrderStatus('${esc(order.id)}','out_for_delivery')">جاري التوصيل</button>
+          <button class="small secondary" onclick="changeOrderStatus('${esc(order.id)}','delivered')">تم التوصيل</button>
+          <button class="small success" onclick="changeOrderPaymentStatus('${esc(order.id)}','cod_paid')">تم الدفع</button>
+          <button class="small danger" onclick="changeOrderStatus('${esc(order.id)}','cancelled')">إلغاء</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function refreshOrdersList(){
+  try{
+    showStatus('جاري تحديث الطلبات...','loading');
+    await loadOrders();
+    renderOrdersList();
+    showStatus('تم تحديث الطلبات','ok');
+  }catch(e){
+    showStatus('تعذر تحديث الطلبات: ' + e.message,'err');
+  }
+}
+
+async function changeOrderStatus(orderId,status){
+  const order = getOrderById(orderId);
+  if(!order){ showStatus('لم يتم العثور على الطلب','err'); return; }
+  order.status = status;
+  order.updatedAt = new Date().toISOString();
+  try{
+    showStatus('جاري حفظ حالة الطلب...','loading');
+    await saveOrdersFile('Update order status ' + orderId);
+    renderOrdersList();
+    addActivityLog('تحديث طلب','تم تغيير حالة الطلب ' + orderId + ' إلى ' + orderStatusLabel(status),'success');
+    showStatus('تم حفظ حالة الطلب','ok');
+  }catch(e){
+    showStatus('فشل حفظ حالة الطلب: ' + e.message,'err');
+  }
+}
+
+async function changeOrderPaymentStatus(orderId,paymentStatus){
+  const order = getOrderById(orderId);
+  if(!order){ showStatus('لم يتم العثور على الطلب','err'); return; }
+  order.paymentStatus = paymentStatus;
+  if(paymentStatus === 'cod_paid' && !order.paidAt){
+    order.paidAt = new Date().toISOString();
+  }
+  order.updatedAt = new Date().toISOString();
+  try{
+    showStatus('جاري حفظ حالة الدفع...','loading');
+    await saveOrdersFile('Update order payment status ' + orderId);
+    renderOrdersList();
+    addActivityLog('تحديث دفع','تم تغيير دفع الطلب ' + orderId + ' إلى ' + paymentStatusLabel(paymentStatus),'success');
+    showStatus('تم حفظ حالة الدفع','ok');
+  }catch(e){
+    showStatus('فشل حفظ حالة الدفع: ' + e.message,'err');
+  }
+}
+
+function openOrderWhatsapp(orderId){
+  const order = getOrderById(orderId);
+  if(!order){ showStatus('لم يتم العثور على الطلب','err'); return; }
+  const customer = order.customer || {};
+  const phone = String(customer.phone || '').replace(/\D/g,'');
+  const phoneForWa = phone.startsWith('971') ? phone : (phone.startsWith('0') ? '971' + phone.slice(1) : phone);
+  const msg = 'مرحباً، بخصوص طلبك من متجر البستان رقم: ' + (order.id || '') + '\n' +
+              'حالة الطلب الحالية: ' + orderStatusLabel(order.status) + '\n' +
+              'الإجمالي: ' + formatAdminMoney(order.grandTotal) + '\n' +
+              'طريقة الدفع: نقداً عند الاستلام COD';
+  if(!phoneForWa){ showStatus('رقم هاتف العميل غير متوفر','warning'); return; }
+  window.open('https://wa.me/' + phoneForWa + '?text=' + encodeURIComponent(msg),'_blank');
 }
 
 function renderProductsList(){
@@ -3429,6 +3755,7 @@ function bindEvents(){
   $('cancelEditBtn').addEventListener('click',resetForm);
   $('recordSaleBtn').addEventListener('click',handleRecordSale);
   $('saveCouponBtn').addEventListener('click',handleSaveCoupon);
+  if($('refreshOrdersBtn')){ $('refreshOrdersBtn').addEventListener('click',refreshOrdersList); }
 
   window.addEventListener('resize',updateMobileHeaderVisibility);
 
@@ -3479,6 +3806,10 @@ function bindEvents(){
 
       if(target === 'coupons'){
         renderCouponsList();
+      }
+
+      if(target === 'orders'){
+        renderOrdersList();
       }
 
       if(target === 'activity-log'){
