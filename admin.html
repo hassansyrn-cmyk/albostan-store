@@ -1983,15 +1983,15 @@ tbody td:last-child{border-start-end-radius:14px;border-end-end-radius:14px;}
         </div>
 
         <div class="box" style="border:2px solid rgba(230,57,70,.18);background:linear-gradient(135deg,#fff,#fff7f8)!important;">
-          <h3 style="margin-bottom:12px;color:var(--danger);">إعادة ضبط المبيعات والإحصائيات</h3>
+          <h3 style="margin-bottom:12px;color:var(--danger);">إعادة ضبط الطلبات والمبيعات</h3>
           <p style="color:#5f3338;line-height:1.8;margin-bottom:14px;font-weight:700;">
-            هذا الزر يستخدم بعد التجارب فقط. سيحذف كل عمليات البيع من ملف sales_data.json، ويعيد حالات الدفع للطلبات المدفوعة إلى غير مدفوعة، ويحذف علامة تسجيل البيع من الطلبات.
+            هذا الزر يستخدم بعد التجارب فقط. سيحذف كل عمليات البيع من ملف sales_data.json، وسيحذف كل الطلبات المسجلة من ملف orders.json حتى يصبح سجل الطلبات والإحصائيات فارغاً.
           </p>
           <p style="color:#8a4b00;background:#fff7e6;border:1px solid rgba(243,156,18,.25);border-radius:12px;padding:10px 12px;line-height:1.7;margin-bottom:14px;">
-            تنبيه: هذا الإجراء لا يرجع كميات المخزون تلقائياً، لأنه لا يمكن معرفة الكميات الأصلية قبل التجارب. إذا كانت تجارب الشراء نقصت المخزون، عدّل الكميات يدوياً من إدارة المنتجات.
+            تنبيه: هذا الإجراء لا يحذف المنتجات أو الكوبونات، ولا يرجع كميات المخزون تلقائياً. إذا كانت تجارب الشراء نقصت المخزون، عدّل الكميات يدوياً من إدارة المنتجات.
           </p>
-          <button class="danger" onclick="resetSalesFactory()">إعادة ضبط المبيعات والإحصائيات</button>
-          <small style="display:block;color:#777;margin-top:10px;line-height:1.6;">سيطلب النظام تأكيداً ثم رمز PIN للحماية. رمز PIN الحالي: 3258</small>
+          <button class="danger" onclick="resetSalesFactory()">إعادة ضبط الطلبات والمبيعات</button>
+          <small style="display:block;color:#777;margin-top:10px;line-height:1.6;">سيطلب النظام تأكيداً ثم رمز PIN للحماية.</small>
         </div>
       </div>
 
@@ -2790,54 +2790,41 @@ async function handleRecordSale(){
 
 async function resetSalesFactory(){
   const salesCountBefore=Array.isArray(salesData)?salesData.length:0;
+  const ordersCountBefore=Array.isArray(orders)?orders.length:0;
   const paidOrdersBefore=orders.filter(function(order){return order.paymentStatus==='cod_paid'||order.paymentStatus==='paid'||order.salesRecorded;}).length;
-  const warningMsg='تحذير مهم:\n\nسيتم حذف كل عمليات البيع من ملف sales_data.json.\nوسيتم تصفير الإحصائيات والأرباح.\nوسيتم تحويل الطلبات المدفوعة إلى غير مدفوعة وإزالة علامة تسجيل البيع منها.\n\nلن يتم حذف الطلبات نفسها، ولن يتم حذف المنتجات أو الكوبونات.\nولن يتم إرجاع كميات المخزون تلقائياً.\n\nهل أنت متأكد أنك تريد المتابعة؟';
+  const warningMsg='تحذير مهم:\n\nسيتم حذف كل عمليات البيع من ملف sales_data.json.\nوسيتم حذف كل الطلبات المسجلة من ملف orders.json.\nوسيتم تصفير الإحصائيات والأرباح وسجل الطلبات في لوحة التحكم.\n\nلن يتم حذف المنتجات أو الكوبونات.\nولن يتم إرجاع كميات المخزون تلقائياً.\n\nهل أنت متأكد أنك تريد المتابعة؟';
   if(!confirm(warningMsg)){
     showStatus('تم إلغاء إعادة الضبط','warning');
     return;
   }
-  const enteredPin=prompt('لإتمام إعادة ضبط المبيعات، أدخل رمز PIN:');
+  const enteredPin=prompt('لإتمام إعادة ضبط الطلبات والمبيعات، أدخل رمز PIN:');
   if(enteredPin===null){
     showStatus('تم إلغاء العملية','warning');
     return;
   }
   if(String(enteredPin).trim()!==RESET_SALES_PIN){
     showStatus('رمز PIN غير صحيح، لم يتم تنفيذ أي تغيير','err');
-    logActivity('حماية','محاولة إعادة ضبط المبيعات برمز PIN غير صحيح','error');
+    logActivity('حماية','محاولة إعادة ضبط الطلبات والمبيعات برمز PIN غير صحيح','error');
     return;
   }
   try{
-    showStatus('جاري إعادة ضبط المبيعات والإحصائيات...','loading');
+    showStatus('جاري إعادة ضبط الطلبات والمبيعات...','loading');
     salesData=[];
-    let changedOrders=0;
-    orders.forEach(function(order){
-      const wasPaid=order.paymentStatus==='cod_paid'||order.paymentStatus==='paid'||order.salesRecorded;
-      if(wasPaid){
-        order.paymentStatus='cod_pending';
-        order.updatedAt=new Date().toISOString();
-        delete order.paidAt;
-        delete order.salesRecorded;
-        delete order.salesRecordedAt;
-        delete order.salesEntriesCount;
-        changedOrders++;
-      }
-    });
+    orders=[];
     await saveSalesFile('Factory reset sales data');
-    if(changedOrders>0){
-      await saveOrdersFile('Reset paid order markers after sales reset');
-    }
+    await saveOrdersFile('Factory reset orders data');
     updateStats();
     renderSalesTables();
     renderOrdersList();
     if(document.getElementById('analytics')&&document.getElementById('analytics').classList.contains('active')){
       initializeCharts();
     }
-    logActivity('إعادة ضبط','تم حذف '+salesCountBefore+' عملية بيع وإرجاع '+changedOrders+' طلب مدفوع إلى غير مدفوع','success');
-    showStatus('تمت إعادة ضبط المبيعات والإحصائيات بنجاح','ok');
+    logActivity('إعادة ضبط','تم حذف '+salesCountBefore+' عملية بيع و '+ordersCountBefore+' طلب مسجل، منها '+paidOrdersBefore+' طلب كان مدفوعاً','success');
+    showStatus('تمت إعادة ضبط الطلبات والمبيعات بنجاح','ok');
   }catch(e){
     console.error(e);
     showStatus('فشلت إعادة الضبط: '+e.message,'err');
-    logActivity('إعادة ضبط','فشل إعادة ضبط المبيعات: '+e.message,'error');
+    logActivity('إعادة ضبط','فشل إعادة ضبط الطلبات والمبيعات: '+e.message,'error');
   }
 }
 
