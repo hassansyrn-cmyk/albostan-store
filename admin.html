@@ -2295,6 +2295,7 @@ async function loadProducts(){
     const result = await loadJsonFile(PRODUCTS_PATH);
     products = result.items;
     productsFileSha = result.sha;
+    syncAllProductsAvailabilityByStock();
   }catch(e){
     showStatus('خطأ في تحميل المنتجات: ' + e.message,'err');
   }
@@ -2341,6 +2342,23 @@ async function saveOrdersFile(commitMsg){
   ordersFileSha = await saveJsonFile(ORDERS_PATH,orders,ordersFileSha,commitMsg);
 }
 
+function syncProductAvailabilityByStock(product){
+  if(!product) return product;
+  const qty = parseInt(product.quantity) || 0;
+  product.quantity = qty < 0 ? 0 : qty;
+  if(product.quantity <= 0){
+    product.available = 'no';
+  }
+  return product;
+}
+
+function syncAllProductsAvailabilityByStock(){
+  if(!Array.isArray(products)) return;
+  products.forEach(function(product){
+    syncProductAvailabilityByStock(product);
+  });
+}
+
 
 function orderStatusLabel(status){const map={pending:'طلب جديد',confirmed:'تم التأكيد',out_for_delivery:'جاري التوصيل',delivered:'تم التوصيل',cancelled:'ملغي'};return map[status]||status||'غير محدد';}
 function orderStatusLabelEn(status){const map={pending:'Pending',confirmed:'Confirmed',out_for_delivery:'Out for delivery',delivered:'Delivered',cancelled:'Cancelled'};return map[status]||status||'Unspecified';}
@@ -2363,7 +2381,7 @@ function displayForEnglish(value,type){const raw=String(value||'').trim();if(!ra
 function displayForArabic(value,type){const raw=String(value||'').trim();if(!raw)return '-';if(type==='emirate')return emirateEnToAr[raw]||raw;return raw;}
 function findProductForOrderItem(item){const itemNameAr=String(item.nameAr||'').trim();const itemNameEn=String(item.nameEn||'').trim();return products.find(function(product){return String(product.nameAr||'').trim()===itemNameAr||String(product.nameEn||'').trim()===itemNameEn;});}
 function buildSalesEntriesFromOrder(order){const items=Array.isArray(order.items)?order.items:[];const now=new Date();return items.map(function(item,idx){const qty=Math.max(1,parseInt(item.qty||item.quantity||1)||1);const price=parseFloat(item.price)||0;const product=findProductForOrderItem(item);const cost=product?(parseFloat(product.cost)||0):0;const total=parseFloat(item.total)||(price*qty);const profit=(price-cost)*qty;return {id:Date.now()+idx,orderId:order.id||'',productName:item.nameAr||item.nameEn||'منتج بدون اسم',productNameEn:item.nameEn||item.nameAr||'',customerName:order.customer&&order.customer.name?order.customer.name:'',customerPhone:order.customer&&order.customer.phone?order.customer.phone:'',qty:qty,total:Number(total).toFixed(2),profit:Number(profit).toFixed(2),date:now.toLocaleString('ar-EG'),dateISO:now.toISOString(),source:'orders.json'};});}
-function reduceProductsStockFromOrder(order){const items=Array.isArray(order.items)?order.items:[];items.forEach(function(item){const product=findProductForOrderItem(item);if(!product)return;const qty=Math.max(1,parseInt(item.qty||item.quantity||1)||1);const currentQty=parseInt(product.quantity)||0;product.quantity=currentQty-qty;if(product.quantity<0)product.quantity=0;});}
+function reduceProductsStockFromOrder(order){const items=Array.isArray(order.items)?order.items:[];items.forEach(function(item){const product=findProductForOrderItem(item);if(!product)return;const qty=Math.max(1,parseInt(item.qty||item.quantity||1)||1);const currentQty=parseInt(product.quantity)||0;product.quantity=currentQty-qty;if(product.quantity<0)product.quantity=0;syncProductAvailabilityByStock(product);});}
 function renderOrdersList(){const countEl=$('ordersCountLabel');const area=$('ordersListArea');const badgesArea=$('ordersSummaryBadges');if(countEl)countEl.textContent=orders.length;if(badgesArea){const pendingCount=orders.filter(o=>o.status==='pending').length;const confirmedCount=orders.filter(o=>o.status==='confirmed').length;const paidCount=orders.filter(o=>o.paymentStatus==='cod_paid'||o.paymentStatus==='paid').length;const cancelledCount=orders.filter(o=>o.status==='cancelled').length;badgesArea.innerHTML='<span class="order-status-pill status-pending">طلبات جديدة: '+pendingCount+'</span><span class="order-status-pill status-confirmed">تم التأكيد: '+confirmedCount+'</span><span class="order-status-pill status-cod_paid">مدفوعة: '+paidCount+'</span><span class="order-status-pill status-cancelled">ملغية: '+cancelledCount+'</span>';}if(!area)return;if(!orders.length){area.innerHTML='<p style="text-align:center;color:#888;padding:20px;">لا توجد طلبات مسجلة حالياً</p>';return;}const sortedOrders=orders.slice().sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));area.innerHTML=sortedOrders.map(function(order){const customer=order.customer||{};const items=Array.isArray(order.items)?order.items:[];const firstItem=items[0]||{};const firstProductName=firstItem.nameAr||firstItem.nameEn||'طلب بدون منتجات';const otherItemsCount=Math.max(0,items.length-1);const statusClass='status-'+esc(order.status||'pending');const payStatusClass='status-'+esc(order.paymentStatus||'cod_pending');const cardId='orderCard-'+safeOrderDomId(order.id);const itemsHtml=items.length?items.map(function(item,idx){const name=item.nameAr||item.nameEn||'منتج بدون اسم';const qty=Number(item.qty||item.quantity||1);const price=Number(item.price||0);const total=Number(item.total||(price*qty));return '<div class="order-item-line"><span>'+(idx+1)+'. '+esc(name)+' × '+qty+'</span><strong>'+formatAdminMoney(total)+'</strong></div>';}).join(''):'<p style="color:#888;">لا توجد منتجات داخل هذا الطلب</p>';return `<div class="order-card" id="${cardId}"><button type="button" class="order-summary-toggle" onclick="toggleOrderDetails('${esc(order.id)}')"><span class="order-summary-main"><strong>${esc(order.id||'بدون رقم')}</strong><span>${esc(firstProductName)}${otherItemsCount?' +'+otherItemsCount:''} | ${formatAdminMoney(order.grandTotal)}</span></span><span class="order-summary-customer"><b>${esc(customer.name||'-')}</b><span style="direction:ltr;display:block;">${esc(customer.phone||'-')}</span></span><span class="order-expand-indicator">⌄</span></button><div class="order-details-panel"><div class="order-card-head"><div><div class="order-card-title">${esc(order.id||'بدون رقم')}</div><div style="color:#666;font-size:.86rem;margin-top:5px;">${formatAdminDate(order.createdAt)}</div></div><div style="display:flex;gap:8px;flex-wrap:wrap;"><span class="order-status-pill ${statusClass}">${esc(orderStatusLabel(order.status))}</span><span class="order-status-pill ${payStatusClass}">${esc(paymentStatusLabel(order.paymentStatus))}</span></div></div><div class="order-meta-grid"><div class="order-meta-item"><strong>اسم العميل</strong>${esc(customer.name||'-')}</div><div class="order-meta-item"><strong>الهاتف</strong><span style="direction:ltr;display:inline-block;">${esc(customer.phone||'-')}</span></div><div class="order-meta-item"><strong>الإمارة</strong>${esc(customer.emirate||'-')}</div><div class="order-meta-item"><strong>العنوان</strong>${esc(customer.address||'-')}</div><div class="order-meta-item"><strong>الإجمالي النهائي</strong>${formatAdminMoney(order.grandTotal)}</div><div class="order-meta-item"><strong>طريقة الدفع</strong>نقداً عند الاستلام COD</div></div>${customer.notes?'<div class="order-meta-item"><strong>ملاحظات العميل</strong>'+esc(customer.notes)+'</div>':''}<div class="order-items-list"><strong style="color:var(--clay-dark);display:block;margin-bottom:8px;">المنتجات</strong>${itemsHtml}</div><div class="order-actions"><button class="small" onclick="openOrderWhatsapp('${esc(order.id)}')">فتح واتساب</button><button class="small secondary" onclick="changeOrderStatus('${esc(order.id)}','confirmed')">تأكيد</button><button class="small secondary" onclick="changeOrderStatus('${esc(order.id)}','out_for_delivery')">جاري التوصيل</button><button class="small secondary" onclick="changeOrderStatus('${esc(order.id)}','delivered')">تم التوصيل</button><button class="small success" onclick="changeOrderPaymentStatus('${esc(order.id)}','cod_paid')">تم الدفع</button><button class="small" onclick="generateOrderInvoicePDF('${esc(order.id)}')">إيصال PDF</button><button class="small danger" onclick="changeOrderStatus('${esc(order.id)}','cancelled')">إلغاء</button></div></div></div>`;}).join('');}
 async function refreshOrdersList(){try{showStatus('جاري تحديث الطلبات...','loading');await loadOrders();renderOrdersList();showStatus('تم تحديث الطلبات','ok');}catch(e){showStatus('تعذر تحديث الطلبات: '+e.message,'err');}}
 async function changeOrderStatus(orderId,status){const order=getOrderById(orderId);if(!order){showStatus('لم يتم العثور على الطلب','err');return;}order.status=status;order.updatedAt=new Date().toISOString();try{showStatus('جاري حفظ حالة الطلب...','loading');await saveOrdersFile('Update order status '+orderId);renderOrdersList();logActivity('تحديث طلب','تم تغيير حالة الطلب '+orderId+' إلى '+orderStatusLabel(status),'success');showStatus('تم حفظ حالة الطلب','ok');}catch(e){showStatus('فشل حفظ حالة الطلب: '+e.message,'err');}}
@@ -2525,7 +2543,7 @@ window.editProduct = function(i){
   $('f_descEn').value = p.descEn || '';
   $('f_emoji').value = p.emoji || '🛒';
   $('f_rating').value = p.rating || '';
-  $('f_available').value = p.available || 'yes';
+  $('f_available').value = (parseInt(p.quantity) || 0) <= 0 ? 'no' : (p.available || 'yes');
 
   setBadgeFields(p.badgeAr || '',p.badgeEn || '');
 
@@ -2666,7 +2684,7 @@ async function handleSaveProduct(){
     price:price,
     categoryAr:$('f_categoryAr').value.trim(),
     categoryEn:$('f_categoryEn').value.trim(),
-    quantity:parseInt($('f_quantity').value) || 0,
+    quantity:Math.max(0,parseInt($('f_quantity').value) || 0),
     cost:$('f_cost').value.trim() || '0',
     oldPrice:$('f_oldPrice').value.trim(),
     discount:$('f_discount').value.trim(),
@@ -2678,10 +2696,11 @@ async function handleSaveProduct(){
     rating:$('f_rating').value.trim(),
     badgeAr:$('f_badgeAr').value.trim(),
     badgeEn:$('f_badgeEn').value.trim(),
-    available:$('f_available').value,
+    available:(Math.max(0,parseInt($('f_quantity').value) || 0) <= 0 ? 'no' : $('f_available').value),
     img:oldProduct.img || '',
     images:Array.isArray(oldProduct.images) ? oldProduct.images : []
   };
+  syncProductAvailabilityByStock(product);
 
   try{
     showStatus('جاري حفظ المنتج...','loading');
@@ -2758,6 +2777,7 @@ async function handleRecordSale(){
 
     product.quantity = currentQty - qty;
     if(product.quantity < 0) product.quantity = 0;
+    syncProductAvailabilityByStock(product);
 
     salesData.push({
       id:Date.now(),
