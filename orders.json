@@ -2,9 +2,9 @@
   {
     "id": "ABS-20260629-0006-6289",
     "createdAt": "2026-06-28T20:06:28.263Z",
-    "updatedAt": "2026-06-28T20:06:28.263Z",
-    "status": "pending",
-    "paymentStatus": "cod_pending",
+    "updatedAt": "2026-06-28T20:07:09.116Z",
+    "status": "delivered",
+    "paymentStatus": "cod_paid",
     "paymentMethod": "COD",
     "source": "website",
     "whatsappSent": false,
@@ -36,6 +36,10 @@
     "subtotal": 47.5,
     "deliveryFee": 15,
     "discountAmount": 0,
-    "grandTotal": 62.5
+    "grandTotal": 62.5,
+    "paidAt": "2026-06-28T20:07:09.116Z",
+    "salesRecorded": true,
+    "salesRecordedAt": "2026-06-28T20:07:09.128Z",
+    "salesEntriesCount": 1
   }
 ]
