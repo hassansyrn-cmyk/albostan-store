@@ -1,5 +1,44 @@
 [
   {
+    "id": "ABS-20260629-0148-6074",
+    "createdAt": "2026-06-28T21:48:55.136Z",
+    "updatedAt": "2026-06-28T21:48:55.136Z",
+    "status": "pending",
+    "paymentStatus": "cod_pending",
+    "paymentMethod": "COD",
+    "source": "website",
+    "whatsappSent": false,
+    "customer": {
+      "name": "حسن",
+      "phone": "0561602612",
+      "emirate": "Abu Dhabi",
+      "address": "الشهامة",
+      "notes": ""
+    },
+    "items": [
+      {
+        "id": "",
+        "nameAr": "كاميرا كانون 250D مستعملة مع 3 عدسات وحقيبة وكرت ذاكرة",
+        "nameEn": "Used Canon 250D Camera with 3 lenses, bag, and memory card",
+        "categoryAr": "",
+        "categoryEn": "",
+        "price": 722.75,
+        "qty": 1,
+        "total": 722.75,
+        "img": "images/1782409077565-jgfvgkp5j-94698.jpg",
+        "emoji": ""
+      }
+    ],
+    "coupon": {
+      "code": "",
+      "discount": 0
+    },
+    "subtotal": 722.75,
+    "deliveryFee": 15,
+    "discountAmount": 0,
+    "grandTotal": 737.75
+  },
+  {
     "id": "ABS-20260629-0006-6289",
     "createdAt": "2026-06-28T20:06:28.263Z",
     "updatedAt": "2026-06-28T20:07:09.116Z",
