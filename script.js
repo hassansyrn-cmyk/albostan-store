@@ -1,6 +1,3 @@
-// ضع هنا كامل أكواد JavaScript التي كانت بين <script> و </script> في الكود الأصلي
-// مع تطبيق إصلاح GitHub API والتحقق من رقم الهاتف
-
   // ===== الإعدادات الثابتة ورسوم التوصيل =====
   const whatsappNumber = '971501554132';
   const deliveryFees = {
@@ -1463,64 +1460,63 @@
   let deferredInstallPrompt = null;
   const installBtn = document.getElementById('installBtn');
   window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredInstallPrompt = e; if(installBtn) installBtn.style.display = 'flex'; });
-  if(installBtn){ installBtn.addEventListener('click', async () => { if(!deferredInstallPrompt) return; deferredInstallPrompt.prompt(); const choice = await deferredInstallPrompt.userChoice; trackGAEvent('pwa_install_prompt', { outcome: choice.outcome }); deferredInstallPrompt =
-          if(installBtn){ installBtn.addEventListener('click', async () => { if(!deferredInstallPrompt) return; deferredInstallPrompt.prompt(); const choice = await deferredInstallPrompt.userChoice; trackGAEvent('pwa_install_prompt', { outcome: choice.outcome }); deferredInstallPrompt = null; installBtn.style.display = 'none'; }); }
-      window.addEventListener('appinstalled', () => { if(installBtn) installBtn.style.display = 'none'; trackGAEvent('pwa_installed'); });
-      if('serviceWorker' in navigator){ window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(err => console.warn('SW registration skipped', err)); }); }
+  if(installBtn){ installBtn.addEventListener('click', async () => { if(!deferredInstallPrompt) return; deferredInstallPrompt.prompt(); const choice = await deferredInstallPrompt.userChoice; trackGAEvent('pwa_install_prompt', { outcome: choice.outcome }); deferredInstallPrompt = null; installBtn.style.display = 'none'; }); }
+  window.addEventListener('appinstalled', () => { if(installBtn) installBtn.style.display = 'none'; trackGAEvent('pwa_installed'); });
+  if('serviceWorker' in navigator){ window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(err => console.warn('SW registration skipped', err)); }); }
 
-      // ===== إخفاء قسم تحميل التطبيق داخل تطبيق الأندرويد =====
-      (function hideDownloadAppInAndroid(){
-        var isInsideApp = false;
-        var urlParams = new URLSearchParams(window.location.search);
-        if(urlParams.get('source') === 'android_app' || urlParams.get('app') === '1'){
-          isInsideApp = true;
-        }
-        if(window.matchMedia('(display-mode: standalone)').matches){
-          isInsideApp = true;
-        }
-        if(window.navigator.standalone === true){
-          isInsideApp = true;
-        }
-        if(isInsideApp){
-          var elements = document.querySelectorAll('.hide-in-app');
-          for(var i = 0; i < elements.length; i++){
-            elements[i].style.display = 'none';
-          }
-        }
-      })();
+  // ===== إخفاء قسم تحميل التطبيق داخل تطبيق الأندرويد =====
+  (function hideDownloadAppInAndroid(){
+    var isInsideApp = false;
+    var urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.get('source') === 'android_app' || urlParams.get('app') === '1'){
+      isInsideApp = true;
+    }
+    if(window.matchMedia('(display-mode: standalone)').matches){
+      isInsideApp = true;
+    }
+    if(window.navigator.standalone === true){
+      isInsideApp = true;
+    }
+    if(isInsideApp){
+      var elements = document.querySelectorAll('.hide-in-app');
+      for(var i = 0; i < elements.length; i++){
+        elements[i].style.display = 'none';
+      }
+    }
+  })();
 
-      // ===== تهيئة أولية =====
-      bindProductCardEvents();
-      renderCart();
-      renderWishlist();
-      renderLastOrderBox();
-      loadDataFromGitHub();
+  // ===== تهيئة أولية =====
+  bindProductCardEvents();
+  renderCart();
+  renderWishlist();
+  renderLastOrderBox();
+  loadDataFromGitHub();
 
-      // ===== HERO VIDEO LOGIC =====
-      (function() {
-        const video = document.getElementById('heroVideo');
-        const fallbackImg = document.querySelector('.hero-banner-img');
-        
-        if (video) {
-          video.addEventListener('canplaythrough', () => {
-            video.style.display = 'block';
-            if (fallbackImg) fallbackImg.style.display = 'none';
-            video.play().catch(e => console.warn("Video autoplay failed", e));
-          });
-          
-          video.addEventListener('error', () => {
-            video.style.display = 'none';
-            if (fallbackImg) fallbackImg.style.display = 'block';
-          });
-          
-          fetch(video.querySelector('source').src, { method: 'HEAD' })
-            .then(res => {
-              if (!res.ok) throw new Error("Video not found");
-            })
-            .catch(() => {
-              video.style.display = 'none';
-              if (fallbackImg) fallbackImg.style.display = 'block';
-            });
-        }
-      })();
-      // ===== END HERO VIDEO =====
+  // ===== HERO VIDEO LOGIC =====
+  (function() {
+    const video = document.getElementById('heroVideo');
+    const fallbackImg = document.querySelector('.hero-banner-img');
+    
+    if (video) {
+      video.addEventListener('canplaythrough', () => {
+        video.style.display = 'block';
+        if (fallbackImg) fallbackImg.style.display = 'none';
+        video.play().catch(e => console.warn("Video autoplay failed", e));
+      });
+      
+      video.addEventListener('error', () => {
+        video.style.display = 'none';
+        if (fallbackImg) fallbackImg.style.display = 'block';
+      });
+      
+      fetch(video.querySelector('source').src, { method: 'HEAD' })
+        .then(res => {
+          if (!res.ok) throw new Error("Video not found");
+        })
+        .catch(() => {
+          video.style.display = 'none';
+          if (fallbackImg) fallbackImg.style.display = 'block';
+        });
+    }
+  })();
+  // ===== END HERO VIDEO =====
