@@ -1,5 +1,56 @@
 [
   {
+    "id": "ABS-20260720-2206-5943",
+    "createdAt": "2026-07-20T18:07:09.033Z",
+    "updatedAt": "2026-07-20T18:07:09.033Z",
+    "status": "pending",
+    "paymentStatus": "cod_pending",
+    "paymentMethod": "COD",
+    "source": "website",
+    "whatsappSent": false,
+    "customer": {
+      "name": "حسن",
+      "phone": "61602612",
+      "emirate": "Abu Dhabi",
+      "address": "الشهامة",
+      "notes": ""
+    },
+    "items": [
+      {
+        "id": "",
+        "nameAr": "عسل",
+        "nameEn": "Honey",
+        "categoryAr": "",
+        "categoryEn": "",
+        "price": 23.75,
+        "qty": 1,
+        "total": 23.75,
+        "img": "images/1782387063608-108951.jpg",
+        "emoji": ""
+      },
+      {
+        "id": "",
+        "nameAr": "سماعات جي بي ال",
+        "nameEn": "JBL Headphones",
+        "categoryAr": "",
+        "categoryEn": "",
+        "price": 54.67,
+        "qty": 1,
+        "total": 54.67,
+        "img": "images/1782401642481-103652.jpg",
+        "emoji": ""
+      }
+    ],
+    "coupon": {
+      "code": "",
+      "discount": 0
+    },
+    "subtotal": 78.42,
+    "deliveryFee": 15,
+    "discountAmount": 0,
+    "grandTotal": 93.42
+  },
+  {
     "id": "ABS-20260629-0148-6074",
     "createdAt": "2026-06-28T21:48:55.136Z",
     "updatedAt": "2026-06-28T21:49:44.757Z",
