@@ -1394,3 +1394,108 @@
     #productGrid .prod-badge{top:6px!important;right:6px!important;font-size:.58rem!important;padding:2px 7px!important;}
   }
   @media(max-width:390px){#productGrid.prod-grid{gap:8px!important;}#productGrid .prod-thumb{height:88px!important;}#productGrid .prod-body{padding:7px!important;}#productGrid .prod-body h4{font-size:.72rem!important;}#productGrid .price{font-size:.70rem!important;}}
+/* ===== تحديثات التصميم العصري (Premium UI) ===== */
+
+/* تأثير الزجاج للهيدر */
+header {
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+/* تحسين الأزرار الرئيسية لتكون أكثر تفاعلاً */
+.btn-primary, .download-app-btn {
+  background: linear-gradient(135deg, var(--clay), #2c8556) !important;
+  box-shadow: 0 8px 20px -5px rgba(31, 94, 59, 0.4) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover, .download-app-btn:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 12px 25px -5px rgba(31, 94, 59, 0.5) !important;
+}
+
+.btn-primary:active, .download-app-btn:active {
+  transform: translateY(1px) scale(0.98) !important;
+}
+
+/* تأثير الموجة (Ripple) للأزرار */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  transform: scale(0);
+  animation: rippleEffect 0.6s linear;
+  pointer-events: none;
+}
+@keyframes rippleEffect {
+  to { transform: scale(4); opacity: 0; }
+}
+
+/* ترقية بطاقات المنتجات (3D Feel & Soft Shadows) */
+.prod-card {
+  background: linear-gradient(145deg, #ffffff, #f9faf9) !important;
+  border: 1px solid rgba(255,255,255,0.6) !important;
+  box-shadow: 0 10px 30px -12px rgba(0,0,0,0.1) !important;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease !important;
+}
+
+.prod-card:hover {
+  transform: translateY(-8px) !important;
+  box-shadow: 0 25px 50px -15px rgba(31, 94, 59, 0.25) !important;
+}
+
+/* ترقية النوافذ المنبثقة (Modals) */
+.modal-box, .cart-drawer, .wishlist-drawer {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+}
+
+/* أنيميشن اهتزاز السلة عند الإضافة (Cart Bump) */
+@keyframes cartBump {
+  0%, 100% { transform: scale(1); }
+  20% { transform: scale(1.2) rotate(-15deg); }
+  40% { transform: scale(0.9) rotate(10deg); }
+  60% { transform: scale(1.1) rotate(-5deg); }
+  80% { transform: scale(0.95) rotate(0deg); }
+}
+.bump {
+  animation: cartBump 0.5s cubic-bezier(0.28, 0.84, 0.42, 1);
+}
+
+/* ترقية بطاقات الأقسام */
+.cat-item {
+  transition: all 0.3s ease !important;
+}
+.cat-item:hover .cat-circle {
+  box-shadow: 0 15px 30px -10px rgba(31, 94, 59, 0.3) !important;
+}
+
+/* تحسين الـ Toast ليبدو كفقاعة عصرية */
+.toast {
+  background: rgba(24, 26, 25, 0.9) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  font-weight: 700 !important;
+  padding: 14px 24px !important;
+}
+
+/* العنصر الطائر للسلة (Fly to Cart) */
+.fly-img {
+  position: fixed;
+  z-index: 9999;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid var(--gold);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  pointer-events: none;
+  transition: all 0.8s cubic-bezier(0.5, -0.5, 1, 1);
+}
