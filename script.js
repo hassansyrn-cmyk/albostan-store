@@ -1520,3 +1520,121 @@
     }
   })();
   // ===== END HERO VIDEO =====
+  // ===== تفاعلات عصرية (Fly to Cart & Ripple) =====
+
+  // 1. تأثير الموجة (Ripple Effect) للأزرار
+  document.addEventListener('click', function(e) {
+    const target = e.target.closest('.btn-primary, .download-app-btn, .filter-btn.active');
+    if (!target) return;
+
+    const circle = document.createElement('span');
+    const diameter = Math.max(target.clientWidth, target.clientHeight);
+    const radius = diameter / 2;
+
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${e.clientX - target.getBoundingClientRect().left - radius}px`;
+    circle.style.top = `${e.clientY - target.getBoundingClientRect().top - radius}px`;
+    circle.classList.add('ripple');
+
+    // إزالة أي موجات قديمة
+    const existingRipple = target.querySelector('.ripple');
+    if (existingRipple) existingRipple.remove();
+
+    target.appendChild(circle);
+
+    // تنظيف بعد انتهاء الأنيميشن
+    setTimeout(() => circle.remove(), 600);
+  });
+
+  // 2. تأثير الطيران إلى السلة واهتزاز الأيقونة
+  function flyToCart(productCard) {
+    if (window.innerWidth < 680) return; // تجاهل التأثير على الجوال للأداء
+    
+    const cartBtn = document.getElementById('cartBtn');
+    const img = productCard.querySelector('.prod-img');
+    
+    if (!cartBtn || !img || img.style.display === 'none') return;
+
+    const imgRect = img.getBoundingClientRect();
+    const cartRect = cartBtn.getBoundingClientRect();
+
+    const flyingImg = document.createElement('img');
+    flyingImg.src = img.src;
+    flyingImg.classList.add('fly-img');
+    
+    // تحديد نقطة البداية (مكان الصورة)
+    flyingImg.style.top = `${imgRect.top}px`;
+    flyingImg.style.left = `${imgRect.left}px`;
+    flyingImg.style.width = `${imgRect.width}px`;
+    flyingImg.style.height = `${imgRect.height}px`;
+    
+    document.body.appendChild(flyingImg);
+
+    // إجبار المتصفح على رسم الصورة قبل تحريكها
+    flyingImg.offsetWidth;
+
+    // تحديد نقطة النهاية (مكان السلة) وتصغير الصورة
+    flyingImg.style.top = `${cartRect.top + cartRect.height / 2}px`;
+    flyingImg.style.left = `${cartRect.left + cartRect.width / 2}px`;
+    flyingImg.style.width = '20px';
+    flyingImg.style.height = '20px';
+    flyingImg.style.opacity = '0.5';
+    flyingImg.style.transform = 'rotate(360deg)';
+
+    // اهتزاز السلة وإنهاء التأثير
+    setTimeout(() => {
+      flyingImg.remove();
+      cartBtn.classList.add('bump');
+      setTimeout(() => cartBtn.classList.remove('bump'), 500);
+    }, 800);
+  }
+
+  // 3. ربط التأثير بزر الإضافة في بطاقة المنتج
+  // تعديل بسيط لدالة bindProductCardEvents لاستدعاء التأثير
+  const originalAddToCart = window.addToCart;
+  window.addToCart = function(productData, customQty = 1) {
+    const result = originalAddToCart(productData, customQty);
+    if (result) {
+      // إيجاد البطاقة التي تم الضغط عليها لتطبيق التأثير
+      const cards = document.querySelectorAll('.prod-card');
+      cards.forEach(card => {
+        if (card.dataset.nameAr === productData.nameAr) {
+          flyToCart(card);
+        }
+      });
+    }
+    return result;
+  };
+
+  // 4. تأثير 3D خفيف لبطاقات المنتجات عند تحريك الماوس (للأجهزة المكتبية)
+  if (window.innerWidth > 1024) {
+    document.addEventListener('mousemove', function(e) {
+      const card = e.target.closest('.prod-card');
+      if (!card || card.classList.contains('is-tilting')) return;
+
+      // تفعيل التأثير فقط إذا كان الماوس فوق البطاقة بالفعل
+      if (card.matches(':hover')) {
+        card.classList.add('is-tilting');
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const rotateX = (y - centerY) / 20;
+        const rotateY = (centerX - x) / 20;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+      }
+    }, { passive: true });
+
+    // إعادة البطاقة لوضعها الطبيعي عند مغادرة الماوس
+    document.addEventListener('mouseout', function(e) {
+      const card = e.target.closest('.prod-card');
+      if (card && !card.matches(':hover')) {
+        card.classList.remove('is-tilting');
+        card.style.transform = '';
+      }
+    }, { passive: true });
+  }
