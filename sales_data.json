@@ -26,5 +26,33 @@
     "date": "٢٩‏/٦‏/٢٠٢٦، ١:٤٩:٤٤ ص",
     "dateISO": "2026-06-28T21:49:44.757Z",
     "source": "orders.json"
+  },
+  {
+    "id": 1784575876060,
+    "orderId": "ABS-20260720-2206-5943",
+    "productName": "عسل",
+    "productNameEn": "Honey",
+    "customerName": "حسن",
+    "customerPhone": "61602612",
+    "qty": 1,
+    "total": "23.75",
+    "profit": "23.75",
+    "date": "٢٠‏/٧‏/٢٠٢٦، ١١:٣١:١٦ م",
+    "dateISO": "2026-07-20T19:31:16.059Z",
+    "source": "orders.json"
+  },
+  {
+    "id": 1784575876063,
+    "orderId": "ABS-20260720-2206-5943",
+    "productName": "سماعات جي بي ال",
+    "productNameEn": "JBL Headphones",
+    "customerName": "حسن",
+    "customerPhone": "61602612",
+    "qty": 1,
+    "total": "54.67",
+    "profit": "54.67",
+    "date": "٢٠‏/٧‏/٢٠٢٦، ١١:٣١:١٦ م",
+    "dateISO": "2026-07-20T19:31:16.059Z",
+    "source": "orders.json"
   }
 ]
